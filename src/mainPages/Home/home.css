@@ -1,0 +1,245 @@
+h4 {
+  font-size: small;
+  font-family: abel;
+  color: #575757;
+
+}
+
+.home {
+  padding: 0 0.3em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  text-align: right;
+  background: url(/public/assets/bg.jpg);
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 90vh;
+}
+
+.home p {
+  font-family: abel;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.home button:hover {
+  background: linear-gradient(white, var(--primary-theme-color));
+}
+
+.home button:focus {
+  background: linear-gradient(white, var(--primary-theme-color));
+}
+
+.trending {
+  min-width: 100%;
+}
+
+.trending p {
+  font-size: 0.8rem;
+  font-family: abel, sans-serif;
+  margin-bottom: 0;
+}
+
+.trending > h3 {
+  margin-top: 0;
+  display: inline-block;
+  border-bottom: 1px solid;
+}
+
+.mainbutton {
+  display: flex;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+.productsContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 10px;
+}
+
+.categoryBox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  width: 90%;
+}
+
+.categoryBox div {
+  cursor: pointer;
+  width: 70%;
+  border-radius: 2%;
+  transition: 0.3s;
+  font-weight: 700;
+  padding: 15px;
+}
+
+.ShopByCategory p,
+.categoryBox {
+  font-family: abel;
+  text-transform: capitalize;
+}
+
+.categoryBox div:hover {
+  transform: translateY(2px);
+  box-shadow: var(--primary-theme-color) 0px -23px 25px 0px inset,
+    rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
+    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
+    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
+    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
+
+.showOff {
+  display: flex;
+  flex-direction: column;
+}
+
+.showOff p {
+  font-family: abel;
+}
+
+.bigImage {
+  height: 600px;
+  width: 100%;
+  height: 50%;
+}
+.smallImage {
+  width: 100%;
+}
+
+.middleImage {
+  width: 50%;
+  padding: 10px;
+}
+
+.whyUs p {
+  font-family: abel;
+}
+
+.whyUsDescription div img {
+  width: 20%;
+}
+
+@media (min-width: 768px) {
+  .home {
+    height: 80vh;
+    font-size: 2rem;
+    padding-right:2.5rem;
+    align-items: flex-end;
+    text-align: right;
+  }
+
+  .home button {
+    font-size: 1rem;
+  }
+
+  .home h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0px;
+  }
+
+  .home p {
+    max-width: 50%;
+  }
+
+  .home h3 {
+    margin: 0;
+  }
+
+  .productsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;    
+    max-width:1200px;
+    margin:auto;
+  
+  }
+
+  .showOff {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .showOff .textContent {
+    width: 50%;
+    padding-left: 100px;
+    z-index: 3;
+  }
+  .mainbutton button{
+    font-size: 1.1rem;
+  }
+
+  .categoryBox {
+    display: flex;
+    flex-wrap: nowrap;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .textContent h3 {
+    margin-top: 0;
+    font-size: 2rem;
+  }
+
+  .imageContent {
+    display: flex;
+    flex-direction: row-reverse;
+  }
+
+  .bigImage {
+    height: 600px;
+    width: 100%;
+  }
+
+  .smallImage {
+    margin-left: -20px;
+    margin-top: 30%;
+    right: -30px;
+    height: 500px;
+    z-index: 1;
+    position: relative;
+  }
+
+  .middleImage {
+    width: 30%;
+    padding: 10px;
+    border-radius: 1%;
+  }
+
+  .whyusContent {
+    display: flex;
+    gap:3rem
+  }
+
+  .whyUsDescription {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    align-items: center;
+    gap: 10px;
+  }
+
+  .whyUsDescription div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 5px;
+  }
+
+  .whyUsDescription p {
+    text-align: left;
+  }
+
+  .whyUsDescription div img {
+    height: 50px;
+    width: 50px;
+  }
+}

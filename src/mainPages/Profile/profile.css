@@ -1,0 +1,251 @@
+.profile {
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.profileContainer {
+  max-width: 1000px;
+}
+.profileContainer a {
+  background-color: var(--primary-theme-color);
+  padding: 0.5em;
+  border-radius: 5px;
+  margin: 10px;
+}
+.displayPages {
+  margin-top: 10px;
+  min-height: 80vh;
+  border: 1px solid var(--primary-text-color);
+  min-width: 100%;
+
+}
+.userDetails {
+  font-family: abel;
+  padding: 10px;
+}
+.userDetails img {
+  max-height:20rem;
+  border-radius: 10px;
+}
+.userDetails div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap:8px;
+}
+.userDetails div p {
+  margin: 0.1rem;
+}
+.userDetails .info {
+  font-weight: bold;
+}
+.userDetails .heading {
+  color: var(--primary-theme-color);
+}
+.addressContainer,
+.addAddress {
+  margin: 5px;
+  font-family: abel;
+  text-align: left;
+  padding: 5px 0;
+  border: 1px solid var(--primary-text-color);
+}
+.addressContainer p {
+  margin: 0px;
+  margin-left: 20px;
+}
+.addAddress {
+  padding: 10px;
+}
+.addType {
+  padding: 3px;
+  margin: 0px;
+  border-radius: 3px;
+  display: inline-block;
+  background-color: rgb(212, 212, 212);
+}
+.addressContainer .buttons button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5em;
+}
+.addressContainer .buttons svg {
+  font-size: 1rem;
+}
+.addressContainer .buttons {
+  width: 90%;
+}
+
+.addFormBox {
+  position: absolute;
+  min-width: 300px;
+  height: auto;
+  display: flex;
+  padding: 20px;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.233);
+  border: 2px solid var(--primary-theme-color);
+  border-radius: 20px;
+  font-family: abel;
+  letter-spacing: 1px;
+  backdrop-filter: blur(4px);
+}
+
+.addressForm {
+  height: auto;
+  width: 90vw;
+  display: flex;
+  gap:5px;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.addressForm div {
+  display: flex;
+  width: auto;
+  flex-direction: column;
+  text-align: left;
+  padding: 0 10px;
+}
+.addressForm input[type="text"],
+.addressForm input[type="number"] {
+  font-size: 1rem;
+  border-radius: 5px;
+  padding: 5px;
+  border: none;
+}
+.addressForm div label {
+  text-shadow: 0 0 10px white;
+}
+.closeAdd {
+  text-align: center;
+  margin: auto;
+  height: 1.3rem;
+  border: thick double;
+  border-radius: 50%;
+}
+.closeAdd:hover {
+  color: var(--secondary-theme-color);
+}
+.css-o4b71y-MuiAccordionSummary-content {
+  justify-content: center;
+}
+.logOutBtn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+}
+.logOutBtn svg{
+  height: 1rem;
+}
+.userProfileDetails .formBox .formValue{
+  display: flex;
+  flex-direction: column;
+  justify-content: conter;
+  align-items: flex-start;
+  gap:10px;
+  padding:20px;
+}
+
+.profileButtons .logOutBtn:hover{
+  color: red
+}
+@media (min-width: 768px) {
+  .profileContainer {
+    min-width: 50%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+
+  }
+  .userProfileDetails{
+    display: flex;
+    flex-direction: column;
+  }
+  .userDetails{
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
+  }
+  .userDetails img {
+  max-width: 50%;
+  border-radius: 10px;
+}
+  .profileContainer nav {
+    display: flex;
+    flex-direction: column;
+  }
+  .address{
+    width: 100%;
+  }
+  .addressContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+  .addressContainer .buttons {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .userDetails {
+
+    margin: auto;
+  }
+  .displayPages {
+    min-height: 60vh;
+    min-width: 65vw;
+    display: flex;
+    justify-content: center;
+  }
+  .addFormBox {
+    max-width: 500px;
+  }
+  .address .checkoutLabel {
+    display: grid;
+    grid-template-columns: 1fr 20fr;
+    justify-content: center;
+    accent-color: var(--primary-theme-color);
+  }
+  .allOrders{
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:2rem;
+  }
+  .userProfileDetails .formBox{
+    max-width: 30%;
+    text-align: center;
+    margin: auto;
+  }
+   .userProfileDetails .formBox .formValue{
+    max-width: 80%;
+    }
+   
+    .userProfileDetails .formValue input{
+      padding: 0.3rem
+    }
+    .closeForm{
+      position: relative;
+      top: 1%;
+      margin-left: 50%;
+    }
+    .profileButtons {
+     
+      margin-bottom:0;
+display: flex;
+flex-direction: row;
+width: 100%;
+    }
+    .profileButtons button{
+      margin:0;
+    }
+}

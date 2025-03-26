@@ -1,0 +1,146 @@
+
+.formBox h2{
+  font-family: 'Cinzel Decorative';
+}
+.loginSection, .signUpSection{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  min-width: 100%;
+  background: url('../../../public/assets/stonesjewel.jpg') ;
+  background-position: center;
+background-size: cover;
+margin-bottom: 0;
+}
+.signUpSection{
+  min-height: 130vh;
+}
+.formBox{
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color:#dabec1a6;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 20px;
+  font-family: abel;
+  letter-spacing: 1px;
+  margin: 12px auto 50px auto;
+  backdrop-filter: blur(4px);
+  padding: 30px 50px;
+}
+.formBox h2{
+  font-size: 2em;
+  text-align: center;
+  margin:20px auto 20px auto
+}
+.inputBox{
+  position: relative;
+  margin: 30px 0;
+   width: 100%;
+  border-bottom: 2px solid #fff;
+}
+.inputBox label{
+  position: absolute;
+  top:50%;
+  left: 5px;
+  transform: translateY(-50%);
+  color: #fff;
+  text-shadow: #000 1px 0 10px;
+  font-size:1em;
+  pointer-events: none;
+  transition: 0.5s;
+}
+ input:focus ~ label, 
+input:valid ~ label{
+  top:-5px;
+}
+.inputBox input{
+  height: 50px;
+  background:transparent;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  padding: 0 35px 0 5px;
+  color:var(--primary-text-color);
+}
+.inputBox svg{
+   position: absolute;
+   right: 8px;
+   color: var(--primary-text-color);
+   font-size: 1.2em;
+   top : 20px;
+}
+.forget{
+  margin:-15px 0 15px;
+  font-size: .9em;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+.forget label input{
+  margin-right: 3px;
+}
+
+.forget span, .signUp p a {
+  color: var(--primary-text-color);
+  text-shadow:0 0 20px 30px #fff;
+  font-weight: 600;
+}
+.forget span:hover, .signUp p a:hover, .formValue a:hover{
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: 700;
+
+}
+
+.formBox button{
+  width: 100%;
+  height:40px;
+  border-radius: 40px;
+  background-color: #fff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1em;
+  display: flex;
+  font-weight: 600;
+  align-items: center;
+  justify-content: center;
+}
+.signUp{
+  font-size: .9em;
+  color: #fff;
+  text-align: center;
+  margin: 25px 0 20px;
+}
+.signUp p, .forget label{
+  text-shadow: #000 1px 0 10px;
+
+}
+.signUp p a{
+  text-shadow: none;
+} 
+.Toastify__toast{
+  font-family: "abel", sans-serif;
+  color: var(--primary-text-color);
+  background: linear-gradient(var(--primary-theme-color), #fff, var(--primary-theme-color));
+  margin-bottom:10px;
+}
+@media  (max-width: 768px) {
+  .formBox{
+
+    font-size: 0.78em;
+    height:auto;
+    padding: 0 20px;
+
+  }
+  .inputBox{
+    position: relative;
+    margin: 30px 0; 
+    border-bottom: 2px solid #fff;
+  }
+  
+
+}
