@@ -27,6 +27,11 @@ import Contact from "./mainPages/Contact/index";
 import { useAuth } from "./context/AuthContext";
 import ScrollToTop from "./components/ScrollUp";
 
+import AdminLayout from "./admin";
+import Dashboard from "./admin/pages/Dashboard";
+import Customers from "./admin/pages/Customer";
+import OrdersAdmin from "./admin/pages/Orders";
+
 function App() {
   const { token } = useAuth();
 
@@ -39,7 +44,17 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/mockman" element={<MockApi />} />
         <Route path="/about" element={<About />} />
-
+        <Route
+          path="/admin"
+          element={
+              <AdminLayout />
+          }
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="users" element={<Customers/>} />
+          {/* <Route path="users" element={<Users />} /> */}
+        </Route>
         <Route
           path="/cart"
           element={
