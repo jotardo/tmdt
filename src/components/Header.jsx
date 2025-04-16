@@ -38,19 +38,22 @@ export default function Header() {
   return (
     <>
       <div className="headerContainer">
+        <div className="logo">
+          <img src="/assets/logo.jpg" alt="Logo"/>
+        </div>
         <div className="categories">
           {categoriesData.map((item) => (
-            <CategoryList
-              item={item}
-              navigate={navigate}
-              setFiltersUsed={setFiltersUsed}
-            />
+              <CategoryList
+                  item={item}
+                  navigate={navigate}
+                  setFiltersUsed={setFiltersUsed}
+              />
           ))}
         </div>
         <div className="headerLeft">
           <div
-            className={isMenuClicked ? "expandMenu" : "menuBar"}
-            onClick={handleMenu}
+              className={isMenuClicked ? "expandMenu" : "menuBar"}
+              onClick={handleMenu}
           >
             <span class="sideBarMenu">
               <div className="bar1"></div>
@@ -58,93 +61,95 @@ export default function Header() {
               <div className="bar3"></div>
             </span>
           </div>
-          <div className="logoContatiner" onClick={()=>{navigate('/')}}>
-            
-              <h2>ShringaaR</h2>
-              <p>Your Jewelry House</p>
-            
+          <div className="logoContatiner" onClick={() => {
+            navigate('/')
+          }}>
+
+            <h2>Aurora Veneris</h2>
+            <p>Your Jewelry House</p>
+
           </div>
         </div>
         <div className="navbarIcons">
-          <NavLink to="/about" >
+          <NavLink to="/about">
             <li className="NavItem">About</li>
           </NavLink>
           <NavLink to="contact">
             <li className="NavItem">Contact</li>
           </NavLink>
 
-          <span className="search" >
+          <span className="search">
             {isSearchclicked ? (
-              <div className="inputElement overlay">
+                <div className="inputElement overlay">
                 <span
-                  className="closeSearch"
-                  onClick={() => {
-                    setIsSearchedClicked(!isSearchclicked);
-                  }}
+                    className="closeSearch"
+                    onClick={() => {
+                      setIsSearchedClicked(!isSearchclicked);
+                    }}
                 >
-                  <HighlightOffIcon />
+                  <HighlightOffIcon/>
                 </span>
-                <input
-                  type="text"
-                  value={inputValue}
-                  placeholder="Search items/ metals/ brand / category"
-                  onChange={(e) => {
-                    setInputValue(e.target.value);
-                  }}
-                />
-                <SearchIcon
-                  onClick={() => {
-                    setFiltersUsed({ type: "SEARCH", inputValue: inputValue });
-                    setIsSearchedClicked(!isSearchclicked);
-                    if (inputValue.length > 0) navigate("/browse");
-                  }}
-                />
-              </div>
+                  <input
+                      type="text"
+                      value={inputValue}
+                      placeholder="Search items/ metals/ brand / category"
+                      onChange={(e) => {
+                        setInputValue(e.target.value);
+                      }}
+                  />
+                  <SearchIcon
+                      onClick={() => {
+                        setFiltersUsed({type: "SEARCH", inputValue: inputValue});
+                        setIsSearchedClicked(!isSearchclicked);
+                        if (inputValue.length > 0) navigate("/browse");
+                      }}
+                  />
+                </div>
             ) : (
-              <SearchIcon
-                onClick={() => {
-                  setIsSearchedClicked(!isSearchclicked);
-                }}
-              />
+                <SearchIcon
+                    onClick={() => {
+                      setIsSearchedClicked(!isSearchclicked);
+                    }}
+                />
             )}
           </span>
           <span className={token ? "wishList" : "hiddenElement"}>
             <Badge
-              badgeContent={token ? wishlistCount : 0}
-              color="secondary"
-              sx={{ color: "#5f3926" }}
+                badgeContent={token ? wishlistCount : 0}
+                color="secondary"
+                sx={{color: "#5f3926"}}
             >
               <NavLink to="/wishlist">
-                <FavoriteTwoToneIcon />
+                <FavoriteTwoToneIcon/>
               </NavLink>
             </Badge>
           </span>
           <span className={token ? "emptyCart" : "hiddenElement"}>
             <Badge
-              badgeContent={token ? cartCount : 0}
-              color="secondary"
-              sx={{ color: "#5f3926" }}
+                badgeContent={token ? cartCount : 0}
+                color="secondary"
+                sx={{color: "#5f3926"}}
             >
               <NavLink to="/cart">
-                <LocalGroceryStoreTwoToneIcon />
+                <LocalGroceryStoreTwoToneIcon/>
               </NavLink>
             </Badge>
           </span>
           <span className="login">
             {token ? (
-              <NavLink to="/profile">
-                <PersonIcon />
-              </NavLink>
+                <NavLink to="/profile">
+                  <PersonIcon/>
+                </NavLink>
             ) : (
-              <NavLink to="/login">
-                <LoginRoundedIcon />
-              </NavLink>
+                <NavLink to="/login">
+                  <LoginRoundedIcon/>
+                </NavLink>
             )}
           </span>
         </div>
       </div>
       {isMenuClicked && (
-        <div title="Menu bar" className="sideNav">
+          <div title="Menu bar" className="sideNav">
           <ul>
             <NavLink to="/">
               <li onClick={handleMenu}>HOME</li>

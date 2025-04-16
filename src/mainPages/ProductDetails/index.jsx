@@ -85,7 +85,7 @@ export default function ProductDetails() {
 
             <div className="offer">Buy 2 & get 5% cashback</div>
             <div className="price">
-              $ {product_price}{" "}
+               {product_price}{" "} VND
               <span className="stikeThrough">$ {product_prevPrice}</span>
               <span className="discount">({discount}% off)</span>
             </div>
