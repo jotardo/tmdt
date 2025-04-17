@@ -50,33 +50,43 @@ export default function Shop() {
                 <div className="priceFilter">
                   <h3>Price</h3>
                   <p>
-                    <span>500</span>
-                    <span>1000</span>
-                    <span>1500</span>
+                    <span>12Tr940K</span>
+                    <span>38Tr820K</span>
+                    {/*<span>500</span>*/}
+                    {/*<span>1500</span>*/}
                   </p>
                   <input
-                    type="range"
-                    name="priceRange"
-                    id="priceRange"
-                    step="100"
-                    value={filtersUsed.priceRange}
-                    min={500}
-                    max={1500}
-                    onChange={(e) => {
-                      setFiltersUsed({
-                        type: "PRICE",
-                        inputValue: e.target.value,
-                      });
-                    }}
+                      type="range"
+                      name="priceRange"
+                      id="priceRange"
+                      // step="100"
+                      step="2588000.00"
+                      value={filtersUsed.priceRange}
+                      min={12940000.00}
+                      max={38820000.00}
+                      // min={500}
+                      // max={1500}
+                      onChange={(e) => {
+                        setFiltersUsed({
+                          type: "PRICE",
+                          inputValue: e.target.value,
+                        });
+                      }}
                   />
+                  <p>
+                    <span style={{ visibility: "hidden" }}>.</span> {/* Placeholder để căn giữa */}
+                    <span>25Tr880K</span>
+                    {/*<span>1000</span>*/}
+                    <span style={{ visibility: "hidden" }}>.</span> {/* Placeholder để căn giữa */}
+                  </p>
                 </div>
                 <div className="categoryFilter">
                   <h3>Category</h3>
                   <label htmlFor="necklace">
                     <input
-                      type="checkbox"
-                      checked={filtersUsed.categoryFilters.includes("necklace")}
-                      name="category"
+                        type="checkbox"
+                        checked={filtersUsed.categoryFilters.includes("necklace")}
+                        name="category"
                       id="necklace"
                       value="necklace"
                       onClick={(e) => {
