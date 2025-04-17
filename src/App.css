@@ -63,6 +63,7 @@ section {
 
 .categories {
   display: none;
+  margin-left: -200px;
 }
 
 .headerLeft {
@@ -1018,4 +1019,8 @@ text-decoration:  overline var(--primary-theme-color);
     max-width: 500px;
     font-family: abel;
   }
+}
+.logo img{
+  width: 50px;
+  height: 50px;
 }
