@@ -5,14 +5,14 @@ export default function EmptyCart() {
   return (
     <div className="emptyCart">
       <img src="\assets\mt-cart.png" alt="empty cart" srcset="" />
-      <p>You have no items in your shopping cart.</p>
+      <p>Giỏ hàng của bạn đang trống kìa.</p>
 
       <button
         onClick={() => {
           navigate("/browse");
         }}
       >
-        Shop Now
+        Đi đến Cửa hàng
       </button>
     </div>
   );

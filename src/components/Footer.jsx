@@ -6,7 +6,7 @@ import { NavLink } from 'react-router-dom';
 
 export default function Footer(){
   return <footer>
-         <h6>Connect with us</h6>
+         <h6>Kết nối với chúng tôi</h6>
          <div className="socialMedia">
           <NavLink to="https://www.facebook.com/Tanishq/"><span className="facebook"><FacebookOutlinedIcon/></span></NavLink>
           <NavLink to="https://twitter.com/TheIndianGirl56"> 

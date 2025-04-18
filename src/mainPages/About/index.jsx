@@ -4,8 +4,8 @@ export default function About() {
     <><div className="aboutPage">
       <section className="heading">
        <div className='text'>
-         <small>A few Words...</small>
-        <h1>About Us</h1>
+         <small>Đôi lời...</small>
+        <h1>Về chúng tôi</h1>
        </div>
        
       </section>

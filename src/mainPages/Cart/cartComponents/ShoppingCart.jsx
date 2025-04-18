@@ -32,13 +32,13 @@ export default function ShoppingCart() {
         <thead>
           <tr>
             
-            <th class="product-thumbnail ">Product image</th>
-            <th class="product-name">Product</th>
-            <th class="product-price">Price</th>
-            <th class="product-quantity">Quantity</th>
-            <th class="product-subtotal">Subtotal</th>
+            <th class="product-thumbnail ">Ảnh</th>
+            <th class="product-name">Sản phẩm</th>
+            <th class="product-price">Đơn giá</th>
+            <th class="product-quantity">Số lượng</th>
+            <th class="product-subtotal">Thành tiền</th>
             <th className="Add to Favoite">Wishlist</th>
-            <th class="product-remove">Remove</th>
+            <th class="product-remove">Xóa</th>
           </tr>
         </thead>
         <tbody>
@@ -142,30 +142,30 @@ export default function ShoppingCart() {
               })
             )
           ) : (
-            <h2>Please Login to see Cart items</h2>
+            <h2>Bạn cần Đăng nhập để nhìn thấy sản phẩm</h2>
           )}
         </tbody>
       </table>
 
       <table className="cartTotal">
         <thead>
-          <th>Cart Total</th>
+          <th>Tổng tiền trong giỏ</th>
         </thead>
         <tbody>
           <tr className="subTotal">
-            <span className="dataTitle">Subtotal</span>
+            <span className="dataTitle">Thành tiền</span>
             <span className="Sprice">${totalPrevPrice}</span>
           </tr>
           <tr className="discount">
-            <span className="disc">Discount :</span> {totalDiscount}%
+            <span className="disc">Khuyến mãi :</span> {totalDiscount}%
           </tr>
           <tr className="Tprice">
             {" "}
-            <span>Total</span>
+            <span>Tổng tiền</span>
             <span className="TotalPrice">${totalPrice}</span>
           </tr>
-          <div onClick={()=>{toast.info("Sorry, no coupons available right now")}} className="applyCoupon">Apply Coupon</div>
-          <button onClick={()=>{navigate("/cart/checkout")}}>Proceed to Checkout</button>
+          <div onClick={()=>{toast.info("Xin lỗi, coupon chưa áp dụng được")}} className="applyCoupon">Áp dụng Coupon</div>
+          <button onClick={()=>{navigate("/cart/checkout")}}>Đi đến Thanh toán</button>
         </tbody>
       </table>
     </div>
