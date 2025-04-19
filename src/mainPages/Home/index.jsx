@@ -46,7 +46,7 @@ export default function Home() {
         <div className="textContent">
           <p>Trang sức độc nhất</p>
           <h3>LUÔN BẮT KỊP XU HƯỚNG</h3>
-          <p >We take immense pride in offering jewelry pieces that are crafted with the utmost care and attention to detail. Each item in our collection undergoes rigorous quality checks to ensure it meets our high standards</p>
+          <p>Chúng tôi vô cùng tự hào khi mang đến những món trang sức được chế tác với sự chăm chút và tỉ mỉ tối đa. Mỗi sản phẩm trong bộ sưu tập của chúng tôi đều trải qua quy trình kiểm tra chất lượng nghiêm ngặt để đảm bảo đáp ứng tiêu chuẩn cao.</p>
           <div className="mainbutton">
             <NavLink to='/browse'>
               <button>Mua Ngay</button>
@@ -94,22 +94,22 @@ export default function Home() {
             <div>
               <img src="\assets\whyUsIcons\percent-solid.svg" alt="big discount" />
               <h3>Khuyến mãi lớn</h3>
-              <p>We provide higher discounts without compromising on quality or craftsmanship. Our commitment to offering affordable prices allows you to indulge in your love for exquisite jewelry while enjoying significant savings.</p>
+              <p>Chúng tôi cung cấp mức giảm giá cao hơn mà không ảnh hưởng đến chất lượng hay tay nghề chế tác. Cam kết mang đến giá cả phải chăng giúp bạn có thể tận hưởng niềm đam mê với trang sức tinh xảo và vẫn tiết kiệm đáng kể.</p>
             </div>
             <div>
               <img src="\assets\whyUsIcons\truck-fast-solid.svg" alt="fast delivery" />
               <h3>Giao hàng miễn phí</h3>
-              <p>With our Free delivery service, you can shop with confidence, knowing that there are no hidden fees or additional charges. Sit back, relax, and let us take care of delivering your exquisite jewelry directly to you.</p>
+              <p>Với dịch vụ giao hàng miễn phí, bạn có thể mua sắm tự tin mà không lo về chi phí ẩn hay khoản phí phát sinh. Chỉ cần ngồi thư giãn, để chúng tôi lo việc giao món trang sức tuyệt đẹp đến tận tay bạn.</p>
             </div>
             <div>
               <img src="\assets\whyUsIcons\wallet-solid.svg" alt="big savings " />
               <h3>Thanh toán bảo mật</h3>
-              <p>We ensure your peace of mind throughout your shopping experience. Your financial security is of utmost importance to us, which is why we have implemented advanced encryption and secure payment gateways.</p>
+              <p>Chúng tôi đảm bảo sự yên tâm của bạn trong suốt quá trình mua sắm. Bảo mật tài chính của bạn là điều vô cùng quan trọng đối với chúng tôi, vì vậy chúng tôi đã áp dụng hệ thống mã hóa tiên tiến và cổng thanh toán an toàn.</p>
             </div>
             <div>
               <img src="\assets\whyUsIcons\boxes-packing-solid.svg" alt="big tracking order" />
               <h3>Theo dõi đơn hàng</h3>
-              <p>We provide tracking order services, allowing you to stay informed and updated on the status of your purchase every step of the way.we ensure a seamless and transparent shopping experience.</p>
+              <p>Chúng tôi cung cấp dịch vụ theo dõi đơn hàng, giúp bạn luôn được cập nhật về tình trạng mua sắm của mình từng bước một, đảm bảo trải nghiệm mua sắm minh bạch và suôn sẻ.</p>
             </div>
           </div>
         </div>

@@ -5,7 +5,7 @@ export default function About() {
       <section className="heading">
        <div className='text'>
          <small>Đôi lời...</small>
-        <h1>Về chúng tôi</h1>
+         <h1>Về chúng tôi</h1>
        </div>
        
       </section>

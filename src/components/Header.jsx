@@ -92,7 +92,7 @@ export default function Header() {
                   <input
                       type="text"
                       value={inputValue}
-                      placeholder="Tìm kiếm mặt hàng / nhãn hiệu / loại trang sức"
+                      placeholder="Tìm kiếm mặt hàng/nhãn hiệu/loại trang sức"
                       onChange={(e) => {
                         setInputValue(e.target.value);
                       }}
