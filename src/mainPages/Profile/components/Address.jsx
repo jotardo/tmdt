@@ -18,9 +18,9 @@ export default function Address({ isPresentinCheckout, setSelectedAddress ,id}) 
         }}
       >
         <span className="plus">+</span>
-        Add New Address
+        Thêm địa chỉ
       </div>
-      {address.length<1? <h6>Please Add atleast one Address</h6>:
+      {address.length<1? <h6>Xin thêm ít nhất 1 địa chỉ trong sổ</h6>:
       address.map((item) => {
         return isPresentinCheckout ? (
           <label htmlFor="" class="checkoutLabel">

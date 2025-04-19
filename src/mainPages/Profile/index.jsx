@@ -7,9 +7,9 @@ export default function Profile() {
     <><div className="profile">
       <div className="profileContainer">
         <nav>
-        <NavLink to=''>user</NavLink>
-        <NavLink to="/profile/address">Address</NavLink>
-        <NavLink to="/profile/orders">Orders</NavLink>
+        <NavLink to=''>Người dùng</NavLink>
+        <NavLink to="/profile/address">Sổ địa chỉ</NavLink>
+        <NavLink to="/profile/orders">Đơn hàng</NavLink>
        
         </nav>
        <div className="displayPages">

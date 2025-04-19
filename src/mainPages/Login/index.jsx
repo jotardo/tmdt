@@ -96,7 +96,7 @@ export default function Login() {
           <div className="formBox">
             <div className="formValue">
               <form>
-                <h2>Login</h2>
+                <h2>Đăng nhập</h2>
                 <div className="inputBox">
                   <MailOutlineRoundedIcon />
                   <input
@@ -129,12 +129,12 @@ export default function Login() {
                     required
                     onChange={handleLoginInput}
                   />
-                  <label htmlFor="loginPassword">Password</label>
+                  <label htmlFor="loginPassword">Mật khẩu</label>
                 </div>
                 <div className="forget">
                   <label htmlFor="rememberMe">
                     <input type="checkbox" name="rememberMe" id="rememberMe" />{" "}
-                    Rememer Me{" "}
+                    Lưu đăng nhập{" "}
                   </label>
                   <span
                     onClick={() => {
@@ -144,27 +144,27 @@ export default function Login() {
                     }}
                   >
                     {" "}
-                    Forgot Password ?
+                    Quên mật khẩu?
                   </span>
                 </div>
                 <div className="buttons" style={{ fontFamily: "abel" }}>
                   <button type="submit" onClick={handleLoginSubmit}>
-                    Log in
+                    Đăng nhập
                   </button>
                   <button type="submit" onClick={handleGuestLogin}>
-                    Set as Guest
+                    Đặt là Guest
                   </button>
                 </div>
                 <div className="signUp">
                   <p>
-                    Don't have an account?{" "}
+                    Chưa có tài khoản?{" "}
                     <a
                       href="#"
                       onClick={() => {
                         setSignedIn(false);
                       }}
                     >
-                      Sign Up...
+                      Đăng kí tại đây...
                     </a>{" "}
                   </p>
                 </div>
@@ -177,7 +177,7 @@ export default function Login() {
           <div className="formBox">
             <div className="formValue">
               <form action="">
-                <h2>Sign Up</h2>
+                <h2>Đăng kí</h2>
                 <div className="inputBox">
                   <PersonIcon />
                   <input
@@ -188,7 +188,7 @@ export default function Login() {
                     required
                     onChange={handleInput}
                   />
-                  <label htmlFor="firstName">First Name</label>
+                  <label htmlFor="firstName">Tên</label>
                 </div>
                 <div className="inputBox">
                   <PersonIcon />
@@ -200,7 +200,7 @@ export default function Login() {
                     required
                     onChange={handleInput}
                   />
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="lastName">Họ</label>
                 </div>
                 <div className="inputBox">
                   <MailOutlineRoundedIcon />
@@ -212,7 +212,7 @@ export default function Login() {
                     required
                     onChange={handleInput}
                   />
-                  <label htmlFor="email">Set Email</label>
+                  <label htmlFor="email">Email</label>
                 </div>
                 <div className="inputBox">
                   <span
@@ -241,7 +241,7 @@ export default function Login() {
                     required
                     onChange={handleInput}
                   />
-                  <label htmlFor="password">Set Password</label>
+                  <label htmlFor="password">Mật khẩu</label>
                 </div>
                 <div className="inputBox">
                   <span
@@ -271,7 +271,7 @@ export default function Login() {
                     required
                     onChange={handleInput}
                   />
-                  <label htmlFor="password">Confirm Password</label>
+                  <label htmlFor="password">Xác nhận mật khẩu</label>
                 </div>
                 <div className="forget">
                   <label htmlFor="acceptT&C">
@@ -282,18 +282,19 @@ export default function Login() {
                       required
                       onChange={handleInput}
                     />
-                    I Accept all Terms & Conditions{" "}
+                    Tôi đã đọc Điều khoản sử dụng và đã chấp thuận{" "}
                   </label>
                 </div>
                 <div className="buttons">
                   <button type="submit" onClick={handleSignUpSubmit}>
-                    Sign Up
+                    Đăng kí
                   </button>
 
-                  <button onClick={handleGuestSignUp}>Set as Guest</button>
+                  <button onClick={handleGuestSignUp}>Đặt là Guest</button>
                 </div>
+
                 <div onClick={() => { setSignedIn(!isSignedIn) }}>
-                  <NavLink to='/login' >Login instead...</NavLink>
+                  <NavLink to='/login' >Đăng nhập ở đây...</NavLink>
                 </div>
 
               </form>

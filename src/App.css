@@ -1,4 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");
+/*@import url("https://fonts.googleapis.com/css2?family=Abel&display=swap");*/
+@font-face {
+  font-family: 'Abel';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('fonts/VL ABELPRO.OTF') format('opentype');
+}
 
 .App {
   text-align: center;
@@ -303,6 +310,7 @@ li {
 .navbarIcons {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 9px;
 }
 

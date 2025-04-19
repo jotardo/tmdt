@@ -7,14 +7,14 @@ export default function WishList() {
   const { wishList } = useWish();
   return (
     <div className="wishLish">
-      <h3>Your Wish List</h3>
+      <h3>Wishlist của bạn</h3>
 
       {wishList?.backendWishList.length === 0 ? (
         <p className="empty_Wishlist ">
           <img src="\assets\empty-wishlist.png" alt="" width={300} />
-          <p>Wishlist is empty...{" "}</p>
+          <p>Wishlist đang trống...{" "}</p>
           <NavLink to="/browse">
-            <button>Browse shop</button>
+            <button>Đi đến Cửa hàng</button>
           </NavLink>
         </p>
       ) : (

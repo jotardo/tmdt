@@ -67,7 +67,7 @@ export default function FilledCart({
     <div className="filledCart">
       <div className="cutomerDetails">
         <div>
-          <h5>Deliver to</h5>
+          <h5>Giao đến</h5>
           <Address
             isPresentinCheckout={true}
             setSelectedAddress={setSelectedAddress}
@@ -76,7 +76,7 @@ export default function FilledCart({
         </div>
 
         <div className="cartProductBox">
-          <h5>Your Order Summary</h5>
+          <h5>Chi tiết các đơn hàng</h5>
           <div className="header">
             <span>Product</span>
             <span>Subtotal</span>
@@ -117,28 +117,28 @@ export default function FilledCart({
       <div className="orderDetails">
         <div className="orderBox">
           <div className="totals">
-            <h5>Price details</h5>
+            <h5>Chi tiết hóa đơn</h5>
             <span className="totalPrice">
-              <span>SubTotal</span>
+              <span>Thành tiền</span>
               <span>$ {totalPrice}</span>
             </span>
             <span className="totalDiscount">
-              <span>Extra Discount</span>
+              <span>Khuyến mãi</span>
               <span>$ {250}</span>
             </span>
 
             <span className="deliveryCharges">
-              <span>Delivery Charges</span>
+              <span>Phí giao hàng</span>
               <span>$ {1}</span>
             </span>
             <span className="grandTotal">
-              <span>Grand Total</span>
+              <span>Tổng tiền</span>
               <span>${totalPrice - 250 + 1}</span>
             </span>
           </div>
 
           <div className="addressShow">
-            <h5>Will be delivered to</h5>
+            <h5>Sẽ được giao tới địa chỉ</h5>
             {selectedAddress.id ?
               <div className="addressText">
                 <p className="addType">
@@ -151,7 +151,7 @@ export default function FilledCart({
                     {mobile}
                   </b>
                 </p>
-                <p>House Number: {building}</p>
+                <p>Số nhà: {building}</p>
                 <p>{streetName}</p>
                 <p>
                   {town},{districtName}
@@ -160,14 +160,14 @@ export default function FilledCart({
                   {state} - <b>{pincode}</b>
                 </p>
               </div>
-              :<p>Please select an Address</p>
+              :<p>Xin lựa chọn địa chỉ giao hàng</p>
 
             }
           </div>
 
 
           <div className="choosePayment">
-            <h5> Choose Payment mode</h5>
+            <h5> Chọn hình thức thanh toán</h5>
             <label htmlFor="online">
               <input
                 type="radio"
@@ -179,7 +179,7 @@ export default function FilledCart({
                   setPaymentSelected(e.target.value);
                 }}
               />
-              Online
+              Trực tuyến
             </label>
             <label htmlFor="cashOnDelivery">
               <input
@@ -192,7 +192,7 @@ export default function FilledCart({
                 }}
                 required
               />
-              Cash On Delivery
+              Trả tiền khi nhận hàng
             </label>
           </div>
 
@@ -201,7 +201,7 @@ export default function FilledCart({
               handleOrderPlaced(paymentSelected, token);
             }}
           >
-            Place Order
+            Đặt hàng
           </button>
         </div>
       </div>

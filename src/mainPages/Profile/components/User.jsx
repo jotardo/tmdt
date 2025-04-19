@@ -25,7 +25,7 @@ export default function User() {
   return (
     <>
       <div className="userProfileDetails">
-        <h3>{currentUser.firstName} Profile</h3>
+        <h3>Thông tin cá nhân của {currentUser.firstName}</h3>
         <div className="userDetails">
           {newUserData.selectedImage ? (
             <img src={newUserData.selectedImage} alt="" />
@@ -40,33 +40,33 @@ export default function User() {
           <div>
             <p className="info">
               {" "}
-              <span className="heading">Name : </span>
+              <span className="heading">Họ và tên : </span>
               {currentUser.firstName} {currentUser.lastName}
             </p>
             {newUserData.gender && (
               <p className="info">
-                <span className="heading">Gender : </span>
+                <span className="heading">Giới tính : </span>
                 {currentUser.gender}
               </p>
             )}
             <p className="info">
               {" "}
-              <span className="heading">Email Address: </span>
+              <span className="heading">Địa chỉ Email: </span>
               {currentUser.email}
             </p>
             {newUserData.mobile && (
               <p className="info">
                 {" "}
-                <span className="heading">Mobile : </span>
+                <span className="heading">Số điện thoại : </span>
                 {currentUser.mobile}
               </p>
             )}
             <p className="info">
-              <span className="heading">Total Items in Cart: </span>
+              <span className="heading">Tổng số hàng trong giỏ: </span>
               {cartCount}
             </p>
             <p className="info">
-              <span className="heading">Total Items in WishList: </span>
+              <span className="heading">Tổng số hàng trong Wishlist: </span>
               {wishlistCount}
             </p>
             <div class="profileButtons">
@@ -78,7 +78,7 @@ export default function User() {
                 Edit Profile
               </button>
               <button class="logOutBtn" onClick={logOutHandler}>
-                <LogoutRoundedIcon /> Log Out{" "}
+                <LogoutRoundedIcon /> Đăng xuất{" "}
               </button>
             </div>
           </div>

@@ -72,10 +72,10 @@ export default function Header() {
         </div>
         <div className="navbarIcons">
           <NavLink to="/about">
-            <li className="NavItem">About</li>
+            <li className="NavItem">Giới thiệu</li>
           </NavLink>
           <NavLink to="contact">
-            <li className="NavItem">Contact</li>
+            <li className="NavItem">Liên Hệ</li>
           </NavLink>
 
           <span className="search">
@@ -92,7 +92,7 @@ export default function Header() {
                   <input
                       type="text"
                       value={inputValue}
-                      placeholder="Search items/ metals/ brand / category"
+                      placeholder="Tìm kiếm mặt hàng/nhãn hiệu/loại trang sức"
                       onChange={(e) => {
                         setInputValue(e.target.value);
                       }}
@@ -152,13 +152,13 @@ export default function Header() {
           <div title="Menu bar" className="sideNav">
           <ul>
             <NavLink to="/">
-              <li onClick={handleMenu}>HOME</li>
+              <li onClick={handleMenu}>TRANG CHỦ</li>
             </NavLink>
             <NavLink to="/about">
-              <li onClick={handleMenu}>ABOUT</li>
+              <li onClick={handleMenu}>VỀ CHÚNG TÔI</li>
             </NavLink>
             <NavLink to="contact">
-              <li onClick={handleMenu}>CONTACT</li>
+              <li onClick={handleMenu}>LIÊN HỆ</li>
             </NavLink>
 
             <li>
@@ -168,11 +168,11 @@ export default function Header() {
                 onChange={handleCategory}
                 id="chooseCategory"
               >
-                <option value="SHOP">SHOP CATEGORY</option>
-                <option value="rings">RINGS</option>
-                <option value="bracelet">BRACELETS</option>
-                <option value="earring">EARRINGS</option>
-                <option value="necklace">NECKLACES</option>
+                <option value="SHOP">DANH MỤC</option>
+                <option value="rings">NHẪN</option>
+                <option value="bracelet">VÒNG TAY</option>
+                <option value="earring">BÔNG TAI</option>
+                <option value="necklace">DÂY CHUYỀN</option>
               </select>
             </li>
           </ul>

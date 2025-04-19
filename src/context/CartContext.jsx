@@ -53,12 +53,12 @@ export function CartProvider({ children }) {
       } = response;
       if (status === 201) {
         setCartManager({ type: "ADDTOCART", payload: cart });
-        toast.success("Added to cart", {
+        toast.success("Đã thêm vào giỏ thành công!", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       }
     } catch (error) {
-      toast.warn("Please Login in before you add to cart", {
+      toast.warn("Bạn cần đăng nhập để sử dụng tính năng này", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
       navigate('/login', {state:{from :location}})
@@ -75,13 +75,13 @@ export function CartProvider({ children }) {
 
       if (status === 200) {
         setCartManager({ type: "DELETEFROMCART", payload: cart });
-       if( showNotification)toast.success(`${title} has been removed from cart`, {
+       if( showNotification)toast.success(`${title} đã xóa khỏi giỏ hàng!`, {
           position: toast.POSITION.BOTTOM_RIGHT,
         })
       }
     } catch (error) {
      
-      if( showNotification) toast.error("Error:Cannot remove this item from cart", {
+      if( showNotification) toast.error("Lỗi: Không thể xóa sản phẩm này khỏi giỏ hàng", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
@@ -100,8 +100,8 @@ export function CartProvider({ children }) {
         else setCartManager({ type: "DECREASEQUANT", payload: cart });
         toast.success(
           type === "increment"
-            ? `Cart quantity increased successfully!`
-            : `Cart quantity decreased successfully!`,
+            ? `Tăng số lượng sản phẩm thành công!`
+            : `Giảm số lượng sản phẩm thành công!`,
           {
             position: toast.POSITION.BOTTOM_RIGHT,
           }

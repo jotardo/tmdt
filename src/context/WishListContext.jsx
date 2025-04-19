@@ -42,7 +42,7 @@ export function WishProvider({ children }) {
     try {
       if (!token){
         navigate('/login', {state:{from :location}})
-        toast.warn("You need to login first", {
+        toast.warn("Bạn cần đăng nhập để sử dụng tính năng này", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });}
       else {
@@ -54,14 +54,14 @@ export function WishProvider({ children }) {
 
         if (status === 201) {
           setWishList({ type: "ADDTOWISH", payload: wishlist });
-          toast.success("Product added to wishlist", {
+          toast.success("Thêm thành công sản phẩm này vào Wishlist của bạn!", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
         }
       }
     } catch (error) {
       console.log(error);
-      toast.error("You need to login first", {
+      toast.error("Bạn cần đăng nhập để sử dụng tính năng này", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
       navigate('/login', {state:{from :location}})
@@ -77,13 +77,13 @@ export function WishProvider({ children }) {
 
       if (status === 200) {
         setWishList({ type: "DELETEWISH", payload: wishlist });
-        toast.warn("Product Deleted from wishlist", {
+        toast.warn("Xóa thành công sản phẩm này khỏi Wishlist của bạn!", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       }
     } catch (error) {
       console.log(error);
-      toast.error("Product could not be found", {
+      toast.error("Lỗi: Không thể tìm thấy sản phẩm này", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     }

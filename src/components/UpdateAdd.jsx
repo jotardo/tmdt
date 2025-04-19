@@ -23,12 +23,12 @@ export default function UpdateAddress({
 
     if (!isEditClicked) {
       addressDispatch({ type: "ADDRESSADD", payload: addressState });
-      toast.success("New Address added successfully", {
+      toast.success("Địa chỉ mới đã được thêm thành công!", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     } else if (isEditClicked) {
       addressDispatch({ type: "EDITADD", payload: addressState });
-      toast.success("Address Edited Successfully", {
+      toast.success("Địa chỉ đã được cập nhật thành công!", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
@@ -55,7 +55,7 @@ export default function UpdateAddress({
               name="fullName"
               id="fullName"
               required
-              placeholder="Full Name"
+              placeholder="Họ và tên"
               value={addressState.fullName}
               onChange={handleAddressInput}
             />
@@ -88,7 +88,7 @@ export default function UpdateAddress({
               name="town"
               id="town"
               required
-              placeholder="City Name"
+              placeholder="Tên Thành Phố"
               value={addressState.town}
               onChange={handleAddressInput}
             />
@@ -100,7 +100,7 @@ export default function UpdateAddress({
               id="districtName"
               required
               value={addressState.districtName}
-              placeholder="District Name"
+              placeholder="Tên Quận / Huyện"
               onChange={handleAddressInput}
             />
           </div>
@@ -142,7 +142,7 @@ export default function UpdateAddress({
           </div>
 
           <div className="addTypeAdd">
-            Address Type
+            Loại Địa Chỉ
             <label htmlFor="home">
               {" "}
               <input
@@ -152,7 +152,7 @@ export default function UpdateAddress({
                 checked={addressState.home}
                 onChange={handleAddressInput}
               />
-              Home{" "}
+              Địa chỉ cá nhân{" "}
             </label>
             <label htmlFor="work">
               <input
@@ -162,7 +162,7 @@ export default function UpdateAddress({
                 checked={addressState.work}
                 onChange={handleAddressInput}
               />
-              Work{" "}
+              Địa chỉ văn phòng / công ty{" "}
             </label>
           </div>
           <div className="buttons">
@@ -173,7 +173,7 @@ export default function UpdateAddress({
                 setAddressState(dummyAddress);
               }}
             >
-              Dummy Address
+              Địa chỉ Dummy
             </button>
           </div>
         </form>
