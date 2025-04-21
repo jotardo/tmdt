@@ -86,7 +86,7 @@ export default function ProductDetails() {
             <div className="offer">Mua 2 giảm 5%</div>
             <div className="price">
                {product_price}{" "} VND
-              <span className="stikeThrough">$ {product_prevPrice}</span>
+              <span className="stikeThrough">{product_prevPrice} VNĐ</span>
               <span className="discount">(Giảm {discount}%)</span>
             </div>
             <div className="deliveryDate">

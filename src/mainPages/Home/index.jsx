@@ -23,7 +23,7 @@ export default function Home() {
         <p>
           {" "}
           Cửa hàng duy nhất của bạn dành cho những món trang sức tinh tế, hoàn hảo cho mọi dịp.<br/>
-          Hãy khám phá bộ sưu tập độc quyền của chúng tôi, được chế tác thủ công với những vật liệu tốt nhất để đảm bảo cả chất lượng và vẻ đẹp.<br/>
+          Hãy khám phá bộ sưu tập độc quyền của chúng tôi, được chế tác thủ công với những loại đá tốt nhất để đảm bảo cả chất lượng và vẻ đẹp.<br/>
           Khám phá bộ sưu tập và tìm kiếm món trang sức hoàn hảo thể hiện cá tính của bạn.
         </p>
         <div className="mainbutton">
@@ -103,7 +103,7 @@ export default function Home() {
             </div>
             <div>
               <img src="\assets\whyUsIcons\wallet-solid.svg" alt="big savings " />
-              <h3>Thanh toán bảo mật</h3>
+              <h3>Thanh toán an toàn</h3>
               <p>Chúng tôi đảm bảo sự yên tâm của bạn trong suốt quá trình mua sắm. Bảo mật tài chính của bạn là điều vô cùng quan trọng đối với chúng tôi, vì vậy chúng tôi đã áp dụng hệ thống mã hóa tiên tiến và cổng thanh toán an toàn.</p>
             </div>
             <div>

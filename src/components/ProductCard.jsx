@@ -39,7 +39,7 @@ export default function ProductCard({ item, inWishlist }) {
               {product_prevPrice && (
                 <span className="stikeThrough">{product_prevPrice} VNĐ</span>
               )}
-              <b> {product_price} VNĐ </b> ({discount} % off)
+              <b> {product_price} VNĐ </b> (Giảm {discount} %)
             </p>
             
           </div>

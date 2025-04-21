@@ -51,16 +51,16 @@ export default function Contact() {
               value="http://shringaar.netlify.app/contact"
             />
             <div className="name">
-              <input type="text" name="first_name" placeholder="Tên" required/>
-
               <input type="text" name="last_name" placeholder="Họ" required/>
+
+              <input type="text" name="first_name" placeholder="Tên" required/>
             </div>
 
             <input
               type="email"
               name="email"
               id="contactEmail"
-              placeholder="email Id"
+              placeholder="Địa chỉ email"
               required
             />
 

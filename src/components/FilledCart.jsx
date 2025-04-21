@@ -40,7 +40,7 @@ export default function FilledCart({
         orderId: uuid(),
         orders: cartData,
         address: selectedAddress,
-        amount: totalPrice - 250 + 1,
+        amount: totalPrice - 2500000 + 25000,
         payBy: paymentSelected,
         deliveryDate: todate.slice(0, 15),
       });
@@ -78,8 +78,8 @@ export default function FilledCart({
         <div className="cartProductBox">
           <h5>Chi tiết các đơn hàng</h5>
           <div className="header">
-            <span>Product</span>
-            <span>Subtotal</span>
+            <span>Sản phẩm</span>
+            <span>Thành tiền</span>
           </div>
           {loading ? (
             <Loader />
@@ -107,7 +107,7 @@ export default function FilledCart({
                       {item.product_name.slice(0, 15)} x {item.qty}
                     </span>
                   </span>
-                  <span>${item.product_price * item.qty}</span>
+                  <span>{item.product_price * item.qty} VNĐ</span>
                 </div>
               );
             })
@@ -120,20 +120,20 @@ export default function FilledCart({
             <h5>Chi tiết hóa đơn</h5>
             <span className="totalPrice">
               <span>Thành tiền</span>
-              <span>$ {totalPrice}</span>
+              <span>{totalPrice} VNĐ</span>
             </span>
             <span className="totalDiscount">
               <span>Khuyến mãi</span>
-              <span>$ {250}</span>
+              <span>{2500000} VNĐ</span>
             </span>
 
             <span className="deliveryCharges">
               <span>Phí giao hàng</span>
-              <span>$ {1}</span>
+              <span>{25000} VNĐ</span>
             </span>
             <span className="grandTotal">
               <span>Tổng tiền</span>
-              <span>${totalPrice - 250 + 1}</span>
+              <span>{totalPrice - 2500000 + 25000} VNĐ</span>
             </span>
           </div>
 
@@ -142,7 +142,7 @@ export default function FilledCart({
             {selectedAddress.id ?
               <div className="addressText">
                 <p className="addType">
-                  <small>{home ? "Home" : work ? "Work" : null}</small>
+                  <small>{home ? "Cá nhân" : work ? "Văn phòng" : null}</small>
                 </p>
                 <p>
                   <b>
