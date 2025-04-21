@@ -17,14 +17,14 @@ const {getSingleProduct} = useData()
 
   return (
     <div className="ordersContainer">
-      <h2>Orders</h2>
+      <h2>Đơn hàng</h2>
       <div className="allOrders">
         {orderPlaced.length > 0 ? (
           loading ? (
             <Loader />
           ) : (
             <div className="viewOrders">
-              <h5>Your Recent orders</h5>
+              <h5>Các đơn hàng gần đây</h5>
               {orderPlaced.map((item) => {
                 const {
                   id,
@@ -44,11 +44,11 @@ const {getSingleProduct} = useData()
                   <>
                     <div className="placedOrderSummary" key={item.orderId}>
                       <h5>
-                        Order Id : <small>{item.orderId}</small>
+                        Mã đơn hàng : <small>{item.orderId}</small>
                       </h5>
-                      <p>Total Amount: $ {item.amount}</p>
-                      <p>Mode of Payment : {item.payBy}</p>
-                      <p>Delivery by : {item.deliveryDate}</p>
+                      <p>Tổng tiền thanh toán: {item.amount} VNĐ</p>
+                      <p>Phương thức thanh toán : {item.payBy}</p>
+                      <p>Ngày giao hàng : {item.deliveryDate}</p>
 
                       <Accordion>
                         <AccordionSummary
@@ -56,14 +56,14 @@ const {getSingleProduct} = useData()
                           aria-controls="panel1a-content"
                           id="panel1a-header"
                         >
-                          show Address
+                          Địa chỉ giao hàng
                         </AccordionSummary>
                         <AccordionDetails>
                           <div key={id} className="addressContainer">
                             <div className="addressText">
                               <p className="addType">
                                 <small>
-                                  {home ? "Home" : work ? "Work" : null}
+                                  {home ? "Cá nhân" : work ? "Văn phòng" : null}
                                 </small>
                               </p>
                               <p>
@@ -73,7 +73,7 @@ const {getSingleProduct} = useData()
                                   {mobile}
                                 </b>
                               </p>
-                              <p>House Number: {building}</p>
+                              <p>Số nhà: {building}</p>
                               <p>{streetName}</p>
                               <p>
                                 {town},{districtName}
@@ -105,7 +105,7 @@ const {getSingleProduct} = useData()
                               {item.product_name.slice(0, 15)} x {item.qty}
                             </span>
                           </span>
-                          <span>${item.product_price * item.qty}</span>
+                          <span>{item.product_price * item.qty} VNĐ</span>
                         </div>
                       ))}
                     </div>
@@ -116,8 +116,8 @@ const {getSingleProduct} = useData()
           )
         ) : (
           <div>
-            <p> "No orders yet , please shop something"</p>
-            <button onClick={()=>{navigate("/browse")}}>Shop Now</button>
+            <p> "Bạn chưa có đơn hàng nào"</p>
+            <button onClick={()=>{navigate("/browse")}}>Đi đến Cửa hàng</button>
           </div>
         )}
       </div>

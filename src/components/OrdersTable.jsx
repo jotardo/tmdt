@@ -75,7 +75,7 @@ const OrdersTable = ({ resultsPerPage = 10, filter = "" }) => {
                 </div>
               </TableCell>
               <TableCell>#000{i}</TableCell>
-              <TableCell>$ {user.amount}</TableCell>
+              <TableCell>{user.amount} VNĐ</TableCell>
               <TableCell>
                 <Chip label={user.status} color={getStatusColor(user.status)} />
               </TableCell>
