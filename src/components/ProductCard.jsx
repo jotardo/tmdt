@@ -37,13 +37,13 @@ export default function ProductCard({ item, inWishlist }) {
             <h3>{product_name.slice(0, 15)}</h3>
             <p className="price">
               {product_prevPrice && (
-                <span className="stikeThrough">$ {product_prevPrice}</span>
+                <span className="stikeThrough">{product_prevPrice} VNĐ</span>
               )}
-              <b> $ {product_price} </b> ({discount} % off)
+              <b> {product_price} VNĐ </b> ({discount} % off)
             </p>
             
           </div>
-          <span className="favorite" title= "Add to WishList" onClick={(e)=>{e.preventDefault();
+          <span className="favorite" title= "Thêm vào WishList" onClick={(e)=>{e.preventDefault();
           token && isAvailableInWishList(_id)>=0 ?deleteWishListData(_id):addWishListData(item)
           }}>
            {
@@ -68,7 +68,7 @@ export default function ProductCard({ item, inWishlist }) {
             <div className="addToCartButton" title= "Add to Cart">
               {token && isItemInCart(_id) ? (
                 <span
-                  title="Move to Cart"
+                  title="Thêm vào giỏ"
                   className="moveToCart"
                   style={{ background: "#cb9fe3", borderRadius: "12px" }}
                 >
@@ -95,7 +95,7 @@ export default function ProductCard({ item, inWishlist }) {
                   changeQuantity(_id, token, "increment");
                 }}
               >
-                + 1 in Cart
+                Thêm 1 đơn vị của sản phẩm này
               </button>
             ) : null}
           </div>

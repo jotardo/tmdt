@@ -26,7 +26,7 @@ export default function Shop() {
     <>
       <div className="allProductsContainer">
         <p>
-          Total Products found : <b> {productCount}</b>
+          Số sản phẩm tìm thấy : <b> {productCount}</b>
         </p>
         <div className="main">
           <button
@@ -35,7 +35,7 @@ export default function Shop() {
               setShowFilters(!showFilters);
             }}
           >
-            {showFilters ? "Hide" : "Show"}
+            {showFilters ? "Ẩn" : "Hiện"}
             <TuneIcon />
           </button>
           <div className="allFilters">
@@ -45,10 +45,10 @@ export default function Shop() {
                 className={!showFilters ? "allFilters " : "mobileViewFilter"}
               >
                 <div className="filterHeader">
-                  <h3>Filters</h3>
+                  <h3>Bộ lọc</h3>
                 </div>
                 <div className="priceFilter">
-                  <h3>Price</h3>
+                  <h3>Giá cả</h3>
                   <p>
                     <span>12Tr940K</span>
                     <span>38Tr820K</span>
@@ -81,14 +81,14 @@ export default function Shop() {
                   </p>
                 </div>
                 <div className="categoryFilter">
-                  <h3>Category</h3>
+                  <h3>Danh mục</h3>
                   <label htmlFor="necklace">
                     <input
                         type="checkbox"
-                        checked={filtersUsed.categoryFilters.includes("necklace")}
+                        checked={filtersUsed.categoryFilters.includes("Dây chuyền")}
                         name="category"
                       id="necklace"
-                      value="necklace"
+                      value="Dây chuyền"
                       onClick={(e) => {
                         setFiltersUsed({
                           type: "CATEGORY",
@@ -96,16 +96,16 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Necklaces
+                    Dây chuyền
                   </label>
 
                   <label htmlFor="ring">
                     <input
                       type="checkbox"
-                      checked={filtersUsed.categoryFilters.includes("ring")}
+                      checked={filtersUsed.categoryFilters.includes("Nhẫn")}
                       name="category"
                       id="ring"
-                      value="ring"
+                      value="Nhẫn"
                       onClick={(e) => {
                         setFiltersUsed({
                           type: "CATEGORY",
@@ -113,16 +113,16 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Rings
+                    Nhẫn
                   </label>
 
                   <label htmlFor="bracelet">
                     <input
                       type="checkbox"
-                      checked={filtersUsed.categoryFilters.includes("bracelet")}
+                      checked={filtersUsed.categoryFilters.includes("Vòng tay")}
                       name="category"
                       id="bracelet"
-                      value="bracelet"
+                      value="Vòng tay"
                       onClick={(e) => {
                         setFiltersUsed({
                           type: "CATEGORY",
@@ -130,15 +130,15 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Bracelets
+                    Vòng tay
                   </label>
                   <label htmlFor="earring">
                     <input
                       type="checkbox"
-                      checked={filtersUsed.categoryFilters.includes("earring")}
+                      checked={filtersUsed.categoryFilters.includes("Bông tai")}
                       name="category"
                       id="earring"
-                      value="earring"
+                      value="Bông tai"
                       onClick={(e) => {
                         setFiltersUsed({
                           type: "CATEGORY",
@@ -146,11 +146,11 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Earrings
+                    Bông tai
                   </label>
                 </div>
                 <div className="ocassionFilter">
-                  <h3>Ocassion</h3>
+                  <h3>Nhu cầu</h3>
                   <label htmlFor="office">
                     <input
                       type="checkbox"
@@ -165,7 +165,7 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Office
+                    Văn phòng
                   </label>
                   <label htmlFor="casual">
                     <input
@@ -181,7 +181,7 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Casual
+                    Thường lệ
                   </label>
                   <label htmlFor="engagement">
                     <input
@@ -199,7 +199,7 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Engagement
+                    Đính hôn
                   </label>
                   <label htmlFor="bridal">
                     <input
@@ -215,11 +215,11 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Bridal
+                    Cưới hỏi
                   </label>
                 </div>
                 <div className="typeOfMetal">
-                  <h3>Type</h3>
+                  <h3>Loại Đá</h3>
                   <label htmlFor="diamond">
                     <input
                       type="checkbox"
@@ -234,7 +234,7 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Diamond
+                    Kim cương
                   </label>
                   <label htmlFor="platinum">
                     <input
@@ -266,7 +266,7 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Gold
+                    Vàng
                   </label>
                   <label htmlFor="silver">
                     <input
@@ -282,11 +282,11 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Silver
+                    Bạc
                   </label>
                 </div>
                 <div className="ratingFilter">
-                  <h3>Rating </h3>
+                  <h3>Đánh giá </h3>
                   <label htmlFor="onePlus">
                     <input
                       type="radio"
@@ -353,7 +353,7 @@ export default function Shop() {
                   </label>
                 </div>
                 <div className="sortByPrice">
-                  <h3>Sort by Price</h3>
+                  <h3>Sắp xếp theo giá</h3>
                   <label htmlFor="lowToHigh">
                     <input
                       type="radio"
@@ -368,7 +368,7 @@ export default function Shop() {
                         });
                       }}
                     />
-                    Low to High
+                    Giá thấp nhất
                   </label>
                   <label htmlFor="highToLow">
                     <input
@@ -384,7 +384,7 @@ export default function Shop() {
                         });
                       }}
                     />
-                    High to Low
+                    Giá cao nhất
                   </label>
                 </div>
                 <div className="clearAll">
@@ -396,7 +396,7 @@ export default function Shop() {
                       });
                     }}
                   >
-                    Clear All
+                    Xóa bộ lọc
                   </button>
                 </div>
               </aside>
@@ -409,7 +409,7 @@ export default function Shop() {
                 <Loader />
               </h3>
             ) : backendData?.error ? (
-              <h3>Something went wrong</h3>
+              <h3>Hiện tại dữ liệu có vấn đề</h3>
             ) : (
               <div className="productsContainer">
                 {finalPriceSortedData.map((item) => (

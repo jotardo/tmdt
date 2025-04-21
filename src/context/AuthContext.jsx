@@ -41,11 +41,11 @@ export function AuthProvider({ children }) {
           })
         );
       }
-      toast.success(`Welcome back, ${foundUser.firstName}!`, {
+      toast.success(`Chào bạn mới trở lại, ${foundUser.firstName}!`, {
         icon: "😍👋",
       });
     } catch (error) {
-      toast.error("Login unsuccessful, Email or Password is wrong", {
+      toast.error("Đăng nhập không thành công, bạn đã nhập Email hoặc mật khẩu sai", {
         position: toast.POSITION.BOTTOM_RIGHT,
       });
     }
@@ -73,7 +73,7 @@ export function AuthProvider({ children }) {
         );
         setToken(encodedToken);
         setCurrentUser(createdUser);
-        toast.success("Sign Up Successful", {
+        toast.success("Tạo tài khoản thành công", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       }
@@ -83,11 +83,11 @@ export function AuthProvider({ children }) {
     } catch (error) {
       console.log(error);
       if (error.response.status === 422) {
-        toast.error("User Already exists", {
+        toast.error("Tên người dùng đã tồn tại", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
       } else
-        toast.error("Sign up unsuccessful", {
+        toast.error("Không thể tạo được tài khoản ngay lúc này", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
     }
@@ -97,7 +97,7 @@ export function AuthProvider({ children }) {
     setToken(() => null);
     setCurrentUser(() => null);
     console.log("logout success");
-    toast.success("logged out successfully", {
+    toast.success("Bạn đã đăng xuất!", {
       position: toast.POSITION.BOTTOM_RIGHT,
     });
     localStorage.removeItem("loginDetails");

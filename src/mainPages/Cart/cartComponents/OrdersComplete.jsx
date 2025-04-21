@@ -4,7 +4,7 @@ export default function OrderComplete() {
   const navigate = useNavigate()
   return (
     <div className="orderComplete">
-      Order Complete
+      Xác nhận đơn hàng
       <div className="orderPlaced">
         <img
           src="\assets\order-placed-purchased-icon.svg"
@@ -13,8 +13,8 @@ export default function OrderComplete() {
           width="200px"
         />
       </div>
-      <h5>Great Choice, Order successfully Placed</h5>
-      <button onClick={()=>{navigate('/profile/orders')}}>See your Orders</button>
+      <h5>Lựa chọn tốt đó, đơn hàng của bạn đã được đặt thành công!</h5>
+      <button onClick={()=>{navigate('/profile/orders')}}>Kiểm tra Đơn hàng của bạn</button>
     </div>
   );
 }

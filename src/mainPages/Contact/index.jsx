@@ -7,12 +7,12 @@ export default function Contact() {
   return (
     <section className="contactPage">
       <div className="heading">
-        <small>Get in touch...</small>
-        <h1> Contact Us</h1>
+        <small>Giữ liên lạc...</small>
+        <h1> Liên hệ với chúng tôi</h1>
       </div>
       <div className="messageUsSection">
         <div className="textContent">
-          <h3>Message Us</h3>
+          <h3>Phản hồi đến chúng tôi</h3>
           <p>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Facilis
             voluptates eos rerum quod nobis eaque consectetur incidunt deserunt
@@ -51,9 +51,9 @@ export default function Contact() {
               value="http://shringaar.netlify.app/contact"
             />
             <div className="name">
-              <input type="text" name="first_name" placeholder="First Name" required/>
+              <input type="text" name="first_name" placeholder="Tên" required/>
 
-              <input type="text" name="last_name" placeholder="Last Name" required/>
+              <input type="text" name="last_name" placeholder="Họ" required/>
             </div>
 
             <input
@@ -69,13 +69,13 @@ export default function Contact() {
               name="story"
               rows="5"
               cols="15"
-              placeholder="I recently had the pleasure of discovering Shringaar jwellery..."
+              placeholder="Gần đây tôi được dịp ghé qua tiệm trang sức Aurora Veneris..."
             ></textarea>
 
             <button
               type="submit"
               onClick={() => {
-                toast.success("Thank you for messaging us, Have a great Day ", {
+                toast.success("Cảm ơn bạn đã đóng góp, chúc bạn một ngày tốt lành ", {
                   position: toast.POSITION.BOTTOM_RIGHT,
                   className: "loginToast",
                 });

@@ -58,7 +58,7 @@ export default function ProductDetails() {
                     : addToCardFunction(product, token);
                 }}
               >
-                {token && isItemInCart(_id) ? "Go to Cart" : "Add to Cart"}
+                {token && isItemInCart(_id) ? "Đi đến giỏ" : "Thêm vào giỏ"}
               </button>
               <button
                 onClick={() => {
@@ -68,11 +68,11 @@ export default function ProductDetails() {
               >
                 {token && isAvailableInWishList(_id) >= 0 ? (
                   <span class="removeWish">
-                    Remove <FavoriteRoundedIcon />{" "}
+                    Xóa Wishlist <FavoriteRoundedIcon />{" "}
                   </span>
                 ) : (
                   <span class="removeWish">
-                    Add to <FavoriteTwoToneIcon />{" "}
+                    Thêm Wishlist <FavoriteTwoToneIcon />{" "}
                   </span>
                 )}
               </button>
@@ -80,33 +80,33 @@ export default function ProductDetails() {
           </div>
           <div className="textContentContainer">
             <h2>{product_name}</h2>
-            <small>{product_category} by </small>
+            <small>{product_category} từ </small>
             {product_brand}
 
-            <div className="offer">Buy 2 & get 5% cashback</div>
+            <div className="offer">Mua 2 giảm 5%</div>
             <div className="price">
                {product_price}{" "} VND
               <span className="stikeThrough">$ {product_prevPrice}</span>
-              <span className="discount">({discount}% off)</span>
+              <span className="discount">(Giảm {discount}%)</span>
             </div>
             <div className="deliveryDate">
-              Delivery by {todate.slice(0, 15)}
+              Giao hàng ngày {todate.slice(0, 15)}
             </div>
 
             <div className="highlights">
               <div>
-                <p class="head">Highlights</p>
+                <p class="head">Đặc điểm nổi bật</p>
                 <ul>
-                  <li>Color: {product_color}</li>
-                  <li>Made of : {product_material}</li>
-                  <li>Occasion : {product_occasion}</li>
-                  <li>Rating : {product_rating} ⭐</li>
-                  <li>Total Reviews : {product_reviews}</li>
+                  <li>Màu: {product_color}</li>
+                  <li>Loại đá : {product_material}</li>
+                  <li>Dịp lễ : {product_occasion}</li>
+                  <li>Điểm đánh giá : {product_rating} ⭐</li>
+                  <li>Tổng số đánh giá : {product_reviews}</li>
                 </ul>
               </div>
 
               <div className="description">
-                <p class="head">Description</p>
+                <p class="head">Mô tả</p>
                 <p>{product_description}</p>
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function ProductDetails() {
   } else
     return (
       <h2 style={{ height: "80vh", marginTop: "100px" }}>
-        sorry, We could not find that product
+        Xin lỗi, sản phẩm này không tồn tại
       </h2>
     );
 }

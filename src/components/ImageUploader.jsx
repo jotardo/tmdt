@@ -43,7 +43,7 @@ const ImageUploader = ({
         >
           <HighlightOffIcon />
         </div>
-        <label htmlFor="dp">Upload new image: </label>
+        <label htmlFor="dp">Tải lên ảnh: </label>
         <input
           type="file"
           accept="image/*"
@@ -51,7 +51,7 @@ const ImageUploader = ({
           name="selectedImage"
           onChange={handleImageUpload}
         />
-        <label for="fname">First name:</label>
+        <label for="fname">Họ:</label>
         <input
           type="text"
           id="fname"
@@ -60,7 +60,7 @@ const ImageUploader = ({
           name="fname"
           disabled
         />
-        <label for="lname">Last name:</label>
+        <label for="lname">Tên:</label>
         <input
           type="text"
           id="lname"
@@ -79,12 +79,12 @@ const ImageUploader = ({
           disabled
         />
         <label htmlFor="mobileP"> </label>
-        Enter your Mobile Number:
+        Số điện thoại:
         <input
           type="number"
           name="mobile"
           id="mobileP"
-          placeholder="Mobile Number"
+          placeholder="Số điện thoại"
           onChange={handleInput}
         />
         <label>
@@ -97,7 +97,7 @@ const ImageUploader = ({
               value="Male"
               onChange={handleInput}
             />
-            Male
+            Nam
           </label>
           <label htmlFor="female">
             <input
@@ -107,7 +107,7 @@ const ImageUploader = ({
               value="Female"
               onChange={handleInput}
             />
-            Female
+            Nữ
           </label>
         </label>
         <button
@@ -117,7 +117,7 @@ const ImageUploader = ({
             setCurrentUser({ ...currentUser, ...newUserData });
           }}
         >
-          Submit
+          Cập nhật
         </button>
       </div>
     </div>

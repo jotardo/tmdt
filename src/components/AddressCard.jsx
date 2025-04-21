@@ -25,7 +25,7 @@ export default function AddressCard({
     <div key={id} className="addressContainer">
       <div className="addressText">
         <p className="addType">
-          <small>{home ? "Home" : work ? "Work" : null}</small>
+          <small>{home ? "Cá nhân" : work ? "Văn phòng / Công ty" : null}</small>
         </p>
         <p>
           <b>
@@ -34,7 +34,7 @@ export default function AddressCard({
             {mobile}
           </b>
         </p>
-        <p>House Number: {building}</p>
+        <p>Số nhà: {building}</p>
         <p>{streetName}</p>
         <p>
           {town},{districtName}
@@ -51,7 +51,7 @@ export default function AddressCard({
               setIsEditClicked(() => true);
             }}
           >
-            Edit
+            Sửa
             <EditIcon />
           </button>
         )}
@@ -61,7 +61,7 @@ export default function AddressCard({
               addressDispatch({ type: "DELETEADD", payload: id });
             }}
           >
-            Delete
+            Xóa
             <DeleteForeverIcon />
           </button>
         )}
