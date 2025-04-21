@@ -28,7 +28,11 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start-env": "env-cmd react-scripts start",
+    "build-env": "env-cmd react-scripts build",
+    "test-env": "env-cmd react-scripts test",
+    "eject-env": "env-cmd react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -44,5 +48,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "env-cmd": "^10.1.0"
   }
 }
