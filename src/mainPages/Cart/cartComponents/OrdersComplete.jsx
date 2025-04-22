@@ -13,8 +13,8 @@ export default function OrderComplete() {
           width="200px"
         />
       </div>
-      <h5>Lựa chọn tốt đó, đơn hàng của bạn đã được đặt thành công!</h5>
-      <button onClick={()=>{navigate('/profile/orders')}}>Kiểm tra Đơn hàng của bạn</button>
+      <h5>Đơn hàng của bạn đã được đặt thành công!</h5>
+      <button onClick={()=>{navigate('/profile/orders')}}>Kiểm tra đơn hàng của bạn tại đây</button>
     </div>
   );
 }

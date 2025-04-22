@@ -66,7 +66,7 @@ export default function UpdateAddress({
               name="building"
               id="building"
               required
-              placeholder="Building"
+              placeholder="Số nhà"
               value={addressState.building}
               onChange={handleAddressInput}
             />
@@ -77,7 +77,7 @@ export default function UpdateAddress({
               name="streetName"
               id="streetName"
               required
-              placeholder="Street Name"
+              placeholder="Tên Đường"
               value={addressState.streetName}
               onChange={handleAddressInput}
             />
@@ -100,7 +100,7 @@ export default function UpdateAddress({
               id="districtName"
               required
               value={addressState.districtName}
-              placeholder="Tên Quận / Huyện"
+              placeholder="Tên Quận/Huyện"
               onChange={handleAddressInput}
             />
           </div>
@@ -111,7 +111,7 @@ export default function UpdateAddress({
               id="state"
               required
               value={addressState.state}
-              placeholder="State"
+              placeholder="Tên Tỉnh"
               onChange={handleAddressInput}
             />
           </div>
@@ -124,7 +124,7 @@ export default function UpdateAddress({
               name="pincode"
               id="pincode"
               required
-              placeholder="Pincode"
+              placeholder="Mã ZIP"
               value={addressState.pincode}
               onChange={handleAddressInput}
             />
@@ -136,7 +136,7 @@ export default function UpdateAddress({
               id="mobile"
               value={addressState.mobile}
               required
-              placeholder="Mobile"
+              placeholder="Số điện thoại"
               onChange={handleAddressInput}
             />
           </div>
@@ -162,18 +162,18 @@ export default function UpdateAddress({
                 checked={addressState.work}
                 onChange={handleAddressInput}
               />
-              Địa chỉ văn phòng / công ty{" "}
+              Địa chỉ văn phòng{" "}
             </label>
           </div>
           <div className="buttons">
-            <button type="submit">Submit</button>
+            <button type="submit">Cập nhật</button>
             <button
               onClick={(e) => {
                 e.preventDefault();
                 setAddressState(dummyAddress);
               }}
             >
-              Địa chỉ Dummy
+              Địa chỉ placeholder
             </button>
           </div>
         </form>

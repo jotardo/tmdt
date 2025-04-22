@@ -25,7 +25,7 @@ export default function AddressCard({
     <div key={id} className="addressContainer">
       <div className="addressText">
         <p className="addType">
-          <small>{home ? "Cá nhân" : work ? "Văn phòng / Công ty" : null}</small>
+          <small>{home ? "Cá nhân" : work ? "Văn phòng" : null}</small>
         </p>
         <p>
           <b>

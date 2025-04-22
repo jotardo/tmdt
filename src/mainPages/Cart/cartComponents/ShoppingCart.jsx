@@ -72,7 +72,7 @@ export default function ShoppingCart() {
                     </td>
 
                     <td class="product-price" data-cell="Price  ">
-                      $ {product_price}
+                      {product_price} VNĐ
                     </td>
 
                     <td class="product-quantity" data-cell="Quantity :">
@@ -99,7 +99,7 @@ export default function ShoppingCart() {
 
                     <td class="product-subtotal" data-cell="Subtotal :">
                       <span>
-                        <b>$ {Math.floor(product_price * qty)}</b>
+                        <b>{Math.floor(product_price * qty)} VNĐ</b>
                       </span>
                     </td>
                     <td class="product-add-to-fav" data-cell="Add to wishList">
@@ -154,7 +154,7 @@ export default function ShoppingCart() {
         <tbody>
           <tr className="subTotal">
             <span className="dataTitle">Thành tiền</span>
-            <span className="Sprice">${totalPrevPrice}</span>
+            <span className="Sprice">{totalPrevPrice} VNĐ</span>
           </tr>
           <tr className="discount">
             <span className="disc">Khuyến mãi :</span> {totalDiscount}%
@@ -162,9 +162,9 @@ export default function ShoppingCart() {
           <tr className="Tprice">
             {" "}
             <span>Tổng tiền</span>
-            <span className="TotalPrice">${totalPrice}</span>
+            <span className="TotalPrice">{totalPrice} VNĐ</span>
           </tr>
-          <div onClick={()=>{toast.info("Xin lỗi, coupon chưa áp dụng được")}} className="applyCoupon">Áp dụng Coupon</div>
+          {/* <div onClick={()=>{toast.info("Xin lỗi, coupon chưa áp dụng được")}} className="applyCoupon">Áp dụng Coupon</div> */}
           <button onClick={()=>{navigate("/cart/checkout")}}>Đi đến Thanh toán</button>
         </tbody>
       </table>
