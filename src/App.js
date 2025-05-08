@@ -31,6 +31,8 @@ import AdminLayout from "./admin";
 import Dashboard from "./admin/pages/Dashboard";
 import Customers from "./admin/pages/Customer";
 import OrdersAdmin from "./admin/pages/Orders";
+import ProductManagement from "./admin/pages/ProductManagement";
+import CategoryManagement from "./admin/pages/CategoryManagement";
 
 function App() {
   const token = localStorage.getItem("jwtToken");
@@ -52,7 +54,8 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Customers/>} />
-          {/* <Route path="users" element={<Users />} /> */}
+          <Route path="products" element={<ProductManagement />} />
+          <Route path="categories" element={<CategoryManagement />} />
         </Route>
         <Route
           path="/cart"
