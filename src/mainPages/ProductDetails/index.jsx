@@ -4,13 +4,13 @@ import InnerImageZoom from "react-inner-image-zoom";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 
-import { useData, useWish, useCart, useAuth } from "../../";
+import { useData, useWish, useCart } from "../../";
 import Loader from "../../components/Loader";
 
 export default function ProductDetails() {
   const { singleProduct } = useData();
   const { addToCardFunction, isItemInCart } = useCart();
-  const { token } = useAuth();
+  const token = localStorage.getItem("jwtToken");
   const todate = new Date().toString();
   const { addWishListData, isAvailableInWishList, deleteWishListData } =
     useWish();

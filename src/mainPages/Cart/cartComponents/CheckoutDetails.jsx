@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useCart, useAddress, useAuth } from "../../../";
+import { useCart, useAddress } from "../../../";
 
 import EmptyCart from "../../../components/EmptyCart";
 import FilledCart from "../../../components/FilledCart";
@@ -28,7 +28,7 @@ export default function CheckoutDetails() {
     deleteFromCartFunction,
     addItemstoOrdersPlaced,
   } = useCart();
-  const { token } = useAuth();
+  const token = localStorage.getItem("jwtToken");
 
   return (
     <div className="checkout">
