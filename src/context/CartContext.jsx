@@ -7,7 +7,7 @@ import {
 } from "react";
 import {useNavigate, useLocation} from 'react-router-dom'
 import { toast } from "react-toastify";
-import { useAuth } from "../";
+import { isLoggedIn } from "../";
 import {
   getCartList,
   addToCart,
@@ -22,7 +22,7 @@ export function CartProvider({ children }) {
     cartReducer,
     initialCartData
   );
-  const { token } = useAuth();
+  const token = localStorage.getItem("jwtToken");
  const navigate = useNavigate()
  const location = useLocation()
   const getAllCartItems = async (encodedToken) => {

@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import MockApi from "./components/MockMan";
+// import MockApi from "./components/MockMan";
 import RequiresAuth from "./components/RequiresAuth";
 
 import Header from "./components/Header";
@@ -24,8 +24,8 @@ import CheckoutDetails from "./mainPages/Cart/cartComponents/CheckoutDetails";
 import ShoppingCart from "./mainPages/Cart/cartComponents/ShoppingCart";
 import OrderComplete from "./mainPages/Cart/cartComponents/OrdersComplete";
 import Contact from "./mainPages/Contact/index";
-import { useAuth } from "./context/AuthContext";
 import ScrollToTop from "./components/ScrollUp";
+import VerifyEmail from "./mainPages/Login/VerifyEmail";
 
 import AdminLayout from "./admin";
 import Dashboard from "./admin/pages/Dashboard";
@@ -33,8 +33,7 @@ import Customers from "./admin/pages/Customer";
 import OrdersAdmin from "./admin/pages/Orders";
 
 function App() {
-  const { token } = useAuth();
-
+  const token = localStorage.getItem("jwtToken");
   return (
     <div className="App">
       <Header />
@@ -42,7 +41,7 @@ function App() {
       <div className="mainApp">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/mockman" element={<MockApi />} />
+        {/* <Route path="/mockman" element={<MockApi />} /> */}
         <Route path="/about" element={<About />} />
         <Route
           path="/admin"
@@ -92,6 +91,8 @@ function App() {
         </Route>
 
         <Route path="/login" element={<Login />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/browse" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
