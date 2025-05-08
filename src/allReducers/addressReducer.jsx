@@ -4,13 +4,13 @@ export const initialAddressData=
   {
     id: uuid(),
     fullName: "JS Kumari",
-    mobile: "+91 91111111110",
-    building: "B33",
-    streetName: "Street 332",
-    town: "TypeScript",
-    districtName: "Doodle District",
-    pincode: "530005",
-    state: "United State of Programming",
+    mobile: "+91 91111111110", //sđt
+    building: "B33",  // số nhà
+    quarter: "Street 332",  // khu phố
+    ward: "United State of Programming",  // phường
+    district: "Doodle District",  // quận huyện
+    province: "TypeScript", // tỉnh
+    pincode: "530005",  
     home: false,
     work: true,
   },

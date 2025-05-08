@@ -75,7 +75,7 @@ export default function User() {
                   setIsOpenForm(!isOpenForm);
                 }}
               >
-                Edit Profile
+                Cập nhật thông tin
               </button>
               <button class="logOutBtn" onClick={logOutHandler}>
                 <LogoutRoundedIcon /> Đăng xuất{" "}

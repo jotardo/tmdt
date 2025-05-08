@@ -71,46 +71,46 @@ export default function UpdateAddress({
               onChange={handleAddressInput}
             />
           </div>
-          <div className="streetAdd">
+          <div className="quarter">
             <input
               type="text"
-              name="streetName"
-              id="streetName"
+              name="quarter"
+              id="quarter"
               required
-              placeholder="Tên Đường"
-              value={addressState.streetName}
+              placeholder="Khu phố"
+              value={addressState.quarter}
               onChange={handleAddressInput}
             />
           </div>
-          <div className="cityAdd">
+          <div className="wardAdd">
             <input
               type="text"
-              name="town"
-              id="town"
+              name="ward"
+              id="ward"
               required
               placeholder="Tên Thành Phố"
-              value={addressState.town}
+              value={addressState.ward}
               onChange={handleAddressInput}
             />
           </div>
           <div className="cityAdd">
             <input
               type="text"
-              name="districtName"
-              id="districtName"
+              name="district"
+              id="district"
               required
-              value={addressState.districtName}
+              value={addressState.district}
               placeholder="Tên Quận/Huyện"
               onChange={handleAddressInput}
             />
           </div>
-          <div className="stateAdd">
+          <div className="provinceAdd">
             <input
               type="text"
-              name="state"
-              id="state"
+              name="province"
+              id="province"
               required
-              value={addressState.state}
+              value={addressState.province}
               placeholder="Tên Tỉnh"
               onChange={handleAddressInput}
             />

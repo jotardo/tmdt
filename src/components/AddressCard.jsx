@@ -13,13 +13,13 @@ export default function AddressCard({
     fullName,
     home,
     work,
-    streetName,
+    quarter,
     mobile,
     building,
-    town,
-    districtName,
+    province,
+    district,
     pincode,
-    state,
+    ward,
   } = addObj;
   return (
     <div key={id} className="addressContainer">
@@ -35,12 +35,12 @@ export default function AddressCard({
           </b>
         </p>
         <p>Số nhà: {building}</p>
-        <p>{streetName}</p>
+        <p>{quarter}</p>
         <p>
-          {town},{districtName}
+          {province},{district}
         </p>
         <p>
-          {state} - <b>{pincode}</b>
+          {ward} - <b>{pincode}</b>
         </p>
       </div>
       <div className="buttons">

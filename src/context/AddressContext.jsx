@@ -1,24 +1,24 @@
 import { createContext, useContext, useState, useReducer } from "react";
 
 import { v4 as uuid } from "uuid";
-import {initialAddressData, reducer} from '../allReducers/addressReducer';
+import { initialAddressData, reducer } from '../allReducers/addressReducer';
 
 
 export const AddressContext = createContext();
 
 
 export const AddressProvider = ({ children }) => {
-  const [address, addressDispatch] = useReducer(reducer,initialAddressData);
+  const [address, addressDispatch] = useReducer(reducer, initialAddressData);
   const dummyAddress = {
     id: uuid(),
     fullName: "Dummy Malhotra",
     mobile: "+91 9998886661",
     building: "A43",
-    streetName: "Street 332",
-    town: "New Town",
-    districtName: "Dummy District",
+    quarter: "Street 332",
+    ward: "New Town",
+    district: "Dummy District",
     pincode: "400005",
-    state: "Use State of React",
+    province: "Use State of React",
     home: true,
     work: false,
   };
@@ -27,26 +27,23 @@ export const AddressProvider = ({ children }) => {
     fullName: null,
     mobile: null,
     building: null,
-    streetName: null,
-    town: null,
-    districtName: null,
+    quarter: null,
+    ward: null,
+    district: null,
     pincode: null,
-    state: null,
+    province: null,
     home: false,
     work: false,
   });
 
   const handleEdit = (id, isEditClicked) => {
-
     const addressToEdit = address.find((item) => item.id === id);
-     if(isEditClicked){
-    setAddressState(addressToEdit);
-  }
-    else
-   { setAddressState(initialAddressData);
-    
-}
-     
+    if (isEditClicked) {
+      setAddressState(addressToEdit);
+    }
+    else {
+      setAddressState(initialAddressData);
+    }
   };
 
   return (
