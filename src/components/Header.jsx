@@ -77,6 +77,9 @@ export default function Header() {
           <NavLink to="contact">
             <li className="NavItem">Liên Hệ</li>
           </NavLink>
+          <NavLink to={"reverse-auction"}>
+            <li className={"NavItem"}>Đấu Giá Ngược</li>
+          </NavLink>
 
           <span className="search">
             {isSearchclicked ? (

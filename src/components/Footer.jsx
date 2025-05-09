@@ -8,17 +8,17 @@ export default function Footer(){
   return <footer>
          <h6>Kết nối với chúng tôi</h6>
          <div className="socialMedia">
-          <NavLink to="https://www.facebook.com/Tanishq/"><span className="facebook"><FacebookOutlinedIcon/></span></NavLink>
-          <NavLink to="https://twitter.com/TheIndianGirl56"> 
+          <NavLink to=""><span className="facebook"><FacebookOutlinedIcon/></span></NavLink>
+          <NavLink to="">
           <span className="twitter"><TwitterIcon/></span></NavLink>
-          <NavLink to="https://github.com/Anush79">
+          <NavLink to="">
           <span className="github"><GitHubIcon/></span>
           </NavLink>
-          <NavLink to="https://www.linkedin.com/in/anushka-jaiswal-46258918a/">
+          <NavLink to="">
           <span className="linkedin"><LinkedInIcon/></span>
           </NavLink>
          </div>
-         <p>Made with ❣️ by Anushka</p>
+         <p>Team Aurora Veneris</p>
          
   </footer>
 }

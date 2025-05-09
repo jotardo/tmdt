@@ -30,7 +30,13 @@ import ScrollToTop from "./components/ScrollUp";
 import AdminLayout from "./admin";
 import Dashboard from "./admin/pages/Dashboard";
 import Customers from "./admin/pages/Customer";
-import OrdersAdmin from "./admin/pages/Orders";
+
+import ReverseAuction from "./mainPages/ReverseAuction/index";
+import MyAuction from "./mainPages/ReverseAuction/Components/myAuction";
+import CreateAuction from "./mainPages/ReverseAuction/Components/CreateAuction";
+
+
+
 
 function App() {
   const { token } = useAuth();
@@ -55,7 +61,11 @@ function App() {
           <Route path="users" element={<Customers/>} />
           {/* <Route path="users" element={<Users />} /> */}
         </Route>
-        <Route
+          <Route path="/reverse-auction" element={<ReverseAuction />}>
+              <Route path="my" element={<MyAuction />} />
+              <Route path="create" element={<CreateAuction />} />
+          </Route>
+          <Route
           path="/cart"
           element={
             <RequiresAuth token={token}>
