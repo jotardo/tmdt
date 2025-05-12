@@ -19,10 +19,12 @@ import AddCategoryModal from "../model/AddCategoryModal"; // Đảm bảo đúng
 import categoryApi from "../../backend/db/categoryApi";
 import { Delete, Edit } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CategoryManagement = () => {
   const [openModal, setOpenModal] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [editCategory, setEditCategory] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -35,6 +37,7 @@ const CategoryManagement = () => {
     setLoading(true);
     try {
       const response = await categoryApi.fetchAllCategories();
+      console.log("Fetched categories:", response.data);
       setCategories(Array.isArray(response.data.categories) ? response.data.categories : []);
     } catch (error) {
       console.error("Failed to fetch categories", error);
@@ -43,10 +46,17 @@ const CategoryManagement = () => {
     }
   };
 
-  // Handle thêm danh mục
-  const handleAddCategory = (newCategory) => {
-    setCategories((prev) => [...prev, newCategory]);
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      await categoryApi.deleteCategory(categoryId);
+      toast.success("Xóa danh mục thành công");
+      fetchCategories(); // Refresh
+    } catch (error) {
+      console.error("Lỗi khi xóa danh mục:", error);
+      toast.error("Xóa danh mục thất bại");
+    }
   };
+
 
   return (
     <Box sx={{ padding: 3 }}>
@@ -54,13 +64,39 @@ const CategoryManagement = () => {
         Quản lý Danh mục
       </Typography>
 
-      <Button 
-        variant="contained" 
-        onClick={() => setOpenModal(true)} 
-        sx={{ mb: 3, boxShadow: 3, '&:hover': { boxShadow: 6 } }}
-      >
-        + Thêm danh mục
-      </Button>
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        <Button
+          variant="outlined"
+          onClick={() => navigate("/admin/category-warehouse")}
+          sx={{
+            textTransform: "none",
+            borderColor: "#ccc",
+            color: "#333",
+            '&:hover': {
+              backgroundColor: '#f5f5f5',
+              borderColor: '#aaa'
+            }
+          }}
+        >
+          📦 Kho lưu trữ
+        </Button>
+
+        <Button
+          variant="contained"
+          onClick={() => setOpenModal(true)}
+          sx={{
+            textTransform: "none",
+            borderColor: "#ccc",
+            color: "#333",
+            '&:hover': {
+              backgroundColor: '#f5f5f5',
+              borderColor: '#aaa'
+            }
+          }}
+        >
+          ➕ Thêm danh mục
+        </Button>
+      </Box>
 
       <Card sx={{ boxShadow: 3 }}>
         <CardContent>
@@ -97,12 +133,18 @@ const CategoryManagement = () => {
                   <TableCell align="center">
                     <IconButton 
                       color="primary" 
+                      onClick={() => {
+                        setEditCategory(cat);
+                        setOpenModal(true);
+                      }}
                       sx={{ '&:hover': { backgroundColor: '#e3f2fd' } }}
                     >
                       <Edit />
                     </IconButton>
+
                     <IconButton 
                       color="error" 
+                      onClick={() => handleDeleteCategory(cat.id)}
                       sx={{ '&:hover': { backgroundColor: '#ffebee' } }}
                     >
                       <Delete />
@@ -117,8 +159,12 @@ const CategoryManagement = () => {
 
       <AddCategoryModal
         open={openModal}
-        onClose={() => setOpenModal(false)}
+        onClose={() => {
+          setOpenModal(false);
+          setEditCategory(null);
+        }}
         onAddCategory={fetchCategories}
+        editCategory={editCategory}
       />
     </Box>
   );

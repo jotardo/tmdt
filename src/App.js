@@ -33,9 +33,16 @@ import Customers from "./admin/pages/Customer";
 import OrdersAdmin from "./admin/pages/Orders";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CategoryManagement from "./admin/pages/CategoryManagement";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "./context/AuthContext";
+import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
 
 function App() {
   const token = localStorage.getItem("jwtToken");
+  const { logout } = useContext(AuthContext);
+  // useEffect(() => {
+  //  logout();
+  // }, [])
   return (
     <div className="App">
       <Header />
@@ -56,6 +63,7 @@ function App() {
           <Route path="users" element={<Customers/>} />
           <Route path="products" element={<ProductManagement />} />
           <Route path="categories" element={<CategoryManagement />} />
+          <Route path="category-warehouse" element={<CategoryWarehouse />} />
         </Route>
         <Route
           path="/cart"
