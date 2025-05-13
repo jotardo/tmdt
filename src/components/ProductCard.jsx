@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-import { useData, useAuth, useWish, useCart } from "..";
+import { useData, useWish, useCart } from "..";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
@@ -10,7 +10,7 @@ export default function ProductCard({ item, inWishlist }) {
   const { deleteWishListData, addWishListData ,isAvailableInWishList} = useWish();
   const { getSingleProduct } = useData();
   const { addToCardFunction, isItemInCart,changeQuantity } = useCart();
-  const { token } = useAuth();
+  const token = localStorage.getItem("jwtToken")
   const {
     _id,
     product_name,
