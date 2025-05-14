@@ -14,6 +14,7 @@ const Sidebar = () => {
     { text: "Users", icon: <PeopleIcon />, path: "/admin/users" },
     { text: "Products", icon: <PeopleIcon />, path: "/admin/products" },
     { text: "Categories", icon: <PeopleIcon />, path: "/admin/categories" },
+    { text: "Pending Collaborators", icon: <PeopleIcon />, path: "/admin/approve-ctv" },
   ];
 
   return (

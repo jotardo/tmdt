@@ -58,6 +58,7 @@ function App() {
           <Route path="users" element={<Customers/>} />
           <Route path="products" element={<ProductManagement />} />
           <Route path="categories" element={<CategoryManagement />} />
+          <Route path="approve-ctv" element={<ApproveCTV />} />
         </Route>
         <Route
           path="/cart"
@@ -101,8 +102,8 @@ function App() {
         <Route path="/browse" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<Error />} />
-          <Route path="/register-ctv" element={<RegisterCTV />} />
-          <Route path="/admin/approve-ctv" element={<ApproveCTV />} />
+        <Route path="/register-ctv" element={<RegisterCTV />} />
+
       </Routes>
       <ToastContainer
         position="bottom-right"
