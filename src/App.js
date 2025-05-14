@@ -33,6 +33,8 @@ import Customers from "./admin/pages/Customer";
 import OrdersAdmin from "./admin/pages/Orders";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CategoryManagement from "./admin/pages/CategoryManagement";
+import ApproveCTV from "./admin/pages/ApproveCTV";
+import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 
 function App() {
   const token = localStorage.getItem("jwtToken");
@@ -92,7 +94,6 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="address" element={<Address />} />
         </Route>
-
         <Route path="/login" element={<Login />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         {/* <Route path="/register" element={<Register />} /> */}
@@ -100,6 +101,8 @@ function App() {
         <Route path="/browse" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<Error />} />
+          <Route path="/register-ctv" element={<RegisterCTV />} />
+          <Route path="/admin/approve-ctv" element={<ApproveCTV />} />
       </Routes>
       <ToastContainer
         position="bottom-right"
