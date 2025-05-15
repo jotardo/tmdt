@@ -36,6 +36,7 @@ import CategoryManagement from "./admin/pages/CategoryManagement";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "./context/AuthContext";
 import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
+import ProductWarehouse from "./admin/pages/ProductWarehouse";
 
 function App() {
   const token = localStorage.getItem("jwtToken");
@@ -64,6 +65,7 @@ function App() {
           <Route path="products" element={<ProductManagement />} />
           <Route path="categories" element={<CategoryManagement />} />
           <Route path="category-warehouse" element={<CategoryWarehouse />} />
+          <Route path="product-warehouse" element={<ProductWarehouse />} />
         </Route>
         <Route
           path="/cart"

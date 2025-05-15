@@ -29,7 +29,7 @@ const AddCategoryModal = ({ open, onClose, onAddCategory, editCategory }) => {
       setName(editCategory.name || "");
       setStatus(editCategory.status || "ACTIVE");
       if (editCategory.thumbnail) {
-        setImagePreview(`${process.env.REACT_APP_BASE_URL}/category/${editCategory.thumbnail}`);
+        setImagePreview("");
       } else {
         setImagePreview("");
       }
