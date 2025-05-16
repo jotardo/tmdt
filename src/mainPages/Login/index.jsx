@@ -23,13 +23,14 @@ export default function Login() {
     isTCChecked: false,
     hideIcon: { password: true, confirmPassword: true },
   });
+  
   const [loginDetails, setLoginDetails] = useState({
     loginEmail: "",
     loginPassword: "",
     hideIcon: true,
   });
 
-
+  
   const { login, user } = useContext(AuthContext);
 
   const validateEmail = (email) => {
@@ -80,7 +81,8 @@ export default function Login() {
 
       // Kiểm tra kết quả từ API
       if (response.success && response.jwtToken) {
-        login(response.jwtToken, response.user);
+        console.log(response)
+        login(response.jwtToken, response.userID);
         toast.success("Đăng nhập thành công!");
         
         // Navigate to home or dashboard after login

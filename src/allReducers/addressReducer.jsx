@@ -5,11 +5,11 @@ export const initialAddressData=
     id: uuid(),
     fullName: "JS Kumari",
     mobile: "+91 91111111110", //sđt
-    building: "B33",  // số nhà
-    quarter: "Street 332",  // khu phố
-    ward: "United State of Programming",  // phường
-    district: "Doodle District",  // quận huyện
-    province: "TypeScript", // tỉnh
+    building: "86/4",  // số nhà
+    quarter: "Khu phố 11",  // khu phố
+    ward: "Tân Hòa",  // phường
+    district: "Biên Hòa",  // quận huyện
+    province: "Đồng Nai", // tỉnh
     pincode: "530005",  
     home: false,
     work: true,

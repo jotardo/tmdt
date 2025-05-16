@@ -18,7 +18,7 @@ export default function Header() {
   const [category, setCategory] = useState("");
 
   const { setFiltersUsed, categoriesData } = useData();
-  const token = localStorage.getItem("jwtToken")
+  const token = localStorage.getItem("jwtToken");
   const { wishlistCount } = useWish();
   const { cartCount } = useCart();
   const navigate = useNavigate();

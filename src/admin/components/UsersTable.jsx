@@ -2,13 +2,17 @@ import React, { useState, useEffect } from "react";
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Avatar, Pagination, Box
 } from "@mui/material";
-import response from "../../utils/demo/usersData"; // Giả lập dữ liệu từ server
+import { userListService } from "../../services/adminService/userService";
+import userAdminApi from "../../backend/db/adminUserApi";
+//import response from "../../utils/demo/usersData"; // Giả lập dữ liệu từ server
 
 const UsersTable = ({ resultsPerPage, filter }) => {
   const [page, setPage] = useState(1);
+  const [apiData, setAPIData] = useState([]);
   const [data, setData] = useState([]);
 
   // pagination setup
+  let response = [];
   const totalResults = response.length;
 
   // pagination change control
@@ -19,8 +23,19 @@ const UsersTable = ({ resultsPerPage, filter }) => {
   // on page change, load new sliced data
   // here you would make another server request for new data
   useEffect(() => {
-    setData(response.slice((page - 1) * resultsPerPage, page * resultsPerPage));
-  }, [page, resultsPerPage, filter]);
+    setData(apiData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
+  }, [page, resultsPerPage, filter, apiData]);
+
+
+  useEffect(() => {
+    
+    const getList = async () => {
+      let response = await userAdminApi.listUsers();
+      return response;
+    }
+    setAPIData(getList());
+  })
+
 
   return (
     <Box>

@@ -37,10 +37,10 @@ export default function AddressCard({
         <p>Số nhà: {building}</p>
         <p>{quarter}</p>
         <p>
-          {province},{district}
+          {ward}, {district}
         </p>
         <p>
-          {ward} - <b>{pincode}</b>
+          {province} - <b>{pincode}</b>
         </p>
       </div>
       <div className="buttons">

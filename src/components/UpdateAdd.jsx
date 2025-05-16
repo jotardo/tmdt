@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { useAddress } from "../context/AddressContext";
+import { getWard } from "../services/locationService/provinceService";
 
 export default function UpdateAddress({
   clickF,
@@ -34,6 +35,14 @@ export default function UpdateAddress({
     }
     clickF(false);
     if (isEditClicked) setIsEditClicked(false);
+  };
+
+  const handleChangeProvince = () => {
+  };
+  const handleChangeDistrict = () => {
+
+  };
+  const handleChangeWard = () => {
   };
 
   return (
@@ -83,7 +92,7 @@ export default function UpdateAddress({
             />
           </div>
           <div className="wardAdd">
-            <input
+            <select
               type="text"
               name="ward"
               id="ward"
@@ -91,10 +100,12 @@ export default function UpdateAddress({
               placeholder="Tên Thành Phố"
               value={addressState.ward}
               onChange={handleAddressInput}
-            />
+            >
+              <option hidden selected value="">Tên Thành Phố</option>
+            </select>
           </div>
           <div className="cityAdd">
-            <input
+            <select
               type="text"
               name="district"
               id="district"
@@ -102,10 +113,12 @@ export default function UpdateAddress({
               value={addressState.district}
               placeholder="Tên Quận/Huyện"
               onChange={handleAddressInput}
-            />
+            >
+              <option hidden selected value="">Tên Quận/Huyện</option>
+            </select>
           </div>
           <div className="provinceAdd">
-            <input
+            <select
               type="text"
               name="province"
               id="province"
@@ -113,7 +126,9 @@ export default function UpdateAddress({
               value={addressState.province}
               placeholder="Tên Tỉnh"
               onChange={handleAddressInput}
-            />
+            >
+              <option hidden selected value="">Tên Tỉnh</option>
+            </select>
           </div>
           <div className="pinCodeAdd">
             <input
