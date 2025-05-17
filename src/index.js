@@ -6,15 +6,15 @@ import { makeServer } from "./server";
 import { BrowserRouter as Router } from "react-router-dom";
 import "react-inner-image-zoom/lib/InnerImageZoom/styles.css";
 
-import { useAuth, AuthProvider } from "./context/AuthContext";
+import AuthProvider from "./context/AuthContext";
 import { useData, DataProvider } from "./context/DataContext";
 import { useWish, WishProvider } from "./context/WishListContext";
 import { useCart, CartProvider } from "./context/CartContext";
 import { useAddress, AddressProvider } from "./context/AddressContext";
 
-export { useData, useWish, useAuth, useCart, useAddress };
+export { useData, useWish, useCart, useAddress };
 // Call make Server
-makeServer();
+// makeServer();
 
 ReactDOM.render(
   <React.StrictMode>

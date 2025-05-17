@@ -8,7 +8,7 @@ import LoginRoundedIcon from "@mui/icons-material/LoginRounded";
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import PersonIcon from "@mui/icons-material/Person";
 
-import { useData, useCart, useWish, useAuth } from "../";
+import { useData, useCart, useWish } from "../";
 
 export default function Header() {
   const [isMenuClicked, setIsMenuClicked] = useState(false);
@@ -18,7 +18,7 @@ export default function Header() {
   const [category, setCategory] = useState("");
 
   const { setFiltersUsed, categoriesData } = useData();
-  const { token } = useAuth();
+  const token = localStorage.getItem("jwtToken")
   const { wishlistCount } = useWish();
   const { cartCount } = useCart();
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ export default function Header() {
               className={isMenuClicked ? "expandMenu" : "menuBar"}
               onClick={handleMenu}
           >
-            <span class="sideBarMenu">
+            <span className="sideBarMenu">
               <div className="bar1"></div>
               <div className="bar2"></div>
               <div className="bar3"></div>
