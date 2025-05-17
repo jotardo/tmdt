@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -14,39 +14,19 @@ import {
   FormControl,
 } from "@mui/material";
 import { Cancel } from "@mui/icons-material";
-import categoryApi from "../../backend/db/categoryApi";
+import categoryApi from "../../backend/db/categoryApi"; // Đảm bảo đúng đường dẫn đến file categoryApi.js
 import { toast } from "react-toastify";
 
-const AddCategoryModal = ({ open, onClose, onAddCategory, editCategory }) => {
+const AddCategoryModal = ({ open, onClose, onAddCategory }) => {
   const [name, setName] = useState("");
   const [thumbnail, setThumbnail] = useState(null);
-  const [thumbnailEdit, setThumbnailEdit] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
-  const [status, setStatus] = useState("ACTIVE");
-
-  useEffect(() => {
-    if (editCategory) {
-      setName(editCategory.name || "");
-      setStatus(editCategory.status || "ACTIVE");
-      if (editCategory.thumbnail) {
-        setImagePreview(`${process.env.REACT_APP_BASE_URL}/category/${editCategory.thumbnail}`);
-      } else {
-        setImagePreview("");
-      }
-      // setThumbnailEdit(editCategory.thumbnail);
-      setThumbnail(null); // reset thumbnail file
-    } else {
-      setName("");
-      setStatus("ACTIVE");
-      setThumbnail(null);
-      setImagePreview("");
-    }
-  }, [editCategory]);
+  const [status, setStatus] = useState("ACTIVE"); // mặc định ACTIVE
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setThumbnail(file);
+      setThumbnail(file); // ✅ Đúng: lưu object file
       setImagePreview(URL.createObjectURL(file));
     }
   };
@@ -59,35 +39,26 @@ const AddCategoryModal = ({ open, onClose, onAddCategory, editCategory }) => {
   const handleSubmit = async () => {
     const formData = new FormData();
     formData.append("name", name);
+    formData.append("thumbnail", thumbnail);
     formData.append("status", status);
-    if (thumbnail) {
-      formData.append("thumbnail", thumbnail);
-    }
 
     try {
-      let response;
-      if (editCategory) {
-        response = await categoryApi.updateCategory(editCategory.id, formData);
-      } else {
-        response = await categoryApi.addCategory(formData);
-      }
-
+      const response = await categoryApi.addCategory(formData);
       if (response.data?.success) {
-        toast.success(editCategory ? "Cập nhật danh mục thành công!" : "Thêm danh mục thành công!");
-        onAddCategory();
-        onClose();
+        toast.success("Thêm danh mục thành công!");
+        onAddCategory(); // Gọi callback để refetch
+        onClose(); // Đóng modal
       } else {
-        toast.error("Thao tác thất bại!");
+        toast.error("Thêm danh mục thất bại!");
       }
     } catch (error) {
-      console.error("Lỗi khi submit:", error);
-      toast.error("Đã xảy ra lỗi!");
+      console.error("Lỗi khi thêm danh mục:", error);
     }
   };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>{editCategory ? "Chỉnh sửa danh mục" : "Thêm danh mục"}</DialogTitle>
+      <DialogTitle>Thêm danh mục</DialogTitle>
       <DialogContent>
         <TextField
           label="Tên danh mục"
@@ -99,7 +70,11 @@ const AddCategoryModal = ({ open, onClose, onAddCategory, editCategory }) => {
 
         {imagePreview ? (
           <Box sx={{ position: "relative", mb: 2 }}>
-            <img src={imagePreview} alt="preview" style={{ width: "25%", borderRadius: 8 }} />
+            <img
+              src={imagePreview}
+              alt="preview"
+              style={{ width: "25%", borderRadius: 8 }}
+            />
             <IconButton
               onClick={handleRemoveImage}
               sx={{
@@ -115,7 +90,12 @@ const AddCategoryModal = ({ open, onClose, onAddCategory, editCategory }) => {
         ) : (
           <Button variant="contained" component="label" sx={{ mb: 2 }}>
             Chọn ảnh
-            <input type="file" accept="image/*" hidden onChange={handleImageChange} />
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleImageChange}
+            />
           </Button>
         )}
 
@@ -127,14 +107,14 @@ const AddCategoryModal = ({ open, onClose, onAddCategory, editCategory }) => {
             onChange={(e) => setStatus(e.target.value)}
           >
             <MenuItem value="ACTIVE">Đang hoạt động</MenuItem>
-            <MenuItem value="DEACTIVATED">Ngừng hoạt động</MenuItem>
+            <MenuItem value="INACTIVE">Ngừng hoạt động</MenuItem>
           </Select>
         </FormControl>
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>Hủy</Button>
         <Button onClick={handleSubmit} variant="contained">
-          {editCategory ? "Cập nhật" : "Thêm"}
+          Thêm
         </Button>
       </DialogActions>
     </Dialog>

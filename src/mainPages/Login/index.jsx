@@ -30,7 +30,6 @@ export default function Login() {
     hideIcon: true,
   });
 
-  
   const { login, user } = useContext(AuthContext);
 
   const validateEmail = (email) => {

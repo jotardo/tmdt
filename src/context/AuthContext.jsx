@@ -24,8 +24,8 @@ export default function AuthProvider({ children }) {
     });
   }
 
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("jwtToken"));
   const [user, setUser] = useState(null);
 

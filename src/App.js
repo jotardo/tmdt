@@ -36,6 +36,8 @@ import CategoryManagement from "./admin/pages/CategoryManagement";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "./context/AuthContext";
 import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
+import ApproveCTV from "./admin/pages/ApproveCTV";
+import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 
 function App() {
   const token = localStorage.getItem("jwtToken");
@@ -43,6 +45,7 @@ function App() {
   // useEffect(() => {
   //  logout();
   // }, [])
+  
   return (
     <div className="App">
       <Header />
@@ -64,6 +67,7 @@ function App() {
           <Route path="products" element={<ProductManagement />} />
           <Route path="categories" element={<CategoryManagement />} />
           <Route path="category-warehouse" element={<CategoryWarehouse />} />
+          <Route path="approve-ctv" element={<ApproveCTV />} />
         </Route>
         <Route
           path="/cart"
@@ -100,7 +104,6 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="address" element={<Address />} />
         </Route>
-
         <Route path="/login" element={<Login />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         {/* <Route path="/register" element={<Register />} /> */}
@@ -108,6 +111,8 @@ function App() {
         <Route path="/browse" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<Error />} />
+        <Route path="/register-ctv" element={<RegisterCTV />} />
+
       </Routes>
       <ToastContainer
         position="bottom-right"

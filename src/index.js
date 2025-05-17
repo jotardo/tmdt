@@ -15,6 +15,7 @@ import { useAddress, AddressProvider } from "./context/AddressContext";
 export { useData, useWish, useCart, useAddress };
 // Call make Server
 // makeServer();
+
 ReactDOM.render(
   <React.StrictMode>
     <Router>
