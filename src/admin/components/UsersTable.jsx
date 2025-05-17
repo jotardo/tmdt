@@ -1,19 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Avatar, Pagination, Box
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Avatar, Pagination, Box,
+  Button
 } from "@mui/material";
-import { userListService } from "../../services/adminService/userService";
 import userAdminApi from "../../backend/db/adminUserApi";
+import { Block, Edit, EditAttributes, InfoRounded } from "@mui/icons-material";
 //import response from "../../utils/demo/usersData"; // Giả lập dữ liệu từ server
 
 const UsersTable = ({ resultsPerPage, filter }) => {
   const [page, setPage] = useState(1);
   const [apiData, setAPIData] = useState([]);
   const [data, setData] = useState([]);
-
-  // pagination setup
-  let response = [];
-  const totalResults = response.length;
 
   // pagination change control
   function onPageChange(event, p) {
@@ -28,13 +25,11 @@ const UsersTable = ({ resultsPerPage, filter }) => {
 
 
   useEffect(() => {
-    
-    const getList = async () => {
-      let response = await userAdminApi.listUsers();
-      return response;
-    }
-    setAPIData(getList());
-  })
+    userAdminApi.listUsers().then(result => {
+      console.log("user lists:", result)
+      setAPIData(result);
+    })
+  }, [])
 
 
   return (
@@ -44,33 +39,53 @@ const UsersTable = ({ resultsPerPage, filter }) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
+              <TableCell>#</TableCell>
+              <TableCell>Họ</TableCell>
+              <TableCell>Tên</TableCell>
               <TableCell>Email</TableCell>
+              <TableCell>Role</TableCell>
               <TableCell>Joined on</TableCell>
+              <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((user, i) => (
               <TableRow key={i}>
                 <TableCell>
-                  <Box sx={{ display: "flex", alignItems: "center" }}>
-                    <Avatar sx={{ mr: 2 }} src={user.avatar} alt="User image" />
-                    <div>
-                      <p style={{ fontWeight: "bold" }}>{user.first_name}</p>
-                    </div>
-                  </Box>
+                  <Avatar sx={{ mr: 2 }} src={user.avatar} alt="User image" />
                 </TableCell>
                 <TableCell>
-                  <span>{user.last_name}</span>
+                  <p style={{ fontWeight: "bold" }}>{user.lastName}</p>
                 </TableCell>
                 <TableCell>
-                  <span>{user.email}</span>
+                  <span>{user.firstName}</span>
+                </TableCell>
+                <TableCell>
+                  <span>{user.emailId}</span>
                 </TableCell>
                 <TableCell>
                   <span>
-                    {new Date(user.joined_on).toLocaleDateString()}
+                    {new Date(user.createdAt).toLocaleDateString()}
                   </span>
+                </TableCell>
+                <TableCell>
+                  <span>{user.role}</span>
+                </TableCell>
+                <TableCell>
+                  <Button 
+                  variant="outlined" 
+                  size="small" 
+                  color="info" 
+                  onClick={getDetails}
+                  >
+                    <p>Chi tiết</p>
+                  </Button>
+                  <Button variant="outlined" size="small" color="secondary">
+                    <p>Sửa</p>
+                  </Button>
+                  <Button variant="outlined" size="small" color="error">
+                    <p>Cấm</p>
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -78,7 +93,7 @@ const UsersTable = ({ resultsPerPage, filter }) => {
         </Table>
         <TableFooter>
           <Pagination
-            count={Math.ceil(totalResults / resultsPerPage)}
+            count={Math.ceil(apiData.length / resultsPerPage)}
             page={page}
             onChange={onPageChange}
             color="primary"
