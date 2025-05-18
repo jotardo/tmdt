@@ -1,0 +1,55 @@
+import React, { useState } from "react";
+import "./createAuction.css";
+import { useAuctionContext } from "./AuctionContext";
+
+export default function CreateAuction() {
+    const [description, setDescription] = useState("");
+    const [budget, setBudget] = useState("");
+    const [image, setImage] = useState(null);
+    const { addAuction } = useAuctionContext(); // Thêm context
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const images = image ? [image.name] : []; // Đơn giản hóa cho demo
+        addAuction({ description, budget: `${budget} VND`, images });
+        alert("Tạo đấu giá thành công!");
+        setDescription("");
+        setBudget("");
+        setImage(null);
+    };
+
+    return (
+        <form className="auction-form" onSubmit={handleSubmit}>
+            <h3>Điền Thông Tin Đấu Giá</h3>
+            <div className="form-group">
+                <label><strong>Mô tả:</strong></label><br />
+                <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows="3"
+                    placeholder="Nhập mô tả thiết kế"
+                    required
+                />
+            </div>
+            <div className="form-group">
+                <label><strong>Hình ảnh thiết kế (nếu có):</strong></label><br />
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setImage(e.target.files[0])}
+                />
+            </div>
+            <div className="form-group">
+                <label><strong>Ngân sách (VND):</strong></label><br />
+                <input
+                    type="number"
+                    value={budget}
+                    onChange={(e) => setBudget(e.target.value)}
+                    placeholder="Ví dụ: 2000000"
+                    required
+                />
+            </div>
+            <button type="submit">Gửi</button>
+        </form>
+    );
+}

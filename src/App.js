@@ -32,8 +32,9 @@ import Dashboard from "./admin/pages/Dashboard";
 import Customers from "./admin/pages/Customer";
 
 import ReverseAuction from "./mainPages/ReverseAuction/index";
-import MyAuction from "./mainPages/ReverseAuction/Components/myAuction";
-import CreateAuction from "./mainPages/ReverseAuction/Components/CreateAuction";
+import MyAuction from "./mainPages/ReverseAuction/UserComponents/myAuction";
+import CreateAuction from "./mainPages/ReverseAuction/UserComponents/CreateAuction";
+import { AuctionProvider } from "./mainPages/ReverseAuction/UserComponents/AuctionContext";
 
 
 
@@ -61,10 +62,18 @@ function App() {
           <Route path="users" element={<Customers/>} />
           {/* <Route path="users" element={<Users />} /> */}
         </Route>
-          <Route path="/reverse-auction" element={<ReverseAuction />}>
+          <Route
+              path="/reverse-auction"
+              element={
+                  <AuctionProvider>
+                      <ReverseAuction />
+                  </AuctionProvider>
+              }
+          >
               <Route path="my" element={<MyAuction />} />
               <Route path="create" element={<CreateAuction />} />
           </Route>
+
           <Route
           path="/cart"
           element={
