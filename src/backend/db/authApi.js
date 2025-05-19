@@ -95,6 +95,32 @@ const authApi = {
       return { success: false }; // Tránh lỗi khi API bị lỗi
     }
   },
+  updateProfile: async (userId, data) => {
+    try {
+      const response = await axiosClient.put(`/user/update/${userId}`, data);
+      return response.data;
+    } catch (error) {
+      console.error("❌ Lỗi khi cập nhật hồ sơ:", error);
+      throw error;
+    }
+  },
+
+  uploadAvatar: async (userId, file) => {
+    try {
+      const response = await axiosClient.post(`/user/${userId}/upload-avatar`, file, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error("❌ Lỗi khi tải lên ảnh đại diện:", error);
+      throw error;
+    }
+  },
+
+
 
 };
 
