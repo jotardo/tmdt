@@ -52,11 +52,9 @@ const ProductManagement = () => {
   const handleAddProduct = async (formData) => {
     try {
       await productApi.addProduct(formData);
-      toast.success("Thêm sản phẩm thành công");
       setOpenModal(false);
       fetchAllProducts();
     } catch (error) {
-      toast.error("Thêm sản phẩm thất bại");
       console.error(error);
     }
   };
@@ -124,7 +122,7 @@ const ProductManagement = () => {
             },
           }}
         >
-          ➕ Thêm danh mục
+          ➕ Thêm sản phẩm
         </Button>
       </Box>
 

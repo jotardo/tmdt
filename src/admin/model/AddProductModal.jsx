@@ -132,28 +132,16 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
     images.forEach((img) => {
       formData.append("images", img);
     });
-  
-    // try {
-    //   await onAddProduct(formData);
-    //   toast.success("Thêm sản phẩm thành công");
-    //   setForm({});
-    //   setImages([]);
-    //   onClose();
-    // } catch (err) {
-    //   console.error("Error submitting product:", err);
-    //   toast.error("Thêm sản phẩm thất bại!");
-    // }
-
     try {
           let response;
           if (editProduct) {
             response = await productApi.updateCategory(editProduct.id, formData);
           } else {
-            response = await productApi.addCategory(formData);
+            response = await productApi.addProduct(formData);
           }
-    
+          
           if (response.data?.success) {
-            toast.success(editProduct ? "Cập nhật danh mục thành công!" : "Thêm danh mục thành công!");
+            toast.success("Cập nhật thành công");
             onAddProduct();
             setForm({});
             setImages([]);
