@@ -37,6 +37,8 @@ import { useContext, useEffect } from "react";
 import { AuthContext } from "./context/AuthContext";
 import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
 import ProductWarehouse from "./admin/pages/ProductWarehouse";
+import ForgotPassword from "./mainPages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
 
 function App() {
   const token = localStorage.getItem("jwtToken");
@@ -79,6 +81,7 @@ function App() {
           <Route path="" element={<ShoppingCart />} />
           <Route path="completedorders" element={<OrderComplete />} />
           <Route path="checkout" element={<CheckoutDetails />} />
+          
         </Route>
 
         <Route
@@ -105,6 +108,8 @@ function App() {
 
         <Route path="/login" element={<Login />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/browse" element={<Shop />} />
