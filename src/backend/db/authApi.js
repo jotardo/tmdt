@@ -121,7 +121,19 @@ const authApi = {
   },
 
 
-
+  changePassword: async (payload) => {
+    try {
+      const response = await axiosClient.put(`/user/change-password`, {
+        userId: payload.userId,
+        oldPassword: payload.oldPassword,
+        newPassword: payload.newPassword,
+      });
+      return response.data; // { success: true }
+    } catch (error) {
+      console.error("Change password error:", error.responseMessage);
+      throw new Error("Đổi mật khẩu thất bại.");
+    }
+  }
 };
 
 export default authApi;
