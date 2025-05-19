@@ -8,7 +8,6 @@ const axiosClient = axios.create({
   baseURL: IP_ADDRESS || "http://localhost:8080/api", // dùng fallback
   headers: {
     "Content-Type": "application/json",
-    "Accept": "application/json"
   },
 });
 

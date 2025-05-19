@@ -33,11 +33,22 @@ import Customers from "./admin/pages/Customer";
 import OrdersAdmin from "./admin/pages/Orders";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CategoryManagement from "./admin/pages/CategoryManagement";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "./context/AuthContext";
+import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
+import ProductWarehouse from "./admin/pages/ProductWarehouse";
+import ForgotPassword from "./mainPages/ForgotPassword/ForgotPassword";
+import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
 import ApproveCTV from "./admin/pages/ApproveCTV";
 import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 
+
 function App() {
   const token = localStorage.getItem("jwtToken");
+  const { logout } = useContext(AuthContext);
+  // useEffect(() => {
+  //  logout();
+  // }, [])
   return (
     <div className="App">
       <Header />
@@ -58,6 +69,8 @@ function App() {
           <Route path="users" element={<Customers/>} />
           <Route path="products" element={<ProductManagement />} />
           <Route path="categories" element={<CategoryManagement />} />
+          <Route path="category-warehouse" element={<CategoryWarehouse />} />
+          <Route path="product-warehouse" element={<ProductWarehouse />} />
           <Route path="approve-ctv" element={<ApproveCTV />} />
         </Route>
         <Route
@@ -97,6 +110,8 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password" element={<ResetPassword />} />
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/browse" element={<Shop />} />
