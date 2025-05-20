@@ -11,14 +11,10 @@ export default function AuthProvider({ children }) {
   // Upon login, request a get info request to set user
   // Since this works using promise, setUser is set here
   const requestUserInfo = (user_id) => {
-    return userApi.getDetail(user_id).then(userDetails => {
-      console.log(userDetails)
-      setUser(userDetails.data)
-      return userDetails?.role;
-    });
+    return userApi.getDetail(user_id);
   }
 
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("jwtToken"));
   const [user, setUser] = useState(null);
@@ -28,15 +24,21 @@ export default function AuthProvider({ children }) {
     localStorage.setItem("user", userID);
 
     setIsLoggedIn(true);
-    requestUserInfo(userID).then(role => {
+    requestUserInfo(userID).then(userDetails => {
+      console.log(userDetails)
+      setUser(userDetails.data)
       // Điều hướng dựa trên role
-      if (role !== null) {
+      if (userDetails?.role !== null) {
         navigate("/admin");
       }
       else {
         navigate("/");
       }
     }) // ✅ Cập nhật state user
+    .catch(err => {
+      logout()
+      toast.error("Something was wrong, please relogin!" + err);
+    })
     
   };
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -13,6 +13,7 @@ import {
   Box,
 } from "@mui/material";
 import { v4 as uuid } from "uuid";
+import categoryApi from "../../backend/db/categoryApi";
 
 const AddProductModal = ({ open, onClose, onAddProduct }) => {
 
@@ -20,7 +21,7 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
     name: "",
     description: "",
     price: "",
-    category: "",
+    categoryId: "",
     brand: "",
     color: "",
     size: "",
@@ -30,6 +31,7 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
     productIsBadge: "",
   });
 
+  const [categories, setCategories] = useState([]);
   const [images, setImages] = useState([]);
 
   const handleImageChange = (e) => {
@@ -46,19 +48,28 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
       ...prev,
       [e.target.name]: e.target.value,
     }));
+
   };
 
   const handleSubmit = () => {
     const newProduct = {
-      _id: uuid(),
+      //id: uuid(),
       ...form,
       product_image: images.map((file) => URL.createObjectURL(file)), // simulate
+      ctvOrAdminId: parseInt(localStorage.getItem("user"))
     };
     onAddProduct(newProduct);
     setForm({});
     setImages([]);
     onClose();
   };
+  
+    useEffect(() =>{
+      categoryApi.fetchAllCategories().then((result) => {
+        setCategories(result.data.categories)
+      })
+    }
+    , [])
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
@@ -69,7 +80,6 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
             { label: "Tên sản phẩm", name: "name" },
             { label: "Mô tả", name: "description", multiline: true },
             { label: "Giá", name: "price" },
-            { label: "Danh mục", name: "category" },
             { label: "Thương hiệu", name: "brand" },
             { label: "Màu sắc", name: "color" },
             { label: "Kích cỡ", name: "size" },
@@ -90,6 +100,18 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
               />
             </Grid>
           ))}
+          <Grid item xs={6}>
+            <Select 
+              label={"Danh mục"}
+              name={"categoryId"}
+              onChange={handleChange}
+            >
+              <MenuItem hidden selected>WHAT ARE YOU DOING</MenuItem>
+              {
+                categories != null && categories.map(c => c.status !== "ACTIVE" ? (<></>): (<MenuItem value={c.id}>{c.name}</MenuItem>))
+              }
+            </Select>
+          </Grid>
 
           {/* <Grid item xs={6}>
             <InputLabel>Yêu thích</InputLabel>

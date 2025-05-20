@@ -24,9 +24,7 @@ const ProductManagement = () => {
   };
 
   useEffect(() => {
-    productApi.fetchAllProduct().then((result) => {
-      setProducts(result.products)
-    })
+    productApi.fetchAllProduct().then((result) => setProducts(result.products));
   }, [])
 
   return (
