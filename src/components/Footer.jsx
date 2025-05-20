@@ -8,17 +8,17 @@ export default function Footer(){
   return <footer>
          <h6>Kết nối với chúng tôi</h6>
          <div className="socialMedia">
-          <NavLink to=""><span className="facebook"><FacebookOutlinedIcon/></span></NavLink>
+          <NavLink to="https://facebook.com"><span className="facebook"><FacebookOutlinedIcon/></span></NavLink>
           <NavLink to="">
           <span className="twitter"><TwitterIcon/></span></NavLink>
-          <NavLink to="">
+          <NavLink to="https://github.com/">
           <span className="github"><GitHubIcon/></span>
           </NavLink>
-          <NavLink to="">
+          <NavLink to="https://www.linkedin.com/">
           <span className="linkedin"><LinkedInIcon/></span>
           </NavLink>
          </div>
-         <p>Team Aurora Veneris</p>
+         <p></p>
          
   </footer>
 }

@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import MockApi from "./components/MockMan";
+// import MockApi from "./components/MockMan";
 import RequiresAuth from "./components/RequiresAuth";
 
 import Header from "./components/Header";
@@ -24,8 +24,8 @@ import CheckoutDetails from "./mainPages/Cart/cartComponents/CheckoutDetails";
 import ShoppingCart from "./mainPages/Cart/cartComponents/ShoppingCart";
 import OrderComplete from "./mainPages/Cart/cartComponents/OrdersComplete";
 import Contact from "./mainPages/Contact/index";
-import { useAuth } from "./context/AuthContext";
 import ScrollToTop from "./components/ScrollUp";
+import VerifyEmail from "./mainPages/Login/VerifyEmail";
 
 import AdminLayout from "./admin";
 import Dashboard from "./admin/pages/Dashboard";
@@ -38,9 +38,21 @@ import { AuctionProvider } from "./mainPages/ReverseAuction/UserComponents/Aucti
 
 
 
+import OrdersAdmin from "./admin/pages/Orders";
+import ProductManagement from "./admin/pages/ProductManagement";
+import CategoryManagement from "./admin/pages/CategoryManagement";
+import { useContext, useEffect } from "react";
+import { AuthContext } from "./context/AuthContext";
+import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
+import ApproveCTV from "./admin/pages/ApproveCTV";
+import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 
 function App() {
-  const { token } = useAuth();
+  const token = localStorage.getItem("jwtToken");
+  const { logout } = useContext(AuthContext);
+  // useEffect(() => {
+  //  logout();
+  // }, [])
 
   return (
     <div className="App">
@@ -49,7 +61,7 @@ function App() {
       <div className="mainApp">
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/mockman" element={<MockApi />} />
+        {/* <Route path="/mockman" element={<MockApi />} /> */}
         <Route path="/about" element={<About />} />
         <Route
           path="/admin"
@@ -60,7 +72,10 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
           <Route path="users" element={<Customers/>} />
-          {/* <Route path="users" element={<Users />} /> */}
+          <Route path="products" element={<ProductManagement />} />
+          <Route path="categories" element={<CategoryManagement />} />
+          <Route path="category-warehouse" element={<CategoryWarehouse />} />
+          <Route path="approve-ctv" element={<ApproveCTV />} />
         </Route>
           <Route
               path="/reverse-auction"
@@ -109,12 +124,15 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="address" element={<Address />} />
         </Route>
-
         <Route path="/login" element={<Login />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
+        {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/browse" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<Error />} />
+        <Route path="/register-ctv" element={<RegisterCTV />} />
+
       </Routes>
       <ToastContainer
         position="bottom-right"

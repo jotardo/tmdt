@@ -6,7 +6,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 
-import { useCart, useAuth, useData, useWish } from "../../../";
+import { useCart, useData, useWish } from "../../../";
 import { NavLink, useNavigate } from "react-router-dom";
 import EmptyCart from "../../../components/EmptyCart";
 
@@ -21,7 +21,7 @@ export default function ShoppingCart() {
     totalPrevPrice,
     totalDiscount,
   } = useCart();
-  const { token } = useAuth();
+  const token = localStorage.getItem("jwtToken");
   const { isAvailableInWishList, addWishListData, deleteWishListData } =
     useWish();
 

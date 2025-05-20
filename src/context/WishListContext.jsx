@@ -11,7 +11,6 @@ import {
   addToWishList,
 } from "../services/shopingService/wishlistService";
 
-import { useAuth } from "../";
 export const WishContext = createContext();
 
 export function WishProvider({ children }) {
@@ -21,7 +20,7 @@ export function WishProvider({ children }) {
   );
   const navigate = useNavigate()
   const location = useLocation()
-  const { token } = useAuth();
+  const token = localStorage.getItem("jwtToken");
 
   const getWishListData = async () => {
     try {

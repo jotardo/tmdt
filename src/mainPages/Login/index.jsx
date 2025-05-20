@@ -1,101 +1,173 @@
 import "./login.css";
 import { toast } from "react-toastify";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
 import PersonIcon from "@mui/icons-material/Person";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-
-import { useAuth } from "../../";
-
-import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import { NavLink, useNavigate } from "react-router-dom";
+import authApi from "../../backend/db/authApi";
 
 export default function Login() {
   const [isSignedIn, setSignedIn] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const [userSignUpDetails, setUserSignUpDetails] = useState({
     email: "",
     password: "",
     confirm_password: "",
     firstName: "",
     lastName: "",
+    username: "",
     isTCChecked: false,
     hideIcon: { password: true, confirmPassword: true },
   });
+  
   const [loginDetails, setLoginDetails] = useState({
     loginEmail: "",
     loginPassword: "",
     hideIcon: true,
   });
-  const guestlogindetails = {
-    loginEmail: "adarshbalika@gmail.com",
-    loginPassword: "adarshbalika",
-    hideIcon: true,
-  };
-  const guestSignupDetails = {
-    email: "guestuser@gmail.com",
-    password: "guestuser321123",
-    confirm_password: "guestuser321123",
-    firstName: "Atithi",
-    lastName: "Dev",
-    isTCChecked: true,
-    hideIcon: { password: true, confirmPassword: true },
 
+  const { login, user } = useContext(AuthContext);
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
-  const { signUpHandler, loginHandler } = useAuth();
 
   const handleInput = (e) => {
-    const input = e.target.value;
-    const prop = e.target.name;
-    if (e.target.type === "checkbox") {
-      setUserSignUpDetails({ ...userSignUpDetails, [prop]: e.target.checked });
-    } else setUserSignUpDetails({ ...userSignUpDetails, [prop]: input });
-  };
-  const handleGuestLogin = (e) => {
-    e.preventDefault();
-    setLoginDetails(() => guestlogindetails);
-  };
-  const handleGuestSignUp = (e) => {
-    e.preventDefault();
-    setUserSignUpDetails(() => guestSignupDetails);
+    const { name, value, type, checked } = e.target;
+    setUserSignUpDetails((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleLoginInput = (e) => {
-    const input = e.target.value;
-    const prop = e.target.name;
-    console.log(input);
-    if (e.target.type === "checkbox") {
-      setLoginDetails({ ...loginDetails, [prop]: e.target.checked });
-    } else setLoginDetails({ ...loginDetails, [prop]: input });
+    const { name, value } = e.target;
+    setLoginDetails((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSignUpSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    if (
-      userSignUpDetails.confirm_password === userSignUpDetails.password &&
-      userSignUpDetails.isTCChecked
-    )
-      signUpHandler(userSignUpDetails);
-    else {
-      toast.error("Passwords does not match", {
+    // Kiểm tra email và mật khẩu
+    if (!validateEmail(loginDetails.loginEmail)) {
+      toast.error("Email không hợp lệ", {
         position: toast.POSITION.BOTTOM_RIGHT,
-        className: "loginToast",
       });
+      return;
+    }
+    if (!loginDetails.loginPassword) {
+      toast.error("Vui lòng nhập mật khẩu", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      return;
+    }
+  
+    setIsLoading(true);
+  
+    try {
+      // Gửi yêu cầu POST đến API
+      const response = await authApi.login({
+        email: loginDetails.loginEmail,
+        password: loginDetails.loginPassword,
+      });
+
+      // Kiểm tra kết quả từ API
+      if (response.success && response.jwtToken) {
+        console.log(response)
+        login(response.jwtToken, response.userID);
+        toast.success("Đăng nhập thành công!");
+        
+        // Navigate to home or dashboard after login
+        navigate("/");
+      } else {
+        toast.error(response.responseMessage || "Đăng nhập thất bại, Vui lòng thử lại!");
+      }
+    } catch (error) {
+      toast.error(error.message || "Đăng nhập thất bại", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleSignUpSubmit = async (e) => {
     e.preventDefault();
-    loginHandler(loginDetails);
+  
+    // Kiểm tra tính hợp lệ của email
+    if (!validateEmail(userSignUpDetails.email)) {
+      toast.error("Email không hợp lệ", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      return;
+    }
+  
+    // Kiểm tra xem mật khẩu có khớp không
+    if (userSignUpDetails.password !== userSignUpDetails.confirm_password) {
+      toast.error("Mật khẩu không khớp", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      return;
+    }
+  
+    // Kiểm tra xem người dùng đã đồng ý với điều khoản sử dụng chưa
+    if (!userSignUpDetails.isTCChecked) {
+      toast.error("Vui lòng chấp nhận điều khoản sử dụng", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      return;
+    }
+  
+    // Kiểm tra xem người dùng đã nhập đủ thông tin chưa
+    if (!userSignUpDetails.firstName || !userSignUpDetails.lastName || !userSignUpDetails.username) {
+      toast.error("Vui lòng nhập đầy đủ thông tin", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+      return;
+    }
+  
+    setIsLoading(true);
+  
+    try {
+      // Gọi API đăng ký người dùng
+      const response = await authApi.register({
+        email: userSignUpDetails.email,
+        password: userSignUpDetails.password,
+        firstName: userSignUpDetails.firstName,
+        lastName: userSignUpDetails.lastName,
+        username: userSignUpDetails.username,
+      });
+      if (response.success) {
+        toast.success("Đăng ký thành công !");
+        setTimeout(() => toast.success("Đã gửi mã xác nhận đến email, xác nhận Email để đăng nhập !"), 1500)
+      } else {
+        toast.error(response.responseMessage || "Đăng ký thất bại. Kiểm tra thông tin!");
+      }
+    } catch (error) {
+      // Nếu có lỗi, hiển thị thông báo lỗi
+      toast.error(error.message || "Đăng ký thất bại", {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
+  
 
   return (
     <>
       {isSignedIn ? (
-        <section class="loginSection">
+        <section className="loginSection">
           <div className="formBox">
             <div className="formValue">
-              <form>
+              <form onSubmit={handleLoginSubmit}>
                 <h2>Đăng nhập</h2>
                 <div className="inputBox">
                   <MailOutlineRoundedIcon />
@@ -106,21 +178,21 @@ export default function Login() {
                     value={loginDetails.loginEmail}
                     required
                     onChange={handleLoginInput}
+                    disabled={isLoading}
                   />
                   <label htmlFor="loginEmail">Email</label>
                 </div>
                 <div className="inputBox">
                   <span
-                    onClick={() => {
+                    onClick={() =>
                       setLoginDetails({
                         ...loginDetails,
                         hideIcon: !loginDetails.hideIcon,
-                      });
-                    }}
+                      })
+                    }
                   >
                     {loginDetails.hideIcon ? <VisibilityOffIcon /> : <VisibilityIcon />}
                   </span>
-
                   <input
                     type={loginDetails.hideIcon ? "password" : "text"}
                     name="loginPassword"
@@ -128,44 +200,34 @@ export default function Login() {
                     value={loginDetails.loginPassword}
                     required
                     onChange={handleLoginInput}
+                    disabled={isLoading}
                   />
                   <label htmlFor="loginPassword">Mật khẩu</label>
                 </div>
                 <div className="forget">
                   <label htmlFor="rememberMe">
-                    <input type="checkbox" name="rememberMe" id="rememberMe" />{" "}
-                    Lưu đăng nhập{" "}
+                    <input type="checkbox" name="rememberMe" id="rememberMe" disabled={isLoading} />
+                    Lưu đăng nhập
                   </label>
                   <span
-                    onClick={() => {
-                      alert(
-                        "Take a deep breath, and try to remember the password.\n Sorry we can't do anything about it :("
-                      );
-                    }}
+                    onClick={() =>
+                      alert("Hãy thử nhớ lại mật khẩu.\nChúng tôi không thể giúp gì thêm :(")
+                    }
                   >
-                    {" "}
                     Quên mật khẩu?
                   </span>
                 </div>
                 <div className="buttons" style={{ fontFamily: "abel" }}>
-                  <button type="submit" onClick={handleLoginSubmit}>
-                    Đăng nhập
-                  </button>
-                  <button type="submit" onClick={handleGuestLogin}>
-                    Đặt là Guest
+                  <button type="submit" disabled={isLoading}>
+                    {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
                   </button>
                 </div>
                 <div className="signUp">
                   <p>
                     Chưa có tài khoản?{" "}
-                    <a
-                      href="#"
-                      onClick={() => {
-                        setSignedIn(false);
-                      }}
-                    >
+                    <a href="#" onClick={() => setSignedIn(false)}>
                       Đăng kí tại đây...
-                    </a>{" "}
+                    </a>
                   </p>
                 </div>
               </form>
@@ -173,10 +235,10 @@ export default function Login() {
           </div>
         </section>
       ) : (
-        <section class="signUpSection">
+        <section className="signUpSection">
           <div className="formBox">
             <div className="formValue">
-              <form action="">
+              <form onSubmit={handleSignUpSubmit}>
                 <h2>Đăng kí</h2>
                 <div className="inputBox">
                   <PersonIcon />
@@ -187,6 +249,7 @@ export default function Login() {
                     value={userSignUpDetails.firstName}
                     required
                     onChange={handleInput}
+                    disabled={isLoading}
                   />
                   <label htmlFor="firstName">Tên</label>
                 </div>
@@ -199,8 +262,22 @@ export default function Login() {
                     value={userSignUpDetails.lastName}
                     required
                     onChange={handleInput}
+                    disabled={isLoading}
                   />
                   <label htmlFor="lastName">Họ</label>
+                </div>
+                <div className="inputBox">
+                  <PersonIcon />
+                  <input
+                    type="text"
+                    name="username"
+                    id="username"
+                    value={userSignUpDetails.username}
+                    required
+                    onChange={handleInput}
+                    disabled={isLoading}
+                  />
+                  <label htmlFor="username">Tên người dùng</label>
                 </div>
                 <div className="inputBox">
                   <MailOutlineRoundedIcon />
@@ -211,20 +288,21 @@ export default function Login() {
                     value={userSignUpDetails.email}
                     required
                     onChange={handleInput}
+                    disabled={isLoading}
                   />
                   <label htmlFor="email">Email</label>
                 </div>
                 <div className="inputBox">
                   <span
-                    onClick={() => {
+                    onClick={() =>
                       setUserSignUpDetails({
-                        ...setUserSignUpDetails,
+                        ...userSignUpDetails,
                         hideIcon: {
                           ...userSignUpDetails.hideIcon,
                           password: !userSignUpDetails.hideIcon.password,
                         },
-                      });
-                    }}
+                      })
+                    }
                   >
                     {userSignUpDetails.hideIcon.password ? (
                       <VisibilityOffIcon />
@@ -232,7 +310,6 @@ export default function Login() {
                       <VisibilityIcon />
                     )}
                   </span>
-
                   <input
                     type={userSignUpDetails.hideIcon.password ? "password" : "text"}
                     name="password"
@@ -240,21 +317,21 @@ export default function Login() {
                     value={userSignUpDetails.password}
                     required
                     onChange={handleInput}
+                    disabled={isLoading}
                   />
                   <label htmlFor="password">Mật khẩu</label>
                 </div>
                 <div className="inputBox">
                   <span
-                    onClick={() => {
+                    onClick={() =>
                       setUserSignUpDetails({
-                        ...setUserSignUpDetails,
+                        ...userSignUpDetails,
                         hideIcon: {
                           ...userSignUpDetails.hideIcon,
-                          confirmPassword:
-                            !userSignUpDetails.hideIcon.confirmPassword,
+                          confirmPassword: !userSignUpDetails.hideIcon.confirmPassword,
                         },
-                      });
-                    }}
+                      })
+                    }
                   >
                     {userSignUpDetails.hideIcon.confirmPassword ? (
                       <VisibilityOffIcon />
@@ -262,7 +339,6 @@ export default function Login() {
                       <VisibilityIcon />
                     )}
                   </span>
-
                   <input
                     type={userSignUpDetails.hideIcon.confirmPassword ? "password" : "text"}
                     name="confirm_password"
@@ -270,8 +346,9 @@ export default function Login() {
                     value={userSignUpDetails.confirm_password}
                     required
                     onChange={handleInput}
+                    disabled={isLoading}
                   />
-                  <label htmlFor="password">Xác nhận mật khẩu</label>
+                  <label htmlFor="confirm_password">Xác nhận mật khẩu</label>
                 </div>
                 <div className="forget">
                   <label htmlFor="acceptT&C">
@@ -279,24 +356,24 @@ export default function Login() {
                       type="checkbox"
                       name="isTCChecked"
                       id="acceptT&C"
-                      required
+                      checked={userSignUpDetails.isTCChecked}
                       onChange={handleInput}
+                      required
+                      disabled={isLoading}
                     />
-                    Tôi đã đọc Điều khoản sử dụng và đã chấp thuận{" "}
+                    Tôi đã đọc và chấp nhận Điều khoản sử dụng
                   </label>
                 </div>
                 <div className="buttons">
-                  <button type="submit" onClick={handleSignUpSubmit}>
-                    Đăng kí
+                  <button type="submit" disabled={isLoading}>
+                    {isLoading ? "Đang đăng ký..." : "Đăng kí"}
                   </button>
-
-                  <button onClick={handleGuestSignUp}>Đặt là Guest</button>
                 </div>
-
-                <div onClick={() => { setSignedIn(!isSignedIn) }}>
-                  <NavLink to='/login' >Đăng nhập ở đây...</NavLink>
+                <div>
+                  <NavLink to="/login" onClick={() => setSignedIn(true)}>
+                    Đăng nhập tại đây...
+                  </NavLink>
                 </div>
-
               </form>
             </div>
           </div>

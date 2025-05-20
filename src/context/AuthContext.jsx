@@ -1,116 +1,73 @@
-import { createContext, useContext, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React, { useState, useEffect, createContext, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { loginService } from "../services/authService/loginService";
+import 'react-toastify/dist/ReactToastify.css';
+import userApi from "../backend/db/userApi";
 
-import { signUpService } from "../services/authService/signUpSevice";
 export const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
-  const localStorageToken = JSON.parse(localStorage.getItem("loginDetails"));
-
-  const [token, setToken] = useState(localStorageToken?.token);
-  const [currentUser, setCurrentUser] = useState(localStorageToken?.user);
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const loginHandler = async ({
-    loginEmail: email,
-    loginPassword: password,
-  }) => {
-    try {
-      const response = await loginService(email, password);
-
-      const {
-        status,
-        data: { encodedToken, foundUser },
-      } = response;
-
-      if (status === 200) {
-        setToken(encodedToken);
-        setCurrentUser(foundUser);
-        if (location?.state?.from?.pathname)
-          navigate(location?.state?.from?.pathname);
-        else navigate("/", { replace: true });
-
-        localStorage.setItem(
-          "loginDetails",
-          JSON.stringify({
-            user: foundUser,
-            token: encodedToken,
-          })
-        );
-      }
-      toast.success(`Chào bạn mới trở lại, ${foundUser.firstName}!`, {
-        icon: "😍👋",
-      });
-    } catch (error) {
-      toast.error("Đăng nhập không thành công, bạn đã nhập Email hoặc mật khẩu sai", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
-    }
-  };
-
-  const signUpHandler = async ({ email, password, firstName, lastName }) => {
-    try {
-      const response = await signUpService(
-        email,
-        password,
-        firstName,
-        lastName
-      );
-      const {
-        status,
-        data: { createdUser, encodedToken },
-      } = response;
-      if (status === 200 || status === 201) {
-        localStorage.setItem(
-          "loginDetails",
-          JSON.stringify({
-            user: createdUser,
-            token: encodedToken,
-          })
-        );
-        setToken(encodedToken);
-        setCurrentUser(createdUser);
-        toast.success("Tạo tài khoản thành công", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
-      }
-      if (location?.state?.from?.pathname)
-        navigate(location?.state?.from?.pathname);
-      else navigate("/browse", { replace: true });
-    } catch (error) {
-      console.log(error);
-      if (error.response.status === 422) {
-        toast.error("Tên người dùng đã tồn tại", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
-      } else
-        toast.error("Không thể tạo được tài khoản ngay lúc này", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
-    }
-  };
-
-  const logOutHandler = async () => {
-    setToken(() => null);
-    setCurrentUser(() => null);
-    console.log("logout success");
-    toast.success("Bạn đã đăng xuất!", {
-      position: toast.POSITION.BOTTOM_RIGHT,
+export default function AuthProvider({ children }) {
+  
+  // Upon login, request a get info request to set user
+  // Since this works using promise, setUser is set here
+  const requestUserInfo = (user_id) => {
+    return userApi.getDetail(user_id).then(userDetails => {
+      console.log(userDetails)
+      setUser(userDetails.data)
+      return userDetails?.role;
     });
-    localStorage.removeItem("loginDetails");
+  }
+
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("jwtToken"));
+  const [user, setUser] = useState(null);
+
+  const login = (token, userID) => {
+    localStorage.setItem("jwtToken", token);
+    localStorage.setItem("user", userID);
+
+    setIsLoggedIn(true);
+    requestUserInfo(userID).then(role => {
+      // Điều hướng dựa trên role
+      if (role !== null) {
+        navigate("/admin");
+      }
+      else {
+        navigate("/");
+      }
+    }) // ✅ Cập nhật state user
+    
+  };
+
+  const logout = () => {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("user");
+    toast.success("Đăng xuất thành công!");
+    setIsLoggedIn(false);
+    setUser(null); // ✅ Xóa user khi logout
     navigate("/");
   };
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("jwtToken");
+    const storedUserID = localStorage.getItem("user");
+  
+    if (storedToken && storedUserID) {
+      setIsLoggedIn(true);
+      const userDetails = requestUserInfo(storedUserID);
+      setUser(userDetails); // ✅ Gán user từ localStorage
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider
-      value={{ signUpHandler, loginHandler, logOutHandler, token,setCurrentUser, currentUser }}
-    >
+    <AuthContext.Provider value={{ isLoggedIn, user, setUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
+  
 }
-export const useAuth = () => {
+
+export function useAuth() {
   return useContext(AuthContext);
-};
+}

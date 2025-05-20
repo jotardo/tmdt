@@ -58,9 +58,12 @@ export function makeServer({ environment = "development" } = {}) {
     routes() {
       this.namespace = "api";
       // auth routes (public)
-      this.post("/auth/signup", signupHandler.bind(this));
-      this.post("/auth/login", loginHandler.bind(this));
+      // this.post("/auth/signup", signupHandler.bind(this));
+      // this.post("/auth/login", loginHandler.bind(this));
 
+       // Cho phép Mirage bỏ qua các request không có handler
+      this.passthrough(); // 👈 Bắt buộc nếu muốn gọi server thật
+      
       // products routes (public)
       this.get("/products", getAllProductsHandler.bind(this));
       this.get("/products/:productId", getProductHandler.bind(this));
