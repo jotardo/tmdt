@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -11,20 +11,23 @@ import {
   TableBody,
 } from "@mui/material";
 import AddProductModal from "../model/AddProductModal"; // Đảm bảo đúng path
+import productApi from "../../backend/db/productApi.js";
 
 const ProductManagement = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [products, setProducts] = useState([
-    { id: 1, name: "iPhone 15", price: 25000000, stock: 10 },
-    { id: 2, name: "Samsung Galaxy S24", price: 22000000, stock: 5 },
-    { id: 3, name: "Xiaomi 14", price: 18000000, stock: 8 },
-  ]);
+  const [products, setProducts] = useState([]);
 
   const handleAddProduct = (newProduct) => {
-    const nextId = products.length > 0 ? products[products.length - 1].id + 1 : 1;
-    const productToAdd = { id: nextId, ...newProduct };
-    setProducts((prev) => [...prev, productToAdd]);
+    productApi.addNewProduct(newProduct).then(result => {
+      setProducts((prev) => [...prev, result.product]);
+    });
   };
+
+  useEffect(() => {
+    productApi.fetchAllProduct().then((result) => {
+      setProducts(result.products)
+    })
+  }, [])
 
   return (
     <Box sx={{ padding: 3 }}>

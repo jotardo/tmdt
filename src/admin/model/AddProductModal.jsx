@@ -15,22 +15,19 @@ import {
 import { v4 as uuid } from "uuid";
 
 const AddProductModal = ({ open, onClose, onAddProduct }) => {
+
   const [form, setForm] = useState({
-    product_name: "",
-    product_description: "",
-    product_price: "",
-    product_category: "",
-    product_brand: "",
-    product_rating: "",
-    product_reviews: "",
-    product_color: "",
-    product_size: "",
-    product_material: "",
-    product_occasion: "",
-    product_prevPrice: "",
-    product_isFavorite: "false",
-    product_isCart: "false",
-    product_isBadge: "",
+    name: "",
+    description: "",
+    price: "",
+    category: "",
+    brand: "",
+    color: "",
+    size: "",
+    material: "",
+    occasion: "",
+    prevPrice: "",
+    productIsBadge: "",
   });
 
   const [images, setImages] = useState([]);
@@ -69,19 +66,17 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
           {[
-            { label: "Tên sản phẩm", name: "product_name" },
-            { label: "Mô tả", name: "product_description", multiline: true },
-            { label: "Giá", name: "product_price" },
-            { label: "Danh mục", name: "product_category" },
-            { label: "Thương hiệu", name: "product_brand" },
-            { label: "Đánh giá", name: "product_rating" },
-            { label: "Lượt đánh giá", name: "product_reviews" },
-            { label: "Màu sắc", name: "product_color" },
-            { label: "Kích cỡ", name: "product_size" },
-            { label: "Chất liệu", name: "product_material" },
-            { label: "Dịp", name: "product_occasion" },
-            { label: "Giá cũ", name: "product_prevPrice" },
-            { label: "Phân loại", name: "product_isBadge" },
+            { label: "Tên sản phẩm", name: "name" },
+            { label: "Mô tả", name: "description", multiline: true },
+            { label: "Giá", name: "price" },
+            { label: "Danh mục", name: "category" },
+            { label: "Thương hiệu", name: "brand" },
+            { label: "Màu sắc", name: "color" },
+            { label: "Kích cỡ", name: "size" },
+            { label: "Chất liệu", name: "material" },
+            { label: "Dịp", name: "occasion" },
+            { label: "Giá cũ", name: "prevPrice" },
+            { label: "Phân loại", name: "productIsBadge" },
           ].map((field, i) => (
             <Grid item xs={6} key={i}>
               <TextField
@@ -96,7 +91,7 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
             </Grid>
           ))}
 
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <InputLabel>Yêu thích</InputLabel>
             <Select
               fullWidth
@@ -107,8 +102,8 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
               <MenuItem value="true">Có</MenuItem>
               <MenuItem value="false">Không</MenuItem>
             </Select>
-          </Grid>
-          <Grid item xs={6}>
+          </Grid> */}
+          {/* <Grid item xs={6}>
             <InputLabel>Trong giỏ</InputLabel>
             <Select
               fullWidth
@@ -119,7 +114,7 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
               <MenuItem value="true">Có</MenuItem>
               <MenuItem value="false">Không</MenuItem>
             </Select>
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12}>
             <InputLabel>Ảnh sản phẩm (tối đa 5)</InputLabel>

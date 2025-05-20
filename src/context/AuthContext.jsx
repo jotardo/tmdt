@@ -11,16 +11,10 @@ export default function AuthProvider({ children }) {
   // Upon login, request a get info request to set user
   // Since this works using promise, setUser is set here
   const requestUserInfo = (user_id) => {
-    userApi.getDetail(user_id).then(userDetails => {
+    return userApi.getDetail(user_id).then(userDetails => {
       console.log(userDetails)
       setUser(userDetails.data)
-      // Điều hướng dựa trên role
-      if (userDetails?.role !== null) {
-        navigate("/admin");
-      }
-      else {
-        navigate("/");
-      }
+      return userDetails?.role;
     });
   }
 
@@ -34,7 +28,15 @@ export default function AuthProvider({ children }) {
     localStorage.setItem("user", userID);
 
     setIsLoggedIn(true);
-    requestUserInfo(userID) // ✅ Cập nhật state user
+    requestUserInfo(userID).then(role => {
+      // Điều hướng dựa trên role
+      if (role !== null) {
+        navigate("/admin");
+      }
+      else {
+        navigate("/");
+      }
+    }) // ✅ Cập nhật state user
     
   };
 

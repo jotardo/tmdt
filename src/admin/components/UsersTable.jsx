@@ -3,14 +3,18 @@ import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Avatar, Pagination, Box,
   Button
 } from "@mui/material";
-import userAdminApi from "../../backend/db/adminUserApi";
 import { Block, Edit, EditAttributes, InfoRounded } from "@mui/icons-material";
+import UserDetailModal from "../model/AdminUserDetailsModal";
+import userApi from "../../backend/db/userApi";
 //import response from "../../utils/demo/usersData"; // Giả lập dữ liệu từ server
 
 const UsersTable = ({ resultsPerPage, filter }) => {
   const [page, setPage] = useState(1);
   const [apiData, setAPIData] = useState([]);
   const [data, setData] = useState([]);
+
+  const [detailVisible, setDetailVisible] = useState(false);
+  const [detailID, setDetailID] = useState(-1);
 
   // pagination change control
   function onPageChange(event, p) {
@@ -25,12 +29,11 @@ const UsersTable = ({ resultsPerPage, filter }) => {
 
 
   useEffect(() => {
-    userAdminApi.listUsers().then(result => {
+    userApi.getListUsers().then(result => {
       console.log("user lists:", result)
       setAPIData(result);
     })
   }, [])
-
 
   return (
     <Box>
@@ -76,7 +79,10 @@ const UsersTable = ({ resultsPerPage, filter }) => {
                   variant="outlined" 
                   size="small" 
                   color="info" 
-                  onClick={getDetails}
+                  onClick={() => {
+                    setDetailID(user.id)
+                    setDetailVisible(true)
+                  }}
                   >
                     <p>Chi tiết</p>
                   </Button>
@@ -100,6 +106,11 @@ const UsersTable = ({ resultsPerPage, filter }) => {
           />
         </TableFooter>
       </TableContainer>
+      <UserDetailModal
+      open={detailVisible}
+      onClose={() => setDetailVisible(false)}
+      userID={detailID}
+       />
     </Box>
   );
 };

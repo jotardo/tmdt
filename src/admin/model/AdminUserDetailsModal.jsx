@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogActions,
@@ -13,62 +13,111 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { Cancel } from "@mui/icons-material";
-import categoryApi from "../../backend/db/categoryApi"; // Đảm bảo đúng đường dẫn đến file categoryApi.js
-import { toast } from "react-toastify";
+import userApi from "../../backend/db/userApi";
 
-const AddCategoryModal = ({ open, onClose, onAddCategory }) => {
-  const [name, setName] = useState("");
-  const [thumbnail, setThumbnail] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");
-  const [status, setStatus] = useState("ACTIVE"); // mặc định ACTIVE
+/** onType = {detail, update, remove?} */
+const UserDetailModal = ({ open, onClose, onType, userID }) => {
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setThumbnail(file); // ✅ Đúng: lưu object file
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
+  const [user, setUser] = useState({});
+  
+  // Upon login, request a get info request to set user
+  // Since this works using promise, setUser is set here
+  const requestUserInfo = (user_id) => {
+    userApi.getDetail(user_id).then(userDetails => {
+      setUser(userDetails.data)
+    });
+  }
 
-  const handleRemoveImage = () => {
-    setThumbnail(null);
-    setImagePreview("");
-  };
+  useEffect(() => {
+    if (open)
+    requestUserInfo(userID)
+  }, [open, userID])
 
-  const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("thumbnail", thumbnail);
-    formData.append("status", status);
+  // const [thumbnail, setThumbnail] = useState(null);
+  // const [imagePreview, setImagePreview] = useState("");
+  // const [status, setStatus] = useState("ACTIVE"); // mặc định ACTIVE
 
-    try {
-      const response = await categoryApi.addCategory(formData);
-      if (response.data?.success) {
-        toast.success("Thêm danh mục thành công!");
-        onAddCategory(); // Gọi callback để refetch
-        onClose(); // Đóng modal
-      } else {
-        toast.error("Thêm danh mục thất bại!");
-      }
-    } catch (error) {
-      console.error("Lỗi khi thêm danh mục:", error);
-    }
-  };
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     setThumbnail(file); // ✅ Đúng: lưu object file
+  //     setImagePreview(URL.createObjectURL(file));
+  //   }
+  // };
+
+  // const handleRemoveImage = () => {
+  //   setThumbnail(null);
+  //   setImagePreview("");
+  // };
+
+  // const handleSubmit = async () => {
+  //   const formData = new FormData();
+  //   formData.append("name", name);
+  //   formData.append("thumbnail", thumbnail);
+  //   formData.append("status", status);
+
+  //   try {
+  //     const response = await categoryApi.addCategory(formData);
+  //     if (response.data?.success) {
+  //       toast.success("Thêm danh mục thành công!");
+  //       onRefetch(); // Gọi callback để refetch
+  //       onClose(); // Đóng modal
+  //     } else {
+  //       toast.error("Thêm danh mục thất bại!");
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi khi thêm danh mục:", error);
+  //   }
+  // };
 
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-      <DialogTitle>Thêm danh mục</DialogTitle>
+      <DialogTitle>
+        {onType == "update" && "Cập nhật "}Thông tin người dùng
+      </DialogTitle>
       <DialogContent>
         <TextField
-          label="Tên danh mục"
+          label="Họ"
+          contentEditable="false"
           fullWidth
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={user.lastName}
+          // onChange={(e) => setName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Tên"
+          contentEditable="false"
+          fullWidth
+          value={user.firstName}
+          // onChange={(e) => setName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Email"
+          contentEditable="false"
+          fullWidth
+          value={user.emailId}
+          // onChange={(e) => setName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="SĐT"
+          contentEditable="false"
+          fullWidth
+          value={user.phoneNo}
+          // onChange={(e) => setName(e.target.value)}
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Quyền hạn"
+          contentEditable="false"
+          fullWidth
+          value={user.role}
+          // onChange={(e) => setName(e.target.value)}
           sx={{ mb: 2 }}
         />
 
-        {imagePreview ? (
+        {/* {imagePreview ? (
           <Box sx={{ position: "relative", mb: 2 }}>
             <img
               src={imagePreview}
@@ -97,9 +146,9 @@ const AddCategoryModal = ({ open, onClose, onAddCategory }) => {
               onChange={handleImageChange}
             />
           </Button>
-        )}
+        )} */}
 
-        <FormControl fullWidth sx={{ mb: 2 }}>
+        {/* <FormControl fullWidth sx={{ mb: 2 }}>
           <InputLabel>Trạng thái</InputLabel>
           <Select
             value={status}
@@ -109,16 +158,16 @@ const AddCategoryModal = ({ open, onClose, onAddCategory }) => {
             <MenuItem value="ACTIVE">Đang hoạt động</MenuItem>
             <MenuItem value="INACTIVE">Ngừng hoạt động</MenuItem>
           </Select>
-        </FormControl>
+        </FormControl> */}
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Hủy</Button>
+        {/* <Button onClick={onClose}>Hủy</Button>
         <Button onClick={handleSubmit} variant="contained">
           Thêm
-        </Button>
+        </Button> */}
       </DialogActions>
     </Dialog>
   );
 };
 
-export default AddCategoryModal;
+export default UserDetailModal;
