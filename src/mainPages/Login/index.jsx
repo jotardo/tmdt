@@ -159,7 +159,10 @@ export default function Login() {
       setIsLoading(false);
     }
   };
-  
+
+  const handleForgotPassword = () => {
+    navigate("/forgot-password");
+  }
 
   return (
     <>
@@ -210,9 +213,7 @@ export default function Login() {
                     Lưu đăng nhập
                   </label>
                   <span
-                    onClick={() =>
-                      alert("Hãy thử nhớ lại mật khẩu.\nChúng tôi không thể giúp gì thêm :(")
-                    }
+                    onClick={() => handleForgotPassword()}
                   >
                     Quên mật khẩu?
                   </span>
