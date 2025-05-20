@@ -1,7 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import "./home.css";
 
-import ProductCard from "../../components/ProductCard";
+import ProductCard from "../../components/Cards/ProductCard";
 
 
 import { useData } from '../../'

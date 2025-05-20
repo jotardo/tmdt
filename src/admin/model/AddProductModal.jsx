@@ -1,39 +1,88 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Button,
-  Grid,
-  InputLabel,
-  Select,
-  MenuItem,
-  Box,
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  TextField, Button, Grid, InputLabel, Select, MenuItem, Box,
+  FormControl
 } from "@mui/material";
-import { v4 as uuid } from "uuid";
+import categoryApi from "../../backend/db/categoryApi";
+import { AuthContext } from "../../context/AuthContext";
+import { toast } from "react-toastify";
+import productApi from "../../backend/db/productApi";
 
-const AddProductModal = ({ open, onClose, onAddProduct }) => {
+const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
+  const { user } = useContext(AuthContext);
   const [form, setForm] = useState({
-    product_name: "",
-    product_description: "",
-    product_price: "",
-    product_category: "",
-    product_brand: "",
-    product_rating: "",
-    product_reviews: "",
-    product_color: "",
-    product_size: "",
-    product_material: "",
-    product_occasion: "",
-    product_prevPrice: "",
-    product_isFavorite: "false",
-    product_isCart: "false",
-    product_isBadge: "",
+    name: "",
+    description: "",
+    price: "",
+    brand: "",
+    size: "",
+    productMaterial: "",
+    occasion: "",
+    prevPrice: "",
+    productIsBadge: "",
+    status: "ACTIVE",
+    // deleted: false,
+    // productIsFavorite: false,
+    // productIsCart: false,
+    categoryId: "",
+    ctvOrAdminId: user.id,
   });
 
+  useEffect(() => {
+    if (editProduct) {
+      setForm({
+        name: editProduct.name || "",
+        description: editProduct.description || "",
+        price: editProduct.price || "",
+        brand: editProduct.brand || "",
+        size: editProduct.size || "",
+        productMaterial: editProduct.productMaterial || "",
+        occasion: editProduct.occasion || "",
+        prevPrice: editProduct.prevPrice || "",
+        productIsBadge: editProduct.productIsBadge || "",
+        status: editProduct.status || "ACTIVE",
+        categoryId: editProduct.categoryId || "",
+        ctvOrAdminId: user.id,
+      });
+    } else {
+      setForm({
+        name: "",
+        description: "",
+        price: "",
+        brand: "",
+        size: "",
+        productMaterial: "",
+        occasion: "",
+        prevPrice: "",
+        productIsBadge: "",
+        status: "ACTIVE",
+        categoryId: "",
+        ctvOrAdminId: user.id,
+      });
+      setImages([]);
+    }
+  }, [editProduct, user.id]);
+  
+
+  console.log("User ID:", user.id);
+
   const [images, setImages] = useState([]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await categoryApi.fetchAllCategories();
+      console.log("Fetched categories:", response.data.categories);
+      setCategories(response.data.categories || []);
+    } catch (err) {
+      console.error("Failed to fetch categories", err);
+    }
+  };
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -45,43 +94,84 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
   };
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [name]: value,
     }));
   };
 
-  const handleSubmit = () => {
-    const newProduct = {
-      _id: uuid(),
-      ...form,
-      product_image: images.map((file) => URL.createObjectURL(file)), // simulate
-    };
-    onAddProduct(newProduct);
-    setForm({});
-    setImages([]);
-    onClose();
-  };
+  
 
+  const handleSubmit = async () => {
+    const formData = new FormData();
+
+    console.log("Category ID and CTV ID:", form.categoryId, form.ctvOrAdminId);
+  
+    // Validate trước
+    if (!form.categoryId || !user.id) {
+      toast.warning("Vui lòng nhập đầy đủ tên, danh mục, giá và người tạo.");
+      return;
+    }
+  
+    // Parse chính xác kiểu dữ liệu
+    formData.append("name", form.name);
+    formData.append("description", form.description);
+    formData.append("price", parseFloat(form.price));
+    formData.append("brand", form.brand);
+    formData.append("size", form.size);
+    formData.append("productMaterial", form.productMaterial);
+    formData.append("occasion", form.occasion);
+    formData.append("productIsBadge", form.productIsBadge);
+    formData.append("prevPrice", form.prevPrice ? parseFloat(form.prevPrice) : 0);
+    formData.append("status", form.status);
+    formData.append("categoryId", parseInt(form.categoryId));
+    formData.append("ctvOrAdminId", parseInt(user.id));
+  
+    // Append images
+    images.forEach((img) => {
+      formData.append("images", img);
+    });
+    try {
+          let response;
+          if (editProduct) {
+            response = await productApi.updateCategory(editProduct.id, formData);
+          } else {
+            response = await productApi.addProduct(formData);
+          }
+          
+          if (response.data?.success) {
+            toast.success("Cập nhật thành công");
+            onAddProduct();
+            setForm({});
+            setImages([]);
+            onClose();
+          } else {
+            toast.error("Thao tác thất bại!");
+          }
+        } catch (error) {
+          console.error("Lỗi khi submit:", error);
+          toast.error("Đã xảy ra lỗi!");
+        }
+  };
+  
+  
+  
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>Thêm sản phẩm</DialogTitle>
+      <DialogTitle>{editProduct ? "Chỉnh sửa danh mục" : "Thêm danh mục"}</DialogTitle>
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
           {[
-            { label: "Tên sản phẩm", name: "product_name" },
-            { label: "Mô tả", name: "product_description", multiline: true },
-            { label: "Giá", name: "product_price" },
-            { label: "Danh mục", name: "product_category" },
-            { label: "Thương hiệu", name: "product_brand" },
-            { label: "Đánh giá", name: "product_rating" },
-            { label: "Lượt đánh giá", name: "product_reviews" },
-            { label: "Màu sắc", name: "product_color" },
-            { label: "Kích cỡ", name: "product_size" },
-            { label: "Chất liệu", name: "product_material" },
-            { label: "Dịp", name: "product_occasion" },
-            { label: "Giá cũ", name: "product_prevPrice" },
-            { label: "Phân loại", name: "product_isBadge" },
+            { label: "Tên sản phẩm", name: "name" },
+            { label: "Mô tả", name: "description", multiline: true },
+            { label: "Giá", name: "price" },
+            { label: "Thương hiệu", name: "brand" },
+            { label: "Kích cỡ", name: "size" },
+            { label: "Chất liệu", name: "productMaterial" },
+            { label: "Dịp", name: "occasion" },
+            { label: "Giá cũ", name: "prevPrice" },
+            { label: "Phân loại badge", name: "productIsBadge" },
           ].map((field, i) => (
             <Grid item xs={6} key={i}>
               <TextField
@@ -96,45 +186,91 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
             </Grid>
           ))}
 
+          {/* Category */}
           <Grid item xs={6}>
-            <InputLabel>Yêu thích</InputLabel>
+            <InputLabel>Danh mục</InputLabel>
             <Select
               fullWidth
-              name="product_isFavorite"
-              value={form.product_isFavorite}
+              name="categoryId"
+              value={form.categoryId}
               onChange={handleChange}
+              displayEmpty
             >
-              <MenuItem value="true">Có</MenuItem>
-              <MenuItem value="false">Không</MenuItem>
+              <MenuItem value="" disabled>
+                Chọn danh mục
+              </MenuItem>
+              {categories.map((cat) => (
+                <MenuItem key={cat.id} value={cat.id}>
+                  {cat.name}
+                </MenuItem>
+              ))}
             </Select>
           </Grid>
           <Grid item xs={6}>
-            <InputLabel>Trong giỏ</InputLabel>
-            <Select
-              fullWidth
-              name="product_isCart"
-              value={form.product_isCart}
-              onChange={handleChange}
-            >
-              <MenuItem value="true">Có</MenuItem>
-              <MenuItem value="false">Không</MenuItem>
-            </Select>
+            <FormControl fullWidth>
+              <InputLabel>Trạng thái</InputLabel>
+              <Select
+                name="status"
+                value={form.status}
+                onChange={handleChange}
+                label="Trạng thái"
+              >
+                <MenuItem value="ACTIVE">Đang hoạt động</MenuItem>
+                <MenuItem value="DEACTIVATED">Ngừng hoạt động</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
 
+          {/* Ảnh */}
           <Grid item xs={12}>
-            <InputLabel>Ảnh sản phẩm (tối đa 5)</InputLabel>
-            <input type="file" accept="image/*" multiple onChange={handleImageChange} />
+            <InputLabel sx={{ mb: 1 }}>Ảnh sản phẩm (tối đa 5)</InputLabel>
+            <Button variant="outlined" component="label">
+              Chọn ảnh
+              <input
+                hidden
+                accept="image/*"
+                multiple
+                type="file"
+                onChange={handleImageChange}
+              />
+            </Button>
+
             {images.length > 0 && (
-              <Box sx={{ mt: 1, display: "flex", gap: 1, flexWrap: "wrap" }}>
+              <Box sx={{ mt: 2, display: "flex", flexWrap: "wrap", gap: 2 }}>
                 {images.map((img, i) => (
-                  <img
-                    key={i}
-                    src={URL.createObjectURL(img)}
-                    alt="preview"
-                    width={100}
-                    height={100}
-                    style={{ objectFit: "cover", borderRadius: 8 }}
-                  />
+                  <Box key={i} sx={{
+                    position: "relative", width: 100, height: 100,
+                    borderRadius: 2, overflow: "hidden", boxShadow: 2,
+                  }}>
+                    <img
+                      src={URL.createObjectURL(img)}
+                      alt="preview"
+                      style={{
+                        width: "100%", height: "100%", objectFit: "cover"
+                      }}
+                    />
+                    <Button
+                      size="small"
+                      onClick={() => {
+                        const newImages = [...images];
+                        newImages.splice(i, 1);
+                        setImages(newImages);
+                      }}
+                      sx={{
+                        minWidth: 0,
+                        position: "absolute",
+                        top: 4,
+                        right: 4,
+                        backgroundColor: "rgba(0,0,0,0.6)",
+                        color: "#fff",
+                        "&:hover": {
+                          backgroundColor: "rgba(0,0,0,0.8)",
+                        },
+                      }}
+                    >
+                      ✕
+                    </Button>
+                  </Box>
                 ))}
               </Box>
             )}
@@ -144,7 +280,7 @@ const AddProductModal = ({ open, onClose, onAddProduct }) => {
       <DialogActions>
         <Button onClick={onClose}>Hủy</Button>
         <Button variant="contained" onClick={handleSubmit}>
-          Thêm
+          {editProduct ? "Cập nhật" : "Thêm"}
         </Button>
       </DialogActions>
     </Dialog>

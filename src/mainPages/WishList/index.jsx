@@ -2,7 +2,7 @@ import "./wishList.css";
 import { NavLink } from "react-router-dom";
 import { useWish } from "../..";
 
-import ProductCard from "../../components/ProductCard";
+import ProductCard from "../../components/Cards/ProductCard";
 export default function WishList() {
   const { wishList } = useWish();
   return (
