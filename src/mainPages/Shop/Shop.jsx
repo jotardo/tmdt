@@ -14,6 +14,8 @@ const Shop = () => {
         .catch(err => console.error("Lỗi khi lấy sản phẩm:", err));
   }, []);
 
+  console.log("Products ", products);
+
   return (
       <div className="allProductsContainer">
           <div className="main">

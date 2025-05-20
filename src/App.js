@@ -42,6 +42,7 @@ import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
 
 import ApproveCTV from "./admin/pages/ApproveCTV";
 import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
+import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
 
 
 function App() {
@@ -112,6 +113,7 @@ function App() {
           <Route path="address" element={<Address />} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password" element={<ResetPassword />} />
