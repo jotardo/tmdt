@@ -11,7 +11,7 @@ import About from "./mainPages/About/index";
 import Home from "./mainPages/Home/index";
 import Cart from "./mainPages/Cart/index";
 import Profile from "./mainPages/Profile/index";
-import Shop from "./mainPages/Shop";
+import Shop from "./mainPages/Shop/Shop";
 import Login from "./mainPages/Login/index";
 import Footer from "./components/Footer";
 import ProductDetails from "./mainPages/ProductDetails/index";
@@ -39,6 +39,10 @@ import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
 import ProductWarehouse from "./admin/pages/ProductWarehouse";
 import ForgotPassword from "./mainPages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
+
+import ApproveCTV from "./admin/pages/ApproveCTV";
+import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
+
 
 function App() {
   const token = localStorage.getItem("jwtToken");
@@ -68,6 +72,8 @@ function App() {
           <Route path="categories" element={<CategoryManagement />} />
           <Route path="category-warehouse" element={<CategoryWarehouse />} />
           <Route path="product-warehouse" element={<ProductWarehouse />} />
+
+          <Route path="approve-ctv" element={<ApproveCTV />} />
         </Route>
         <Route
           path="/cart"
@@ -105,16 +111,17 @@ function App() {
           <Route path="orders" element={<Orders />} />
           <Route path="address" element={<Address />} />
         </Route>
-
         <Route path="/login" element={<Login />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password" element={<ResetPassword />} />
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/products/:prodID" element={<ProductDetails />} />
-        <Route path="/browse" element={<Shop />} />
+        <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="*" element={<Error />} />
+        <Route path="/register-ctv" element={<RegisterCTV />} />
+
       </Routes>
       <ToastContainer
         position="bottom-right"

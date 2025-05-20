@@ -24,7 +24,6 @@ export default function ChangePasswordForm({ setIsOpenChangePassword, userId }) 
         oldPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword,
       };
-
       await authApi.changePassword(payload);
       toast.success('✅ Đổi mật khẩu thành công!');
       setPasswordData({
