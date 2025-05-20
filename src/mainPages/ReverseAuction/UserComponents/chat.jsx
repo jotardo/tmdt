@@ -1,23 +1,35 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import "./chat.css";
 
 export default function Chat({ auctionName, chatStore, setChatStore }) {
     const messages = chatStore[auctionName] || [];
     const [newMessage, setNewMessage] = useState("");
     const messagesEndRef = useRef(null);
-    const prevMessagesLength = useRef(messages.length);
 
     const handleSend = (e) => {
         e.preventDefault();
         if (newMessage.trim()) {
-            const updatedMessages = [...messages, newMessage];
+            const userMessage = `🧑 Bạn: ${newMessage}`;
+            const botMessage = `🤖 Đối tác: Cảm ơn bạn đã gửi "${newMessage}"`;
+
+            const updatedMessages = [...messages, userMessage];
             setChatStore({
                 ...chatStore,
                 [auctionName]: updatedMessages,
             });
             setNewMessage("");
+
+            // Giả lập tin nhắn phản hồi sau 1 giây
+            setTimeout(() => {
+                const newMessages = [...updatedMessages, botMessage];
+                setChatStore((prevStore) => ({
+                    ...prevStore,
+                    [auctionName]: newMessages,
+                }));
+            }, 1000);
         }
     };
+
 
 
     return (

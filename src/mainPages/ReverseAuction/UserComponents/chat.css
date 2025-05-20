@@ -31,6 +31,34 @@
     border-radius: 6px;
     max-width: 80%;
 }
+.messages {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.message {
+    padding: 10px 14px;
+    border-radius: 18px;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+.message.user {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+    color: #000;
+    text-align: right;
+}
+
+.message.bot {
+    align-self: flex-start;
+    background-color: #f1f0f0;
+    color: #000;
+}
 
 .no-messages {
     color: #888;

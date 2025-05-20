@@ -3,15 +3,24 @@ import "./myAuction.css";
 import Chat from "./chat";
 import { useAuctionContext } from "./AuctionContext";
 
-
 export default function MyAuction() {
-    const { auctions } = useAuctionContext(); // Lấy danh sách shared
+    const { auctions } = useAuctionContext();
     const [selectedAuction, setSelectedAuction] = useState(auctions[0]?.name || "");
     const [chatStore, setChatStore] = useState({});
+    const [editing, setEditing] = useState(false);
 
     const current = auctions.find((a) => a.name === selectedAuction);
 
     if (!current) return <div>Không có đấu giá nào.</div>;
+
+    const handleEditClick = () => {
+        alert("Chỉnh quàiiii");
+        setEditing(true);
+    };
+
+    const handleDealClick = () => {
+        alert("Đợi CTV phản hồi");
+    };
 
     return (
         <div className="auction-layout">
@@ -40,7 +49,13 @@ export default function MyAuction() {
                             <div><strong>Mô tả:</strong> {current.description}</div>
                             <div><strong>Ngân sách:</strong> {current.budget}</div>
                         </div>
+
+                        <div className="button-group">
+                            <button onClick={handleEditClick}>✏️ Chỉnh sửa</button>
+                            <button onClick={handleDealClick}>✅ DEAL</button>
+                        </div>
                     </section>
+
                     <section className="auction-chat">
                         <Chat
                             key={selectedAuction}
