@@ -138,8 +138,8 @@ export default function Header() {
               </NavLink>
             </Badge>
           </span>
-          <span className={user?.role != null ? "admin" : "hiddenElement"}>
-                <NavLink to="/admin">
+          <span className={user?.role !== "Admin" ? "admin" : "hiddenElement"}>
+                <NavLink to="/admin/dashboard">
                   <AdminPanelSettings/>
                 </NavLink>
           </span>

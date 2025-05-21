@@ -8,7 +8,7 @@ const Shop = () => {
   useEffect(() => {
     getAllProducts()
         .then(res => {
-          if (Array.isArray(res)) setProducts(res);
+          if (Array.isArray(res.data.productDTOs)) setProducts(res.data.productDTOs);
           else console.error('Dữ liệu không phải mảng:', res);
         })
         .catch(err => console.error("Lỗi khi lấy sản phẩm:", err));

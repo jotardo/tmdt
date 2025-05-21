@@ -20,9 +20,6 @@ import { Delete, Edit } from "@mui/icons-material";
 import productApi from "../../backend/db/productApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import productApi from "../../backend/db/productApi.js";
-import { toast } from "react-toastify";
-import ProductsTable from "../components/ProductsTable.jsx";
 
 const ProductManagement = () => {
   const [openModal, setOpenModal] = useState(false);
