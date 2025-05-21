@@ -4,6 +4,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
 import { useNavigate } from "react-router-dom";
+import { Category, Inbox, Inventory } from "@mui/icons-material";
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -12,9 +13,9 @@ const Sidebar = () => {
     { text: "Dashboard", icon: <DashboardIcon />, path: "/admin/dashboard" },
     { text: "Orders", icon: <ShoppingCartIcon />, path: "/admin/orders" },
     { text: "Users", icon: <PeopleIcon />, path: "/admin/users" },
-    { text: "Products", icon: <PeopleIcon />, path: "/admin/products" },
-    { text: "Categories", icon: <PeopleIcon />, path: "/admin/categories" },
-    { text: "Pending Collaborators", icon: <PeopleIcon />, path: "/admin/approve-ctv" },
+    { text: "Products", icon: <Inventory />, path: "/admin/products" },
+    { text: "Categories", icon: <Category />, path: "/admin/categories" },
+    { text: "Pending Collaborators", icon: <Inbox />, path: "/admin/approve-ctv" },
   ];
 
   return (

@@ -4,14 +4,14 @@ const productApi = {
   // Thêm danh mục mới
   addProduct: async (formData) => {
     console.log("📤 Gửi yêu cầu thêm sản phẩm với:");
-    for (let pair of formData.entries()) {
-      if (pair[1] instanceof File) {
-        console.log(`${pair[0]}: ${pair[1].name}`);
-      } else {
-        console.log(`${pair[0]}: ${pair[1]}`);
-      }
-    }
-  
+    // for (let pair of formData.entries()) {
+    //   if (pair[1] instanceof File) {
+    //     console.log(`${pair[0]}: ${pair[1].name}`);
+    //   } else {
+    //     console.log(`${pair[0]}: ${pair[1]}`);
+    //   }
+    // }
+
     return await axiosClient.post("/product/add", formData, {
       headers: {
         "Content-Type": "multipart/form-data"
@@ -28,14 +28,14 @@ const productApi = {
         console.log(`${pair[0]}: ${pair[1]}`);
       }
     }
-  
+
     return await axiosClient.put(`/product/update/${productId}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data"
       }
     });
   },
-  
+
 
   fetchAllProducts: async () => {
     return await axiosClient.get("/product/fetch-all");
