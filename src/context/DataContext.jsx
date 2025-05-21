@@ -29,13 +29,14 @@ export function DataProvider({ children }) {
   const getBackendData = async () => {
     try {
       const response = await getAllProducts();
-      setBackendData({
-        ...backendData,
+     setBackendData({
         loading: false,
-        productsData: [...response?.data?.products],
+        error: null,
+        productsData: response?.data || [],
       });
     } catch (error) {
       setBackendData({ ...backendData, loading: false, error: error });
+            console.error("Lỗi kết nối tới backend:", error);
     }
   };
 
@@ -46,17 +47,14 @@ export function DataProvider({ children }) {
     });
     try {
       const response = await getProduct(id);
-      const {
-        status,
-        data: { product: productDB },
-      } = response;
-      if (status === 200)
+      const { status, data: productDB } = response;
+      if (status === 200) {
         setSingleProduct({
           product: productDB,
           loading: false,
         });
-    } catch (error) {
-      toast.error(error.message);
+    }} catch (error) {
+      toast.error("Không thể tải sản phẩm!");
       console.log(error);
     }
   };
