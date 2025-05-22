@@ -25,7 +25,7 @@ export default function ProductCard({ item, inWishlist }) {
   const mainImage = imageURLs && imageURLs.length > 0 ? imageURLs[0].url : "/no-image.jpg";
 
   return (
-      <div className="ProductCard" key={id}>
+      <div className="ProductCard" key={id} onClick={() => getSingleProduct(id)}>
           <NavLink to={`/products/${id}`}>
               <img src={mainImage} alt="Sản phẩm trang sức"/>
 

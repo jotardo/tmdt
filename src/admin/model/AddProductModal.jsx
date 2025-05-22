@@ -99,6 +99,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
       ...prev,
       [name]: value,
     }));
+
   };
 
   

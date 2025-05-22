@@ -9,6 +9,8 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import PersonIcon from "@mui/icons-material/Person";
 
 import { useData, useCart, useWish } from "../";
+import { AdminPanelSettings } from "@mui/icons-material";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const [isMenuClicked, setIsMenuClicked] = useState(false);
@@ -18,7 +20,8 @@ export default function Header() {
   const [category, setCategory] = useState("");
 
   const { setFiltersUsed, categoriesData } = useData();
-  const token = localStorage.getItem("jwtToken")
+  const token = localStorage.getItem("jwtToken");
+  const { user } = useAuth();
   const { wishlistCount } = useWish();
   const { cartCount } = useCart();
   const navigate = useNavigate();
@@ -134,6 +137,11 @@ export default function Header() {
                 <LocalGroceryStoreTwoToneIcon/>
               </NavLink>
             </Badge>
+          </span>
+          <span className={user?.role !== "Admin" ? "admin" : "hiddenElement"}>
+                <NavLink to="/admin/dashboard">
+                  <AdminPanelSettings/>
+                </NavLink>
           </span>
           <span className="login">
             {token ? (

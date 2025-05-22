@@ -1,5 +1,6 @@
 import { toast } from "react-toastify";
 import { useAddress } from "../context/AddressContext";
+import { getWard } from "../services/locationService/provinceService";
 
 export default function UpdateAddress({
   clickF,
@@ -34,6 +35,14 @@ export default function UpdateAddress({
     }
     clickF(false);
     if (isEditClicked) setIsEditClicked(false);
+  };
+
+  const handleChangeProvince = () => {
+  };
+  const handleChangeDistrict = () => {
+
+  };
+  const handleChangeWard = () => {
   };
 
   return (
@@ -71,49 +80,55 @@ export default function UpdateAddress({
               onChange={handleAddressInput}
             />
           </div>
-          <div className="streetAdd">
+          <div className="quarter">
             <input
               type="text"
-              name="streetName"
-              id="streetName"
+              name="quarter"
+              id="quarter"
               required
-              placeholder="Tên Đường"
-              value={addressState.streetName}
+              placeholder="Khu phố"
+              value={addressState.quarter}
               onChange={handleAddressInput}
             />
           </div>
-          <div className="cityAdd">
-            <input
+          <div className="wardAdd">
+            <select
               type="text"
-              name="town"
-              id="town"
+              name="ward"
+              id="ward"
               required
               placeholder="Tên Thành Phố"
-              value={addressState.town}
+              value={addressState.ward}
               onChange={handleAddressInput}
-            />
+            >
+              <option hidden selected value="">Tên Thành Phố</option>
+            </select>
           </div>
           <div className="cityAdd">
-            <input
+            <select
               type="text"
-              name="districtName"
-              id="districtName"
+              name="district"
+              id="district"
               required
-              value={addressState.districtName}
+              value={addressState.district}
               placeholder="Tên Quận/Huyện"
               onChange={handleAddressInput}
-            />
+            >
+              <option hidden selected value="">Tên Quận/Huyện</option>
+            </select>
           </div>
-          <div className="stateAdd">
-            <input
+          <div className="provinceAdd">
+            <select
               type="text"
-              name="state"
-              id="state"
+              name="province"
+              id="province"
               required
-              value={addressState.state}
+              value={addressState.province}
               placeholder="Tên Tỉnh"
               onChange={handleAddressInput}
-            />
+            >
+              <option hidden selected value="">Tên Tỉnh</option>
+            </select>
           </div>
           <div className="pinCodeAdd">
             <input

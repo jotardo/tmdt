@@ -7,11 +7,8 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 import { reducerFilterFunction } from "../allReducers/filtersReducer";
-import {
-  getProduct,
-  getAllProducts,
-} from "../services/shopingService/shopService";
-import { getAllCategories } from "../services/shopingService/categoryService";
+import productApi from "../backend/db/productApi";
+import categoryApi from "../backend/db/categoryApi";
 
 export const DataContext = createContext();
 export function DataProvider({ children }) {
@@ -28,11 +25,11 @@ export function DataProvider({ children }) {
 
   const getBackendData = async () => {
     try {
-      const response = await getAllProducts();
-     setBackendData({
+      const response = await productApi.fetchAllProducts();
+      setBackendData({
+        ...backendData,
         loading: false,
-        error: null,
-        productsData: response?.data || [],
+        productsData: [...response?.data?.productDTOs],
       });
     } catch (error) {
       setBackendData({ ...backendData, loading: false, error: error });
@@ -46,14 +43,18 @@ export function DataProvider({ children }) {
       loading: true,
     });
     try {
-      const response = await getProduct(id);
-      const { status, data: productDB } = response;
+      const response = await productApi.fetchProductDetail(id);
+      const {
+        status,
+        data: { ...productDB },
+      } = response;
       if (status === 200) {
         setSingleProduct({
           product: productDB,
           loading: false,
         });
-    }} catch (error) {
+      }
+    } catch (error) {
       toast.error("Không thể tải sản phẩm!");
       console.log(error);
     }
@@ -61,7 +62,7 @@ export function DataProvider({ children }) {
 
   const getCategories = async () => {
     try {
-      const response = await getAllCategories();
+      const response = await categoryApi.fetchAllCategories();
       const {
         status,
         data: { categories },
