@@ -5,12 +5,12 @@ import {
   FormControl
 } from "@mui/material";
 import categoryApi from "../../backend/db/categoryApi";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import productApi from "../../backend/db/productApi";
 
 const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [form, setForm] = useState({
     name: "",
     description: "",
