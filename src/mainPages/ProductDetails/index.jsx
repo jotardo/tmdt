@@ -6,11 +6,10 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 
 import { useData, useWish, useCart } from "../../";
 import Loader from "../../components/Loader";
-import { useEffect } from "react";
 
 export default function ProductDetails() {
-  const { singleProduct, getSingleProduct } = useData();
-  const { addToCardFunction, isItemInCart } = useCart();
+  const { singleProduct } = useData();
+  const { addToCartFunction, isItemInCart } = useCart();
   const token = localStorage.getItem("jwtToken");
   const todate = new Date().toString();
   const { addWishListData, isAvailableInWishList, deleteWishListData } =
@@ -18,11 +17,6 @@ export default function ProductDetails() {
   const navigate = useNavigate();
 
   const product = singleProduct?.product;
-
-  // useEffect(() => {
-  //   if (!singleProduct.product)
-  //     getSingleProduct()
-  // }, [])
 
   if (product) {
     const {
@@ -60,7 +54,7 @@ export default function ProductDetails() {
                 onClick={() => {
                   token && isItemInCart(id)
                     ? navigate("/cart")
-                    : addToCardFunction(product, token);
+                    : addToCartFunction(product, token);
                 }}
               >
                 {token && isItemInCart(id) ? "Đi đến giỏ" : "Thêm vào giỏ"}
@@ -72,11 +66,11 @@ export default function ProductDetails() {
                 }}
               >
                 {token && isAvailableInWishList(id) >= 0 ? (
-                  <span class="removeWish">
+                  <span className="removeWish">
                     Xóa Wishlist <FavoriteRoundedIcon />{" "}
                   </span>
-                ) : (
-                  <span class="removeWish">
+                  ) : (
+                      <span className="removeWish">
                     Thêm Wishlist <FavoriteTwoToneIcon />{" "}
                   </span>
                 )}
@@ -100,7 +94,7 @@ export default function ProductDetails() {
 
             <div className="highlights">
               <div>
-                <p class="head">Đặc điểm nổi bật</p>
+                <p className="head">Đặc điểm nổi bật</p>
                 <ul>
                   <li>Màu: {product_color}</li>
                   <li>Loại đá : {product_material}</li>
@@ -111,7 +105,7 @@ export default function ProductDetails() {
               </div>
 
               <div className="description">
-                <p class="head">Mô tả</p>
+                <p className="head">Mô tả</p>
                 <p>{description}</p>
               </div>
             </div>

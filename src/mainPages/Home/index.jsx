@@ -73,7 +73,7 @@ export default function Home() {
                 });
 
                 setFiltersUsed({ type: "CATEGORY", inputValue: categoryName });
-                navigate('/browse')
+                navigate('/shop')
               }}>
               <img src={thumbnail} alt={`${categoryName}`} />
               <p>{categoryName}</p>

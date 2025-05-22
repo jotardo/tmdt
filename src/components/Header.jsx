@@ -107,7 +107,7 @@ export default function Header() {
                       onClick={() => {
                         setFiltersUsed({type: "SEARCH", inputValue: inputValue});
                         setIsSearchedClicked(!isSearchclicked);
-                        if (inputValue.length > 0) navigate("/browse");
+                        if (inputValue.length > 0) navigate("/shop");
                       }}
                   />
                 </div>
@@ -204,7 +204,7 @@ const CategoryList = ({ item, navigate, setFiltersUsed }) => {
           inputValue: "",
         });
         setFiltersUsed({ type: "CATEGORY", inputValue: item.categoryName });
-        navigate("/browse");
+        navigate("/shop");
       }}
     >
       {item.categoryName}

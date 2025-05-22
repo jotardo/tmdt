@@ -8,7 +8,7 @@ import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 export default function ProductCard({ item, inWishlist }) {
   const { deleteWishListData, addWishListData, isAvailableInWishList } = useWish();
   const { getSingleProduct } = useData();
-  const { addToCardFunction, isItemInCart, changeQuantity } = useCart();
+  const { addToCartFunction , isItemInCart, changeQuantity } = useCart();
   const token = localStorage.getItem("jwtToken");
 
   const {
@@ -83,7 +83,7 @@ export default function ProductCard({ item, inWishlist }) {
                       <AddShoppingCartIcon
                           onClick={(e) => {
                               e.preventDefault();
-                              addToCardFunction(item, token);
+                              addToCartFunction(item, token);
                           }}
                       />
                   )}
