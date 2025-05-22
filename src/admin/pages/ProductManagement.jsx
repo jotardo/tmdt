@@ -14,12 +14,13 @@ import {
   IconButton,
   Tooltip,
   useTheme,
+  Grid,
 } from "@mui/material";
 import AddProductModal from "../model/AddProductModal";
-import { Delete, Edit } from "@mui/icons-material";
 import productApi from "../../backend/db/productApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import ProductsTable from "../components/ProductsTable";
 
 const ProductManagement = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -30,11 +31,11 @@ const ProductManagement = () => {
 
   const theme = useTheme();
   
-
   const fetchAllProducts = async () => {
     setLoading(true);
     try {
       const response = await productApi.fetchAllProducts();
+      console.log(response)
       toast.success(response.data.message);
       setProducts(response.data.productDTOs);
     } catch (error) {
@@ -44,10 +45,6 @@ const ProductManagement = () => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchAllProducts();
-  }, []);
 
   const handleAddProduct = async (formData) => {
     try {
@@ -70,8 +67,22 @@ const ProductManagement = () => {
       }
     };
 
+  const handleHeaderClick = (headCell) => {
+    setEditProduct(headCell);
+    setOpenModal(true);
+  }
+
+  const handleEditClick = (product) =>{
+    setEditProduct(product);
+    setOpenModal(true);
+  }
+
+  useEffect(() => {
+    fetchAllProducts();
+  }, []);
+
   return (
-    <Box sx={{ padding: 4, maxWidth: "100%", bgcolor: "#f9fafb", minHeight: "100vh" }}>
+    <Box sx={{ p: 3, bgcolor: "#f9fafb", overflow: "scroll" }}>
       <Typography
         variant="h4"
         sx={{ fontWeight: 700, mb: 3, color: theme.palette.primary.main, letterSpacing: 1 }}
@@ -126,145 +137,7 @@ const ProductManagement = () => {
         </Button>
       </Box>
 
-      <Paper
-        elevation={3}
-        sx={{
-          borderRadius: 3,
-          overflow: "hidden",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
-        }}
-      >
-        <TableContainer
-          sx={{
-            maxHeight: 550,
-            "&::-webkit-scrollbar": {
-              height: 8,
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "#90caf9",
-              borderRadius: 2,
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: "#e3f2fd",
-            },
-          }}
-        >
-          <Table stickyHeader size="medium" sx={{ minWidth: 900 }}>
-            <TableHead sx={{ bgcolor: "#e3f2fd" }}>
-              <TableRow>
-                {[
-                  "ID",
-                  "Tên",
-                  "Giá hiện tại",
-                  "Giá trước",
-                  "Thương hiệu",
-                  "Kích thước",
-                  "Chất liệu",
-                  "Dịp sử dụng",
-                  "Trạng thái",
-                  "Người tạo",
-                  "Hành động",
-                ].map((headCell) => (
-                  <TableCell
-                    key={headCell}
-                    sx={{
-                      fontWeight: 700,
-                      color: theme.palette.primary.dark,
-                      borderBottom: "2px solid #90caf9",
-                    }}
-                    align={headCell === "Hành động" ? "center" : "left"}
-                    onClick={() => {
-                      setEditProduct(headCell);
-                      setOpenModal(true);
-                    }}
-                  >
-                    {headCell}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={11} align="center" sx={{ py: 4 }}>
-                    Đang tải dữ liệu...
-                  </TableCell>
-                </TableRow>
-              ) : products.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={11} align="center" sx={{ py: 4 }}>
-                    Không có sản phẩm nào
-                  </TableCell>
-                </TableRow>
-              ) : (
-                products.map((p) => (
-                  <TableRow
-                    key={p.id}
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: "#f1f9ff",
-                        cursor: "pointer",
-                        transition: "background-color 0.3s ease",
-                      },
-                    }}
-                  >
-                    <TableCell>{p.id}</TableCell>
-                    <TableCell>{p.name}</TableCell>
-                    <TableCell>{p.price?.toLocaleString()}₫</TableCell>
-                    <TableCell>{p.prevPrice?.toLocaleString()}₫</TableCell>
-                    <TableCell>{p.brand}</TableCell>
-                    <TableCell>{p.size}</TableCell>
-                    <TableCell>{p.productMaterial}</TableCell>
-                    <TableCell>{p.occasion}</TableCell>
-                    <TableCell>
-                      <Chip
-                        label={p.status.toLowerCase() === "active" ? "Hoạt động" : "Không hoạt động"}
-                        color={p.status.toLowerCase() === "active" ? "success" : "default"}
-                        size="small"
-                        sx={{ fontWeight: 600, textTransform: "capitalize" }}
-                      />
-                    </TableCell>
-                    <TableCell>{p.ctvOrAdminId}</TableCell>
-                    <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
-                      <Tooltip title="Chỉnh sửa">
-                        <IconButton
-                          color="primary"
-                          onClick={() => {
-                            setEditProduct(p);
-                            setOpenModal(true);
-                          }}
-                          sx={{
-                            mr: 1,
-                            '&:hover': { backgroundColor: "#e3f2fd" },
-                            transition: "background-color 0.2s ease",
-                          }}
-                          aria-label={`Sửa danh mục ${p.name}`}
-                        >
-                          <Edit />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Xóa">
-                        <IconButton
-                          color="error"
-                          onClick={() => handleDeleteProduct(p.id)}
-                          sx={{
-                            transition: "background-color 0.3s",
-                            "&:hover": { backgroundColor: "#ffebee" },
-                          }}
-                        >
-                          <Delete fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Paper>
-
+      <ProductsTable resultsPerPage={10} loading={loading} apiData={products} onDelete={handleDeleteProduct} onHeaderClick={handleHeaderClick} onEditClick={handleEditClick} />
       <AddProductModal open={openModal} onClose={() => setOpenModal(false)} onAddProduct={handleAddProduct} editProduct={editProduct} />
     </Box>
   );
