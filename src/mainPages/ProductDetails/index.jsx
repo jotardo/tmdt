@@ -6,7 +6,7 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 
 import { useData, useWish, useCart } from "../../";
 import Loader from "../../components/Loader";
-import { useEffect } from "react";
+import ProductImageContainer from "../../components/ProductImageContainer";
 
 export default function ProductDetails() {
   const { singleProduct, getSingleProduct } = useData();
@@ -27,13 +27,13 @@ export default function ProductDetails() {
   if (product) {
     const {
       id,
-      product_brand,
-      product_category,
+      brand,
+      categoryName,
       product_color,
       description,
 
-      product_image,
-      product_material,
+      imageURLs,
+      productMaterial,
       name,
       occasion,
       prevPrice,
@@ -53,7 +53,9 @@ export default function ProductDetails() {
       <div className="productDetailsContainer" key={id}>
         <div className="detailsContainer">
           <div className="imgcontainer">
-            <InnerImageZoom src={product_image} zoomSrc={product_image} />
+            <ProductImageContainer image_urls={imageURLs.map(img => {
+              return {...img, url: `http://localhost:8080/api/product/${img.url}`}
+            }) } />
 
             <div className="buttons">
               <button
@@ -85,8 +87,8 @@ export default function ProductDetails() {
           </div>
           <div className="textContentContainer">
             <h2>{name}</h2>
-            <small>{product_category} từ </small>
-            {product_brand}
+            <small>{categoryName} từ </small>
+            {brand}
 
             <div className="offer">Mua 2 giảm 5%</div>
             <div className="price">
@@ -103,7 +105,7 @@ export default function ProductDetails() {
                 <p class="head">Đặc điểm nổi bật</p>
                 <ul>
                   <li>Màu: {product_color}</li>
-                  <li>Loại đá : {product_material}</li>
+                  <li>Loại đá : {productMaterial}</li>
                   <li>Dịp lễ : {occasion}</li>
                   <li>Điểm đánh giá : {product_rating} ⭐</li>
                   <li>Tổng số đánh giá : {product_reviews}</li>

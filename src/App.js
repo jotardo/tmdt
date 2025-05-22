@@ -30,7 +30,6 @@ import VerifyEmail from "./mainPages/Login/VerifyEmail";
 import AdminLayout from "./admin";
 import Dashboard from "./admin/pages/Dashboard";
 import Customers from "./admin/pages/Customer";
-import OrdersAdmin from "./admin/pages/Orders";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CategoryManagement from "./admin/pages/CategoryManagement";
 import { useContext, useEffect } from "react";
