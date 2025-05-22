@@ -110,14 +110,14 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="*" element={<Error />} />
         <Route path="/register-ctv" element={<RegisterCTV />} />
+        <Route path="*" element={<Error />} />
 
       </Routes>
       <ToastContainer

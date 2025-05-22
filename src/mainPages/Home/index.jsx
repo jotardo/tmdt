@@ -27,7 +27,7 @@ export default function Home() {
           Khám phá bộ sưu tập và tìm kiếm món trang sức hoàn hảo thể hiện cá tính của bạn.
         </p>
         <div className="mainbutton">
-          <NavLink to='/browse'>
+          <NavLink to='/shop'>
             <button>Mua Ngay</button>
           </NavLink>
 
@@ -48,7 +48,7 @@ export default function Home() {
           <h3>LUÔN BẮT KỊP XU HƯỚNG</h3>
           <p>Chúng tôi vô cùng tự hào khi mang đến những món trang sức được chế tác với sự chăm chút và tỉ mỉ tối đa. Mỗi sản phẩm trong bộ sưu tập của chúng tôi đều trải qua quy trình kiểm tra chất lượng nghiêm ngặt để đảm bảo đáp ứng tiêu chuẩn cao.</p>
           <div className="mainbutton">
-            <NavLink to='/browse'>
+            <NavLink to='/shop'>
               <button>Mua Ngay</button>
             </NavLink>
           </div>

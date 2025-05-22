@@ -29,7 +29,7 @@ export default function AuthProvider({ children }) {
       setUser(userDetails.data)
       // Điều hướng dựa trên role
       if (userDetails?.role !== null) {
-        navigate("/admin");
+        navigate("/admin/dashboard");
       }
       else {
         navigate("/");

@@ -1,5 +1,6 @@
-import axios from 'axios'
+import axiosClient from "../../backend/api/axiosClient";
 
-export const getAllProducts = async()=>axios.get('http://localhost:8080/api/product/list').then(res => res.data);
 
-export const getProduct = async (productId) => await axios.get(`http://localhost:8080/api/product/${productId}`);
+export const getAllProducts = async() => axiosClient.get('/product/fetch-all');
+
+export const getProduct = async (productId) => await axiosClient.get(`/product/${productId}`);

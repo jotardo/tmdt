@@ -6,9 +6,10 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 
 import { useData, useWish, useCart } from "../../";
 import Loader from "../../components/Loader";
+import { useEffect } from "react";
 
 export default function ProductDetails() {
-  const { singleProduct } = useData();
+  const { singleProduct, getSingleProduct } = useData();
   const { addToCardFunction, isItemInCart } = useCart();
   const token = localStorage.getItem("jwtToken");
   const todate = new Date().toString();
@@ -18,34 +19,38 @@ export default function ProductDetails() {
 
   const product = singleProduct?.product;
 
+  // useEffect(() => {
+  //   if (!singleProduct.product)
+  //     getSingleProduct()
+  // }, [])
+
   if (product) {
     const {
-      _id,
+      id,
       product_brand,
       product_category,
       product_color,
-      product_description,
+      description,
 
       product_image,
       product_material,
-      product_name,
-      product_occasion,
-      product_prevPrice,
-      product_price,
+      name,
+      occasion,
+      prevPrice,
+      price,
       product_rating,
       product_reviews,
 
     } = product;
 
     const discount = Math.floor(
-      100 - (product_price / product_prevPrice) * 100
+      100 - (price / prevPrice) * 100
     );
 
     if (singleProduct.loading)
       return <Loader />
     return (
-
-      <div className="productDetailsContainer" key={_id}>
+      <div className="productDetailsContainer" key={id}>
         <div className="detailsContainer">
           <div className="imgcontainer">
             <InnerImageZoom src={product_image} zoomSrc={product_image} />
@@ -53,20 +58,20 @@ export default function ProductDetails() {
             <div className="buttons">
               <button
                 onClick={() => {
-                  token && isItemInCart(_id)
+                  token && isItemInCart(id)
                     ? navigate("/cart")
                     : addToCardFunction(product, token);
                 }}
               >
-                {token && isItemInCart(_id) ? "Đi đến giỏ" : "Thêm vào giỏ"}
+                {token && isItemInCart(id) ? "Đi đến giỏ" : "Thêm vào giỏ"}
               </button>
               <button
                 onClick={() => {
-                  if (token && isAvailableInWishList(_id) >= 0) deleteWishListData(_id);
+                  if (token && isAvailableInWishList(id) >= 0) deleteWishListData(id);
                   else addWishListData(product);
                 }}
               >
-                {token && isAvailableInWishList(_id) >= 0 ? (
+                {token && isAvailableInWishList(id) >= 0 ? (
                   <span class="removeWish">
                     Xóa Wishlist <FavoriteRoundedIcon />{" "}
                   </span>
@@ -79,14 +84,14 @@ export default function ProductDetails() {
             </div>
           </div>
           <div className="textContentContainer">
-            <h2>{product_name}</h2>
+            <h2>{name}</h2>
             <small>{product_category} từ </small>
             {product_brand}
 
             <div className="offer">Mua 2 giảm 5%</div>
             <div className="price">
-               {product_price}{" "} VND
-              <span className="stikeThrough">{product_prevPrice} VNĐ</span>
+               {price}{" "} VND
+              <span className="stikeThrough">{prevPrice} VNĐ</span>
               <span className="discount">(Giảm {discount}%)</span>
             </div>
             <div className="deliveryDate">
@@ -99,7 +104,7 @@ export default function ProductDetails() {
                 <ul>
                   <li>Màu: {product_color}</li>
                   <li>Loại đá : {product_material}</li>
-                  <li>Dịp lễ : {product_occasion}</li>
+                  <li>Dịp lễ : {occasion}</li>
                   <li>Điểm đánh giá : {product_rating} ⭐</li>
                   <li>Tổng số đánh giá : {product_reviews}</li>
                 </ul>
@@ -107,7 +112,7 @@ export default function ProductDetails() {
 
               <div className="description">
                 <p class="head">Mô tả</p>
-                <p>{product_description}</p>
+                <p>{description}</p>
               </div>
             </div>
           </div>
