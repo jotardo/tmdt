@@ -28,7 +28,7 @@ export default function AuthProvider({ children }) {
       console.log(userDetails)
       setUser(userDetails.data)
       // Điều hướng dựa trên role
-      if (userDetails?.role !== null) {
+      if (userDetails?.role === "Admin") {
         navigate("/admin/dashboard");
       }
       else {

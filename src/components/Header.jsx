@@ -45,13 +45,18 @@ export default function Header() {
           <img src="/assets/logo.jpg" alt="Logo"/>
         </div>
         <div className="categories">
-          {categoriesData.map((item) => (
-              <CategoryList
-                  item={item}
-                  navigate={navigate}
-                  setFiltersUsed={setFiltersUsed}
-              />
-          ))}
+          {Array.isArray(categoriesData) && categoriesData.length > 0 ? (
+              categoriesData.map((item) => (
+                  <CategoryList
+                      item={item}
+                      navigate={navigate}
+                      setFiltersUsed={setFiltersUsed}
+                      key={item.id || item.categoryName}
+                  />
+              ))
+          ) : (
+              <p>...</p>
+          )}
         </div>
         <div className="headerLeft">
           <div
@@ -158,25 +163,25 @@ export default function Header() {
       </div>
       {isMenuClicked && (
           <div title="Menu bar" className="sideNav">
-          <ul>
-            <NavLink to="/">
-              <li onClick={handleMenu}>TRANG CHỦ</li>
-            </NavLink>
-            <NavLink to="/about">
-              <li onClick={handleMenu}>VỀ CHÚNG TÔI</li>
-            </NavLink>
-            <NavLink to="contact">
-              <li onClick={handleMenu}>LIÊN HỆ</li>
-            </NavLink>
+            <ul>
+              <NavLink to="/">
+                <li onClick={handleMenu}>TRANG CHỦ</li>
+              </NavLink>
+              <NavLink to="/about">
+                <li onClick={handleMenu}>VỀ CHÚNG TÔI</li>
+              </NavLink>
+              <NavLink to="contact">
+                <li onClick={handleMenu}>LIÊN HỆ</li>
+              </NavLink>
 
-            <li>
-              <select
-                value={category}
-                name="categoryChoose"
-                onChange={handleCategory}
-                id="chooseCategory"
-              >
-                <option value="SHOP">DANH MỤC</option>
+              <li>
+                <select
+                    value={category}
+                    name="categoryChoose"
+                    onChange={handleCategory}
+                    id="chooseCategory"
+                >
+                  <option value="SHOP">DANH MỤC</option>
                 <option value="rings">NHẪN</option>
                 <option value="bracelet">VÒNG TAY</option>
                 <option value="earring">BÔNG TAI</option>
