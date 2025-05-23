@@ -1,15 +1,15 @@
 import "./productDetails.css";
 import { useNavigate } from "react-router-dom";
-import InnerImageZoom from "react-inner-image-zoom";
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 
 import { useData, useWish, useCart } from "../../";
 import Loader from "../../components/Loader";
 import ProductImageContainer from "../../components/ProductImageContainer";
+import { useEffect } from "react";
 
 export default function ProductDetails() {
-  const { singleProduct, getSingleProduct } = useData();
+  const { singleProduct } = useData();
   const { addToCardFunction, isItemInCart } = useCart();
   const token = localStorage.getItem("jwtToken");
   const todate = new Date().toString();
@@ -19,17 +19,16 @@ export default function ProductDetails() {
 
   const product = singleProduct?.product;
 
-  // useEffect(() => {
-  //   if (!singleProduct.product)
-  //     getSingleProduct()
-  // }, [])
+    useEffect(()=> {
+      console.log("Current details:", product)
+    })
 
   if (product) {
     const {
       id,
       brand,
       categoryName,
-      product_color,
+      // product_color,
       description,
 
       imageURLs,
@@ -104,7 +103,7 @@ export default function ProductDetails() {
               <div>
                 <p class="head">Đặc điểm nổi bật</p>
                 <ul>
-                  <li>Màu: {product_color}</li>
+                  {/* <li>Màu: {product_color}</li> */}
                   <li>Loại đá : {productMaterial}</li>
                   <li>Dịp lễ : {occasion}</li>
                   <li>Điểm đánh giá : {product_rating} ⭐</li>

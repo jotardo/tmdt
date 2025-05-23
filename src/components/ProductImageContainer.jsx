@@ -24,8 +24,12 @@ export default function ProductImageContainer({ image_urls }) {
 
     return (<div>
         <div>
-            <InnerImageZoom src={image_urls[index].url} zoomSrc={image_urls[index].url} />
+            <InnerImageZoom 
+            src={(image_urls && image_urls.length > 0) ? image_urls[index].url : "assets/empty-wishlist.png"} 
+            zoomSrc={(image_urls && image_urls.length > 0) ? image_urls[index].url : "assets/empty-wishlist.png"} />
         </div>
+        {
+            !(image_urls && image_urls.length > 0) ? (<></>) : (<>
         <ArrowBack onClick={decrementIndex}/>
         <ArrowForward onClick={incrementIndex}/>
         <div style={{display: "flex"}}>
@@ -33,5 +37,7 @@ export default function ProductImageContainer({ image_urls }) {
                 image_urls.map((img, index) => <img src={img.url} alt={img.id} key={img.id} style={{width: 50}} onClick={() => setIndex(index)} />)
             }
         </div>
+            </>)
+        }
     </div>);
 }

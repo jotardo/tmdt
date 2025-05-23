@@ -21,12 +21,16 @@ import productApi from "../../backend/db/productApi";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import ProductsTable from "../components/ProductsTable";
+import { useData } from "../../context/DataContext";
 
 const ProductManagement = () => {
   const [openModal, setOpenModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
-  const [products, setProducts] = useState([]);
+
+  const { backendData, getBackendData:reloadProduct} = useData();
+
+  const products = backendData.productsData;
   const navigate = useNavigate();
 
   const theme = useTheme();
@@ -34,10 +38,7 @@ const ProductManagement = () => {
   const fetchAllProducts = async () => {
     setLoading(true);
     try {
-      const response = await productApi.fetchAllProducts();
-      console.log(response)
-      toast.success(response.data.message);
-      setProducts(response.data.productDTOs);
+      reloadProduct();
     } catch (error) {
       toast.error("Không thể tải danh sách sản phẩm");
       console.error(error);

@@ -13,7 +13,7 @@ export default function WishList() {
         <p className="empty_Wishlist ">
           <img src="\assets\empty-wishlist.png" alt="" width={300} />
           <p>Wishlist đang trống...{" "}</p>
-          <NavLink to="/browse">
+          <NavLink to="/shop">
             <button>Đi đến Cửa hàng</button>
           </NavLink>
         </p>

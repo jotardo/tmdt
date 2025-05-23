@@ -12,6 +12,12 @@ import categoryApi from "../backend/db/categoryApi";
 
 export const DataContext = createContext();
 export function DataProvider({ children }) {
+  /**
+   * Product properties currently in focus and probably filter: {
+   * name, description, price, prevPrice,
+   * brand, size, productMaterial, occasion
+   * }
+   */
   const [backendData, setBackendData] = useState({
     loading: true,
     error: null,
@@ -25,7 +31,7 @@ export function DataProvider({ children }) {
 
   const getBackendData = async () => {
     try {
-      const response = await productApi.fetchAllProducts();
+      const response = await productApi.fetchExistingProducts();
       setBackendData({
         ...backendData,
         loading: false,
@@ -33,7 +39,7 @@ export function DataProvider({ children }) {
       });
     } catch (error) {
       setBackendData({ ...backendData, loading: false, error: error });
-            console.error("Lỗi kết nối tới backend:", error);
+      console.log("Lỗi kết nối tới backend:", error);
     }
   };
 
@@ -46,7 +52,7 @@ export function DataProvider({ children }) {
       const response = await productApi.fetchProductDetail(id);
       const {
         status,
-        data: { ...productDB },
+        data: { productDTO: {...productDB} },
       } = response;
       if (status === 200) {
         setSingleProduct({
@@ -74,8 +80,15 @@ export function DataProvider({ children }) {
   };
 
   useEffect(() => {
-    getBackendData();
-    getCategories();
+    /** refresh data every 1 min? */
+      getBackendData();
+      getCategories();
+    const interval = setInterval(() => {
+      console.log("Refreshing data every 1min")
+      getBackendData();
+      getCategories();
+    }, 1000 * 60);
+    return () => clearInterval(interval)
   }, []);
 
   const [filtersUsed, setFiltersUsed] = useReducer(reducerFilterFunction, {
@@ -94,13 +107,13 @@ export function DataProvider({ children }) {
     filtersUsed.search.length > 0
       ? backendData?.productsData.filter(
           (item) =>
-            item.product_name.toLowerCase().includes(lowercaseSearch) ||
-            item.product_material.toLowerCase().includes(lowercaseSearch) ||
-            item.product_occasion.toLowerCase().includes(lowercaseSearch) ||
-            item.product_brand.toLowerCase().includes(lowercaseSearch) ||
-            item.product_category.toLowerCase().includes(lowercaseSearch) ||
-            item.product_color.toLowerCase().includes(lowercaseSearch) ||
-            item.product_isBadge.toLowerCase().includes(lowercaseSearch)
+            item.name.toLowerCase().includes(lowercaseSearch) ||
+            item.productMaterial.toLowerCase().includes(lowercaseSearch) ||
+            item.occasion.toLowerCase().includes(lowercaseSearch) ||
+            item.brand.toLowerCase().includes(lowercaseSearch) ||
+            item.categoryName.toLowerCase().includes(lowercaseSearch) ||
+            // item.product_color.toLowerCase().includes(lowercaseSearch) ||
+            item.productIsBadge.toLowerCase().includes(lowercaseSearch)
         )
       : backendData?.productsData;
 
@@ -108,7 +121,7 @@ export function DataProvider({ children }) {
     filtersUsed.categoryFilters.length > 0
       ? searchedDataValue.filter((item) =>
           filtersUsed.categoryFilters.some(
-            (elem) => item.product_category === elem
+            (elem) => item.categoryName === elem
           )
         )
       : searchedDataValue;
@@ -117,7 +130,7 @@ export function DataProvider({ children }) {
     filtersUsed.ocassionFilters.length > 0
       ? categoryFilterData.filter((item) =>
           filtersUsed.ocassionFilters.some(
-            (elem) => item.product_occasion === elem
+            (elem) => item.occasion === elem
           )
         )
       : categoryFilterData;
@@ -125,7 +138,7 @@ export function DataProvider({ children }) {
     filtersUsed.materialFilter.length > 0
       ? occasionFilterData.filter((item) =>
           filtersUsed.materialFilter.some(
-            (elem) => item.product_material === elem
+            (elem) => item.productMaterial === elem
           )
         )
       : occasionFilterData;
@@ -133,7 +146,7 @@ export function DataProvider({ children }) {
   const priceRangeData =
     filtersUsed.priceRange.length > 0
       ? materialFilterData.filter(
-          (item) => item.product_price < filtersUsed.priceRange
+          (item) => item.price < filtersUsed.priceRange
         )
       : materialFilterData;
   const ratingFilter =
@@ -145,10 +158,10 @@ export function DataProvider({ children }) {
   const finalPriceSortedData =
     filtersUsed?.sort.length > 0 && filtersUsed.sort === "LOWTOHIGH"
       ? ratingFilter.sort(
-          (first, second) => first.product_price - second.product_price
+          (first, second) => first.price - second.price
         )
       : ratingFilter.sort(
-          (first, second) => second.product_price - first.product_price
+          (first, second) => second.price - first.price
         );
   return (
     <DataContext.Provider
@@ -161,7 +174,7 @@ export function DataProvider({ children }) {
         getSingleProduct,
         singleProduct,
         filtersUsed,
-        setBackendData,
+        getBackendData,
       }}
     >
       {children}
