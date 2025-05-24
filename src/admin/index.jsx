@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 
 const AdminLayout = () => {
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "grid", gridTemplateColumns: "20% 80%" }}>
       <Sidebar />
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <Toolbar /> {/* tránh đè AppBar nếu có */}

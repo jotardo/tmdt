@@ -9,7 +9,7 @@ export default function EmptyCart() {
 
       <button
         onClick={() => {
-          navigate("/browse");
+          navigate("/shop");
         }}
       >
         Tiếp tục mua tại Cửa hàng

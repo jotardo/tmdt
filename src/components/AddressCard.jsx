@@ -10,37 +10,36 @@ export default function AddressCard({
 }) {
   const {
     id,
-    fullName,
-    home,
-    work,
+    receiverName,
+    workAddress,
     quarter,
-    mobile,
-    building,
-    province,
-    district,
+    contactNumber,
+    buildingAddress,
+    provinceName,
+    districtName,
     pincode,
-    ward,
+    wardName,
   } = addObj;
   return (
     <div key={id} className="addressContainer">
       <div className="addressText">
         <p className="addType">
-          <small>{home ? "Cá nhân" : work ? "Văn phòng" : null}</small>
+          <small>{!workAddress ? "Cá nhân" : "Văn phòng"}</small>
         </p>
         <p>
           <b>
-            {fullName}
+            {receiverName}
             <span style={{ width: "20px" }}> ... </span>
-            {mobile}
+            {contactNumber}
           </b>
         </p>
-        <p>Số nhà: {building}</p>
+        <p>Số nhà: {buildingAddress}</p>
         <p>{quarter}</p>
         <p>
-          {ward}, {district}
+          {wardName}, {districtName}
         </p>
         <p>
-          {province} - <b>{pincode}</b>
+          {provinceName} - <b>{pincode}</b>
         </p>
       </div>
       <div className="buttons">

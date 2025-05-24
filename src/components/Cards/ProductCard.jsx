@@ -22,12 +22,12 @@ export default function ProductCard({ item, inWishlist }) {
   } = item;
 
   const discount = prevPrice ? Math.floor(100 - (price / prevPrice) * 100) : 0;
-  const mainImage = imageURLs && imageURLs.length > 0 ? imageURLs[0].url : "/no-image.jpg";
+  const mainImage = imageURLs && imageURLs.length > 0 ? imageURLs[0].url : "no-image.jpg";
 
   return (
       <div className="ProductCard" key={id} onClick={() => getSingleProduct(id)}>
           <NavLink to={`/products/${id}`}>
-              <img src={mainImage} alt="Sản phẩm trang sức"/>
+              <img src={`http://localhost:8080/api/product/${mainImage}`} alt="Sản phẩm trang sức"/>
 
               <div className="cardTextContent">
                   <h3>{name.slice(0, 15)}</h3>

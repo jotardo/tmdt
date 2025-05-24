@@ -1,23 +1,39 @@
 import {
-  createContext,
-  useContext,
-  useReducer,
-  useState,
-  useEffect,
+    createContext,
+    useContext,
+    useReducer,
+    useState,
+    useEffect,
+    useCallback,
 } from "react";
 import { toast } from "react-toastify";
 import { reducerFilterFunction } from "../allReducers/filtersReducer";
+import {
+    getProduct,
+    getAllProducts,
+} from "../services/shopingService/shopService";
+import { getAllCategories } from "../services/shopingService/categoryService";
 import productApi from "../backend/db/productApi";
 import categoryApi from "../backend/db/categoryApi";
 
 export const DataContext = createContext();
 export function DataProvider({ children }) {
+  /**
+   * Product properties currently in focus and probably filter: {
+   * name, description, price, prevPrice,
+   * brand, size, productMaterial, occasion
+   * }
+   */
+  const uniqueArrayFunc = (val, index, originalArr) => originalArr.indexOf(val) === index;
   const [backendData, setBackendData] = useState({
     loading: true,
     error: null,
     productsData: [],
   });
   const [categoriesData, setCategoriesData] = useState([]);
+  const [brandData, setBrandData] = useState([]);
+  const [materialData, setMaterialData] = useState([]);
+  const [occasionData, setOccasionData] = useState([]);
   const [singleProduct, setSingleProduct] = useState({
     product: {},
     loading: true,
@@ -25,15 +41,22 @@ export function DataProvider({ children }) {
 
   const getBackendData = async () => {
     try {
-      const response = await productApi.fetchAllProducts();
+      const response = await productApi.fetchExistingProducts();
+      const productList = response?.data?.productDTOs;
       setBackendData({
         ...backendData,
         loading: false,
-        productsData: [...response?.data?.productDTOs],
+        productsData: [...productList],
       });
+      // brands
+      const brandList = productList.map(product => product.brand).filter(uniqueArrayFunc);
+      setBrandData(brandList);
+      // occasions
+      const occasionList = productList.map(product => product.occasion).filter(uniqueArrayFunc);
+      setOccasionData(occasionList);
     } catch (error) {
       setBackendData({ ...backendData, loading: false, error: error });
-            console.error("Lỗi kết nối tới backend:", error);
+      console.log("Lỗi kết nối tới backend:", error);
     }
   };
 
@@ -46,7 +69,7 @@ export function DataProvider({ children }) {
       const response = await productApi.fetchProductDetail(id);
       const {
         status,
-        data: { ...productDB },
+        data: { productDTO: {...productDB} },
       } = response;
       if (status === 200) {
         setSingleProduct({
@@ -59,23 +82,29 @@ export function DataProvider({ children }) {
       console.log(error);
     }
   };
-
-  const getCategories = async () => {
-    try {
-      const response = await categoryApi.fetchAllCategories();
-      const {
-        status,
-        data: { categories },
-      } = response;
-      if (status === 200) setCategoriesData(categories);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    const getCategories = async () => {
+      try {
+        const response = await categoryApi.fetchAllCategories();
+        const {
+          status,
+          data: { categories },
+        } = response;
+        if (status === 200) setCategoriesData(categories);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   useEffect(() => {
-    getBackendData();
-    getCategories();
+    /** refresh data every 1 min? */
+      getBackendData();
+      getCategories();
+    const interval = setInterval(() => {
+      console.log("Refreshing data every 1min")
+      getBackendData();
+      getCategories();
+    }, 1000 * 60);
+    return () => clearInterval(interval)
   }, []);
 
   const [filtersUsed, setFiltersUsed] = useReducer(reducerFilterFunction, {
@@ -86,6 +115,7 @@ export function DataProvider({ children }) {
     ocassionFilters: [],
     categoryFilters: [],
     materialFilter: [],
+    brandFilters: [],
   });
 
   const lowercaseSearch = filtersUsed.search.toLowerCase();
@@ -94,38 +124,52 @@ export function DataProvider({ children }) {
     filtersUsed.search.length > 0
       ? backendData?.productsData.filter(
           (item) =>
-            item.product_name.toLowerCase().includes(lowercaseSearch) ||
-            item.product_material.toLowerCase().includes(lowercaseSearch) ||
-            item.product_occasion.toLowerCase().includes(lowercaseSearch) ||
-            item.product_brand.toLowerCase().includes(lowercaseSearch) ||
-            item.product_category.toLowerCase().includes(lowercaseSearch) ||
-            item.product_color.toLowerCase().includes(lowercaseSearch) ||
-            item.product_isBadge.toLowerCase().includes(lowercaseSearch)
+            item.name.toLowerCase().includes(lowercaseSearch) ||
+            item.productMaterial.toLowerCase().includes(lowercaseSearch) ||
+            item.occasion.toLowerCase().includes(lowercaseSearch) ||
+            item.brand.toLowerCase().includes(lowercaseSearch) ||
+            item.categoryName.toLowerCase().includes(lowercaseSearch) ||
+            // item.product_color.toLowerCase().includes(lowercaseSearch) ||
+            item.productIsBadge.toLowerCase().includes(lowercaseSearch)
         )
       : backendData?.productsData;
 
+      /** Filter order: search result -> category -> (*)brand -> occasion ->
+       *  material -> price range -> rating.
+       * AFTER ALL THAT, SORT THEM BY PRICE IF THERE ARE SORT IN PLACE
+      */
   const categoryFilterData =
     filtersUsed.categoryFilters.length > 0
       ? searchedDataValue.filter((item) =>
           filtersUsed.categoryFilters.some(
-            (elem) => item.product_category === elem
+            (elem) => item.categoryName === elem
           )
         )
       : searchedDataValue;
 
-  const occasionFilterData =
-    filtersUsed.ocassionFilters.length > 0
+      /** yipee brand */
+  const brandFilterData = 
+    filtersUsed.brandFilters.length > 0
       ? categoryFilterData.filter((item) =>
-          filtersUsed.ocassionFilters.some(
-            (elem) => item.product_occasion === elem
+          filtersUsed.brandFilters.some(
+            (elem) => item.brand === elem
           )
         )
       : categoryFilterData;
+
+  const occasionFilterData =
+    filtersUsed.ocassionFilters.length > 0
+      ? brandFilterData.filter((item) =>
+          filtersUsed.ocassionFilters.some(
+            (elem) => item.occasion === elem
+          )
+        )
+      : brandFilterData;
   const materialFilterData =
     filtersUsed.materialFilter.length > 0
       ? occasionFilterData.filter((item) =>
           filtersUsed.materialFilter.some(
-            (elem) => item.product_material === elem
+            (elem) => item.productMaterial === elem
           )
         )
       : occasionFilterData;
@@ -133,7 +177,7 @@ export function DataProvider({ children }) {
   const priceRangeData =
     filtersUsed.priceRange.length > 0
       ? materialFilterData.filter(
-          (item) => item.product_price < filtersUsed.priceRange
+          (item) => item.price < filtersUsed.priceRange
         )
       : materialFilterData;
   const ratingFilter =
@@ -145,10 +189,10 @@ export function DataProvider({ children }) {
   const finalPriceSortedData =
     filtersUsed?.sort.length > 0 && filtersUsed.sort === "LOWTOHIGH"
       ? ratingFilter.sort(
-          (first, second) => first.product_price - second.product_price
+          (first, second) => first.price - second.price
         )
       : ratingFilter.sort(
-          (first, second) => second.product_price - first.product_price
+          (first, second) => second.price - first.price
         );
   return (
     <DataContext.Provider
@@ -161,7 +205,10 @@ export function DataProvider({ children }) {
         getSingleProduct,
         singleProduct,
         filtersUsed,
-        setBackendData,
+        getBackendData,
+        // added
+        brandData,
+        occasionData
       }}
     >
       {children}
@@ -170,5 +217,5 @@ export function DataProvider({ children }) {
 }
 
 export const useData = () => {
-  return useContext(DataContext);
+    return useContext(DataContext);
 };

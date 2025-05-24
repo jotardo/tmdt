@@ -1,6 +1,5 @@
 import { toast } from "react-toastify";
 import { useAddress } from "../context/AddressContext";
-import { getWard } from "../services/locationService/provinceService";
 
 export default function UpdateAddress({
   clickF,
@@ -15,6 +14,8 @@ export default function UpdateAddress({
     let prop = e.target.id;
 
     if (e.target.type === "radio") {
+      // same name instead xdx
+      prop = e.target.name
       setAddressState(() => ({ ...addressState, [prop]: e.target.checked }));
     } else setAddressState(() => ({ ...addressState, [prop]: input }));
   };
@@ -37,12 +38,12 @@ export default function UpdateAddress({
     if (isEditClicked) setIsEditClicked(false);
   };
 
-  const handleChangeProvince = () => {
+  const handleChangeprovinceName = () => {
   };
-  const handleChangeDistrict = () => {
+  const handleChangedistrictName = () => {
 
   };
-  const handleChangeWard = () => {
+  const handleChangewardName = () => {
   };
 
   return (
@@ -58,25 +59,25 @@ export default function UpdateAddress({
           >
             X
           </div>
-          <div className="fullNameAdd">
+          <div className="receiverNameAdd">
             <input
               type="text"
-              name="fullName"
-              id="fullName"
+              name="receiverName"
+              id="receiverName"
               required
               placeholder="Họ và tên"
-              value={addressState.fullName}
+              value={addressState.receiverName}
               onChange={handleAddressInput}
             />
           </div>
-          <div className="buildingAdd">
+          <div className="buildingAddressAdd">
             <input
               type="text"
-              name="building"
-              id="building"
+              name="buildingAddress"
+              id="buildingAddress"
               required
               placeholder="Số nhà"
-              value={addressState.building}
+              value={addressState.buildingAddress}
               onChange={handleAddressInput}
             />
           </div>
@@ -91,14 +92,14 @@ export default function UpdateAddress({
               onChange={handleAddressInput}
             />
           </div>
-          <div className="wardAdd">
+          <div className="wardNameAdd">
             <select
               type="text"
-              name="ward"
-              id="ward"
+              name="wardName"
+              id="wardName"
               required
               placeholder="Tên Thành Phố"
-              value={addressState.ward}
+              value={addressState.wardName}
               onChange={handleAddressInput}
             >
               <option hidden selected value="">Tên Thành Phố</option>
@@ -107,23 +108,23 @@ export default function UpdateAddress({
           <div className="cityAdd">
             <select
               type="text"
-              name="district"
-              id="district"
+              name="districtName"
+              id="districtName"
               required
-              value={addressState.district}
+              value={addressState.districtName}
               placeholder="Tên Quận/Huyện"
               onChange={handleAddressInput}
             >
               <option hidden selected value="">Tên Quận/Huyện</option>
             </select>
           </div>
-          <div className="provinceAdd">
+          <div className="provinceNameAdd">
             <select
               type="text"
-              name="province"
-              id="province"
+              name="provinceName"
+              id="provinceName"
               required
-              value={addressState.province}
+              value={addressState.provinceName}
               placeholder="Tên Tỉnh"
               onChange={handleAddressInput}
             >
@@ -144,12 +145,12 @@ export default function UpdateAddress({
               onChange={handleAddressInput}
             />
           </div>
-          <div className="mobileAdd">
+          <div className="contactNumberAdd">
             <input
               type="text"
-              name="mobile"
-              id="mobile"
-              value={addressState.mobile}
+              name="contactNumber"
+              id="contactNumber"
+              value={addressState.contactNumber}
               required
               placeholder="Số điện thoại"
               onChange={handleAddressInput}
@@ -162,9 +163,9 @@ export default function UpdateAddress({
               {" "}
               <input
                 type="radio"
-                name="addType"
+                name="workAddress"
                 id="home"
-                checked={addressState.home}
+                checked={!addressState.workAddress}
                 onChange={handleAddressInput}
               />
               Địa chỉ cá nhân{" "}
@@ -172,9 +173,9 @@ export default function UpdateAddress({
             <label htmlFor="work">
               <input
                 type="radio"
-                name="addType"
+                name="workAddress"
                 id="work"
-                checked={addressState.work}
+                checked={addressState.workAddress}
                 onChange={handleAddressInput}
               />
               Địa chỉ văn phòng{" "}

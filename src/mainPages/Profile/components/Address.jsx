@@ -1,12 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAddress } from "../../../";
 import UpdateAddress from "../../../components/UpdateAdd";
 import AddressCard from "../../../components/AddressCard";
+import deliveryAddressApi from "../../../backend/db/deliveryAddressApi";
+import { useAuth } from "../../../context/AuthContext";
 export default function Address({ isPresentinCheckout, setSelectedAddress ,id}) {
   const [isAddClicked, setIsAddClicked] = useState(false);
   const [isEditClicked, setIsEditClicked] = useState(false);
+  const { user } = useAuth();
   const { address, handleEdit, addressDispatch } = useAddress();
+
+  useEffect(() => {
+    if (!user)
+      return;
+    deliveryAddressApi.fetchByUser(user?.id).then(result => {
+      console.log(result)
+      addressDispatch({type: "SETADD", payload: result.addresses})
+  })
+  }, [user])
 
   return (
     <div className="address">
