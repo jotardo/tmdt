@@ -7,14 +7,17 @@ import { useData, useWish, useCart } from "../../";
 import Loader from "../../components/Loader";
 import ProductImageContainer from "../../components/ProductImageContainer";
 import { useEffect } from "react";
+import ProductReviews from "../../components/ProductReviews";
 
 export default function ProductDetails() {
   const { singleProduct } = useData();
   const { addToCardFunction, isItemInCart } = useCart();
   const token = localStorage.getItem("jwtToken");
+  const currentUserId = token ? parseInt(localStorage.getItem("user")) : null;
+
   const todate = new Date().toString();
   const { addWishListData, isAvailableInWishList, deleteWishListData } =
-    useWish();
+      useWish();
   const navigate = useNavigate();
 
   const product = singleProduct?.product;
@@ -37,15 +40,16 @@ export default function ProductDetails() {
       occasion,
       prevPrice,
       price,
-      product_rating,
-      product_reviews,
+      averageRating=0,
+      totalRating=0,
 
     } = product;
+    const mainImage = imageURLs && imageURLs.length > 0 ? imageURLs[0].url : "/no-image.jpg";
 
     const discount = Math.floor(
-      100 - (price / prevPrice) * 100
+        100 - (price / prevPrice) * 100
     );
-
+    console.log("userid", currentUserId )
     if (singleProduct.loading)
       return <Loader />
     return (
@@ -56,32 +60,33 @@ export default function ProductDetails() {
               return {...img, url: `http://localhost:8080/api/product/${img.url}`}
             }) } />
 
-            <div className="buttons">
-              <button
-                onClick={() => {
-                  token && isItemInCart(id)
-                    ? navigate("/cart")
-                    : addToCardFunction(product, token);
-                }}
-              >
-                {token && isItemInCart(id) ? "Đi đến giỏ" : "Thêm vào giỏ"}
-              </button>
-              <button
-                onClick={() => {
-                  if (token && isAvailableInWishList(id) >= 0) deleteWishListData(id);
-                  else addWishListData(product);
-                }}
-              >
-                {token && isAvailableInWishList(id) >= 0 ? (
-                  <span class="removeWish">
-                    Xóa Wishlist <FavoriteRoundedIcon />{" "}
+              <div className="buttons">
+                <button
+                    onClick={() => {
+                      token && isItemInCart(id)
+                          ? navigate("/cart")
+                          : addToCardFunction(product, token);
+                    }}
+                >
+                  {token && isItemInCart(id) ? "Đi đến giỏ" : "Thêm vào giỏ"}
+                </button>
+                <button
+                    onClick={() => {
+                      if (token && isAvailableInWishList(id) >= 0) deleteWishListData(id);
+                      else addWishListData(product);
+                    }}
+                >
+                  {token && isAvailableInWishList(id) >= 0 ? (
+                      <span class="removeWish">
+                    Xóa Wishlist <FavoriteRoundedIcon/>{" "}
                   </span>
-                ) : (
-                  <span class="removeWish">
-                    Thêm Wishlist <FavoriteTwoToneIcon />{" "}
+                  ) : (
+                      <span class="removeWish">
+                    Thêm Wishlist <FavoriteTwoToneIcon/>{" "}
                   </span>
-                )}
-              </button>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
           <div className="textContentContainer">
@@ -111,19 +116,33 @@ export default function ProductDetails() {
                 </ul>
               </div>
 
-              <div className="description">
-                <p class="head">Mô tả</p>
-                <p>{description}</p>
+              <div className="highlights">
+                <div>
+                  <p class="head">Đặc điểm nổi bật</p>
+                  <ul>
+                    <li>Loại đá : {productMaterial}</li>
+                    <li>Dịp lễ : {occasion}</li>
+                    <li>Điểm đánh giá : {averageRating.toFixed(1)} ⭐ ({totalRating} đánh giá)</li>
+                  </ul>
+                </div>
+
+                <div className="description">
+                  <p className="head">Mô tả</p>
+                  <p>{description}</p>
+                </div>
               </div>
             </div>
           </div>
+          <hr className="divider"/>
+
+              <ProductReviews productId={id} currentUserId={currentUserId} navigate={navigate}/>
+
         </div>
-      </div>
     );
   } else
     return (
-      <h2 style={{ height: "80vh", marginTop: "100px" }}>
-        Xin lỗi, sản phẩm này không tồn tại
-      </h2>
+        <h2 style={{height: "80vh", marginTop: "100px"}}>
+          Xin lỗi, sản phẩm này không tồn tại
+        </h2>
     );
 }

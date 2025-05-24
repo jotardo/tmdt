@@ -1,14 +1,19 @@
 import {
-  createContext,
-  useContext,
-  useReducer,
-  useState,
-  useEffect,
+    createContext,
+    useContext,
+    useReducer,
+    useState,
+    useEffect,
+    useCallback,
 } from "react";
 import { toast } from "react-toastify";
 import { reducerFilterFunction } from "../allReducers/filtersReducer";
+import {
+    getProduct,
+    getAllProducts,
+} from "../services/shopingService/shopService";
+import { getAllCategories } from "../services/shopingService/categoryService";
 import productApi from "../backend/db/productApi";
-import categoryApi from "../backend/db/categoryApi";
 
 export const DataContext = createContext();
 export function DataProvider({ children }) {
@@ -18,6 +23,7 @@ export function DataProvider({ children }) {
    * brand, size, productMaterial, occasion
    * }
    */
+  
   const [backendData, setBackendData] = useState({
     loading: true,
     error: null,
@@ -66,19 +72,6 @@ export function DataProvider({ children }) {
     }
   };
 
-  const getCategories = async () => {
-    try {
-      const response = await categoryApi.fetchAllCategories();
-      const {
-        status,
-        data: { categories },
-      } = response;
-      if (status === 200) setCategoriesData(categories);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   useEffect(() => {
     /** refresh data every 1 min? */
       getBackendData();
@@ -91,17 +84,38 @@ export function DataProvider({ children }) {
     return () => clearInterval(interval)
   }, []);
 
-  const [filtersUsed, setFiltersUsed] = useReducer(reducerFilterFunction, {
-    priceRange: 1500,
-    search: "",
-    sort: "",
-    rating: "",
-    ocassionFilters: [],
-    categoryFilters: [],
-    materialFilter: [],
-  });
+    const getCategories = async () => {
+        try {
+            const response = await getAllCategories();
+            const { status, data } = response;
+            if (status === 200 && data && Array.isArray(data.categories)) {
+                setCategoriesData(data.categories);
+            } else {
+                setCategoriesData([]);
+            }
+        } catch (error) {
+            console.log(error);
+            setCategoriesData([]);
+        }
+    };
 
-  const lowercaseSearch = filtersUsed.search.toLowerCase();
+    useEffect(() => {
+        getBackendData();
+        getCategories();
+    }, []);
+    
+      const [filtersUsed, setFiltersUsed] = useReducer(reducerFilterFunction, {
+        priceRange: 1500,
+        search: "",
+        sort: "",
+        rating: "",
+        ocassionFilters: [],
+        categoryFilters: [],
+        materialFilter: [],
+      });
+    
+      const lowercaseSearch = filtersUsed.search.toLowerCase();
+    
 
   const searchedDataValue =
     filtersUsed.search.length > 0
@@ -183,5 +197,5 @@ export function DataProvider({ children }) {
 }
 
 export const useData = () => {
-  return useContext(DataContext);
+    return useContext(DataContext);
 };

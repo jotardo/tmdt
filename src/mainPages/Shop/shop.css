@@ -158,6 +158,9 @@ aside label {
 
 .productsContentArea {
   width: 100%;
+  padding-right: 30px;
+  box-sizing: border-box;
+
 }
 
 .productsContentArea > div:first-child {
