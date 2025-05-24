@@ -26,12 +26,18 @@ export const reducerFilterFunction = (state, action) => {
           : [...state.materialFilter, value],
       };
     case "CATEGORY":
-   
       return {
         ...state,
         categoryFilters: state.categoryFilters.includes(value)
           ? [...state.categoryFilters.filter((item) => item !== value)]
           : [...state.categoryFilters, value],
+      };
+    case "BRAND":
+      return {
+        ...state,
+        brandFilters: state.brandFilters.includes(value)
+          ? [...state.brandFilters.filter((item) => item !== value)]
+          : [...state.brandFilters, value],
       };
     case "CLEARFILTER":
       return {
@@ -42,6 +48,7 @@ export const reducerFilterFunction = (state, action) => {
         ocassionFilters: [],
         categoryFilters: [],
         materialFilter: [],
+        brandFilters: [],
       };
 
     default:

@@ -14,6 +14,7 @@ import {
 } from "../services/shopingService/shopService";
 import { getAllCategories } from "../services/shopingService/categoryService";
 import productApi from "../backend/db/productApi";
+import categoryApi from "../backend/db/categoryApi";
 
 export const DataContext = createContext();
 export function DataProvider({ children }) {
@@ -23,13 +24,16 @@ export function DataProvider({ children }) {
    * brand, size, productMaterial, occasion
    * }
    */
-  
+  const uniqueArrayFunc = (val, index, originalArr) => originalArr.indexOf(val) === index;
   const [backendData, setBackendData] = useState({
     loading: true,
     error: null,
     productsData: [],
   });
   const [categoriesData, setCategoriesData] = useState([]);
+  const [brandData, setBrandData] = useState([]);
+  const [materialData, setMaterialData] = useState([]);
+  const [occasionData, setOccasionData] = useState([]);
   const [singleProduct, setSingleProduct] = useState({
     product: {},
     loading: true,
@@ -38,11 +42,18 @@ export function DataProvider({ children }) {
   const getBackendData = async () => {
     try {
       const response = await productApi.fetchExistingProducts();
+      const productList = response?.data?.productDTOs;
       setBackendData({
         ...backendData,
         loading: false,
-        productsData: [...response?.data?.productDTOs],
+        productsData: [...productList],
       });
+      // brands
+      const brandList = productList.map(product => product.brand).filter(uniqueArrayFunc);
+      setBrandData(brandList);
+      // occasions
+      const occasionList = productList.map(product => product.occasion).filter(uniqueArrayFunc);
+      setOccasionData(occasionList);
     } catch (error) {
       setBackendData({ ...backendData, loading: false, error: error });
       console.log("Lỗi kết nối tới backend:", error);
@@ -71,6 +82,18 @@ export function DataProvider({ children }) {
       console.log(error);
     }
   };
+    const getCategories = async () => {
+      try {
+        const response = await categoryApi.fetchAllCategories();
+        const {
+          status,
+          data: { categories },
+        } = response;
+        if (status === 200) setCategoriesData(categories);
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   useEffect(() => {
     /** refresh data every 1 min? */
@@ -84,38 +107,18 @@ export function DataProvider({ children }) {
     return () => clearInterval(interval)
   }, []);
 
-    const getCategories = async () => {
-        try {
-            const response = await getAllCategories();
-            const { status, data } = response;
-            if (status === 200 && data && Array.isArray(data.categories)) {
-                setCategoriesData(data.categories);
-            } else {
-                setCategoriesData([]);
-            }
-        } catch (error) {
-            console.log(error);
-            setCategoriesData([]);
-        }
-    };
+  const [filtersUsed, setFiltersUsed] = useReducer(reducerFilterFunction, {
+    priceRange: 1500,
+    search: "",
+    sort: "",
+    rating: "",
+    ocassionFilters: [],
+    categoryFilters: [],
+    materialFilter: [],
+    brandFilters: [],
+  });
 
-    useEffect(() => {
-        getBackendData();
-        getCategories();
-    }, []);
-    
-      const [filtersUsed, setFiltersUsed] = useReducer(reducerFilterFunction, {
-        priceRange: 1500,
-        search: "",
-        sort: "",
-        rating: "",
-        ocassionFilters: [],
-        categoryFilters: [],
-        materialFilter: [],
-      });
-    
-      const lowercaseSearch = filtersUsed.search.toLowerCase();
-    
+  const lowercaseSearch = filtersUsed.search.toLowerCase();
 
   const searchedDataValue =
     filtersUsed.search.length > 0
@@ -131,6 +134,10 @@ export function DataProvider({ children }) {
         )
       : backendData?.productsData;
 
+      /** Filter order: search result -> category -> (*)brand -> occasion ->
+       *  material -> price range -> rating.
+       * AFTER ALL THAT, SORT THEM BY PRICE IF THERE ARE SORT IN PLACE
+      */
   const categoryFilterData =
     filtersUsed.categoryFilters.length > 0
       ? searchedDataValue.filter((item) =>
@@ -140,14 +147,24 @@ export function DataProvider({ children }) {
         )
       : searchedDataValue;
 
+      /** yipee brand */
+  const brandFilterData = 
+    filtersUsed.brandFilters.length > 0
+      ? categoryFilterData.filter((item) =>
+          filtersUsed.brandFilters.some(
+            (elem) => item.brand === elem
+          )
+        )
+      : categoryFilterData;
+
   const occasionFilterData =
     filtersUsed.ocassionFilters.length > 0
-      ? categoryFilterData.filter((item) =>
+      ? brandFilterData.filter((item) =>
           filtersUsed.ocassionFilters.some(
             (elem) => item.occasion === elem
           )
         )
-      : categoryFilterData;
+      : brandFilterData;
   const materialFilterData =
     filtersUsed.materialFilter.length > 0
       ? occasionFilterData.filter((item) =>
@@ -189,6 +206,9 @@ export function DataProvider({ children }) {
         singleProduct,
         filtersUsed,
         getBackendData,
+        // added
+        brandData,
+        occasionData
       }}
     >
       {children}
