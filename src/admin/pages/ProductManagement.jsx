@@ -34,6 +34,7 @@ const ProductManagement = () => {
   const navigate = useNavigate();
 
   const theme = useTheme();
+
   
   const fetchAllProducts = async () => {
     setLoading(true);

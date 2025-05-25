@@ -40,25 +40,27 @@ export function DataProvider({ children }) {
   });
 
   const getBackendData = async () => {
-    try {
-      const response = await productApi.fetchExistingProducts();
-      const productList = response?.data?.productDTOs;
-      setBackendData({
-        ...backendData,
-        loading: false,
-        productsData: [...productList],
-      });
-      // brands
-      const brandList = productList.map(product => product.brand).filter(uniqueArrayFunc);
-      setBrandData(brandList);
-      // occasions
-      const occasionList = productList.map(product => product.occasion).filter(uniqueArrayFunc);
-      setOccasionData(occasionList);
-    } catch (error) {
-      setBackendData({ ...backendData, loading: false, error: error });
-      console.log("Lỗi kết nối tới backend:", error);
-    }
-  };
+  try {
+    const response = await productApi.fetchExistingProducts();
+    const productList = response?.data;
+    
+    setBackendData({
+      ...backendData,
+      loading: false,
+      productsData: productList,
+    });
+
+    const brandList = productList.map(product => product.brand).filter(uniqueArrayFunc);
+    setBrandData(brandList);
+
+    const occasionList = productList.map(product => product.occasion).filter(uniqueArrayFunc);
+    setOccasionData(occasionList);
+  } catch (error) {
+    setBackendData({ ...backendData, loading: false, error: error });
+    console.error("Lỗi kết nối tới backend hoặc dữ liệu sai:", error);
+  }
+};
+
 
   const getSingleProduct = async (id) => {
     setSingleProduct({
