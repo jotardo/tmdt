@@ -43,6 +43,7 @@ import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
 import ApproveCTV from "./admin/pages/ApproveCTV";
 import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
+import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
 
 
 function App() {
@@ -114,10 +115,13 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+        <Route path="/login/oauth2/code/facebook" element={<FacebookOAuthCallback />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="reset-password" element={<ResetPassword />} />
+
         {/* <Route path="/register" element={<Register />} /> */}
+
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />

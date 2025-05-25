@@ -2,6 +2,7 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { clearAuthData } from "../utils/authUtils";
 
 export const AuthContext = createContext();
 
@@ -30,6 +31,7 @@ export default function AuthProvider({ children }) {
   };
 
   const logout = () => {
+    clearAuthData()
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("user");
     toast.success("Đăng xuất thành công!");

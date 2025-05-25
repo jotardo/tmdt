@@ -164,10 +164,15 @@ export default function Login() {
   }
 
   const GOOGLE_AUTH_URL = "http://localhost:8080/oauth2/authorization/google";
+  const FACEBOOK_AUTH_URL = "http://localhost:8080/oauth2/authorization/facebook";
 
   const handleGoogleLogin = () => {
     window.location.href = GOOGLE_AUTH_URL;
   };
+
+  const handleFacebookLogin = () => {
+    window.location.href = FACEBOOK_AUTH_URL;
+  }
 
   return (
     <>
@@ -229,10 +234,15 @@ export default function Login() {
                   </button>
                 </div>
 
-                {/* Login Google */}
+                {/* Login OAuth2 */}
                 <div className="googleLoginButton" style={{ marginTop: "20px", textAlign: "center" }}>
                   <button type="button" onClick={handleGoogleLogin} disabled={isLoading}>
                     Đăng nhập với Google
+                  </button>
+                </div>
+                <div className="facebookLoginButton" style={{ marginTop: "20px", textAlign: "center" }}>
+                  <button type="button" onClick={handleFacebookLogin} disabled={isLoading}>
+                    Đăng nhập với Facebook
                   </button>
                 </div>
 
