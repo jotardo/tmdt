@@ -80,9 +80,9 @@ aside .filterHeader h3 {
   color: var(--secondary-text-color);
 }
 
-.priceFilter h3 {
+/* .priceFilter h3 {
 
-}
+} */
 
 .priceFilter input[type="range"] {
   -webkit-appearance: none;
@@ -158,6 +158,9 @@ aside label {
 
 .productsContentArea {
   width: 100%;
+  padding-right: 30px;
+  box-sizing: border-box;
+
 }
 
 .productsContentArea > div:first-child {
@@ -180,7 +183,7 @@ aside label {
   background-color: var(--card-bg-color);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;

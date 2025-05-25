@@ -11,29 +11,27 @@ export const AddressProvider = ({ children }) => {
   const [address, addressDispatch] = useReducer(reducer, initialAddressData);
   const dummyAddress = {
     id: uuid(),
-    fullName: "Dummy Malhotra",
-    mobile: "+91 9998886661",
-    building: "A43",
+    receiverName: "Dummy Malhotra",
+    contactNumber: "+91 9998886661",
+    buildingAddress: "A43",
     quarter: "Street 332",
-    ward: "New Town",
-    district: "Dummy District",
+    wardName: "New Town",
+    districtName: "Dummy districtName",
     pincode: "400005",
-    province: "Use State of React",
-    home: true,
-    work: false,
+    provinceName: "Use State of React",
+    workAddress: true,
   };
   const [addressState, setAddressState] = useState({
     id: uuid(),
-    fullName: null,
-    mobile: null,
-    building: null,
+    receiverName: null,
+    contactNumber: null,
+    buildingAddress: null,
     quarter: null,
-    ward: null,
-    district: null,
+    wardName: null,
+    districtName: null,
     pincode: null,
-    province: null,
-    home: false,
-    work: false,
+    provinceName: null,
+    workAddress: false,
   });
 
   const handleEdit = (id, isEditClicked) => {

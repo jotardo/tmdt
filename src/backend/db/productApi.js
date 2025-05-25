@@ -82,6 +82,11 @@ const productApi = {
     return axiosClient.get(`/product/${productID}`);
   },
 
+  // Lấy danh sách sản phẩm ko phải deleted
+  fetchExistingProducts: async () => {
+    return await axiosClient.get("/product/list");
+  },
+
 }
 
 export default productApi;

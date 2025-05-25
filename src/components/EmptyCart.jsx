@@ -7,13 +7,13 @@ export default function EmptyCart() {
             <img src="/assets/mt-cart.png" alt="empty cart" />
             <p>Giỏ hàng của bạn chưa có sản phẩm nào hết.</p>
 
-            <button
-                onClick={() => {
-                    navigate("/shop");
-                }}
-            >
-                Tiếp tục mua tại Cửa hàng
-            </button>
-        </div>
-    );
+      <button
+        onClick={() => {
+          navigate("/shop");
+        }}
+      >
+        Tiếp tục mua tại Cửa hàng
+      </button>
+    </div>
+  );
 }

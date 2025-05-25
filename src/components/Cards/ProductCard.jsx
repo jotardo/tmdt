@@ -2,9 +2,8 @@ import { NavLink } from "react-router-dom";
 import { useData, useWish, useCart } from "../../index";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
-import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
-import { useMemo } from "react";
+import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
+import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
 
 export default function ProductCard({ item, inWishlist }) {
     const token = useMemo(() => localStorage.getItem("jwtToken"), []);
@@ -19,7 +18,7 @@ export default function ProductCard({ item, inWishlist }) {
     }, [isAvailableInWishList, id]);
 
     const discount = prevPrice ? Math.floor(100 - (price / prevPrice) * 100) : 0;
-    const mainImage = imageURLs?.[0]?.url || "/no-image.jpg";
+    const mainImage = imageURLs && imageURLs.length > 0 ? imageURLs[0].url : "no-image.jpg";
 
     const handleWishlistToggle = (e) => {
         e.preventDefault();
@@ -45,7 +44,7 @@ export default function ProductCard({ item, inWishlist }) {
     return (
         <div className="ProductCard" onClick={() => getSingleProduct(id)}>
             <NavLink to={`/products/${id}`}>
-                <img src={mainImage} alt={name || "Sản phẩm trang sức"} />
+                <img src={`http://localhost:8080/api/product/${mainImage}`} alt="Sản phẩm trang sức"/>
                 <div className="cardTextContent">
                     <h3>{name?.slice(0, 15) || "Sản phẩm"}</h3>
                     {brand && <p className="brand">Thương hiệu: {brand}</p>}

@@ -5,12 +5,12 @@ import {
   FormControl
 } from "@mui/material";
 import categoryApi from "../../backend/db/categoryApi";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext, useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import productApi from "../../backend/db/productApi";
 
 const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -26,7 +26,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
     // productIsFavorite: false,
     // productIsCart: false,
     categoryId: "",
-    ctvOrAdminId: user.id,
+    ctvOrAdminId: user?.id,
   });
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
         productIsBadge: editProduct.productIsBadge || "",
         status: editProduct.status || "ACTIVE",
         categoryId: editProduct.categoryId || "",
-        ctvOrAdminId: user.id,
+        ctvOrAdminId: user?.id,
       });
     } else {
       setForm({
@@ -58,14 +58,14 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
         productIsBadge: "",
         status: "ACTIVE",
         categoryId: "",
-        ctvOrAdminId: user.id,
+        ctvOrAdminId: user?.id,
       });
       setImages([]);
     }
-  }, [editProduct, user.id]);
+  }, [editProduct, user?.id]);
+  
 
-
-  console.log("User ID:", user.id);
+  console.log("User ID:", user?.id);
 
   const [images, setImages] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -102,19 +102,19 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
 
   };
 
-
+  
 
   const handleSubmit = async () => {
     const formData = new FormData();
 
     console.log("Category ID and CTV ID:", form.categoryId, form.ctvOrAdminId);
-
+  
     // Validate trước
-    if (!form.categoryId || !user.id) {
+    if (!form.categoryId || !user?.id) {
       toast.warning("Vui lòng nhập đầy đủ tên, danh mục, giá và người tạo.");
       return;
     }
-
+  
     // Parse chính xác kiểu dữ liệu
     formData.append("name", form.name);
     formData.append("description", form.description);
@@ -128,7 +128,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
     formData.append("status", form.status);
     formData.append("categoryId", parseInt(form.categoryId));
     formData.append("ctvOrAdminId", parseInt(user.id));
-
+  
     // Append images
     images.forEach((img) => {
       formData.append("images", img);
