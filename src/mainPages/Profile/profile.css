@@ -112,7 +112,8 @@
   padding: 0 10px;
 }
 .addressForm input[type="text"],
-.addressForm input[type="number"] {
+.addressForm input[type="number"],
+.addressForm select {
   font-size: 1rem;
   border-radius: 5px;
   padding: 5px;
@@ -249,3 +250,5 @@ width: 100%;
       margin:0;
     }
 }
+
+/* custom */

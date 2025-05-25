@@ -5,6 +5,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
+import { useEffect } from "react";
 
 export default function ProductCard({ item, inWishlist }) {
   const { deleteWishListData, addWishListData ,isAvailableInWishList} = useWish();
@@ -12,51 +13,54 @@ export default function ProductCard({ item, inWishlist }) {
   const { addToCardFunction, isItemInCart,changeQuantity } = useCart();
   const token = localStorage.getItem("jwtToken")
   const {
-    _id,
-    product_name,
-    product_price,
-    product_prevPrice,
+    id,
+    name,
+    price,
+    prevPrice,
     product_image,
-    product_isBadge,
+    productIsBadge,
     
     
   } = item;
   const discount = Math.floor(
-    100 - (product_price / product_prevPrice) * 100
+    100 - (price / prevPrice) * 100
   );
+  useEffect(()=>{
+    alert(JSON.stringify(item))
+  }, [])
   return (
-    <div className="ProductCard" key={_id}>
-      <NavLink to={`/products/${_id}`}>
+    <div className="ProductCard" key={id}>
+      <NavLink to={`/products/${id}`}>
         <div
           onClick={() => {
-            getSingleProduct(_id);
+            getSingleProduct(id);
           }}
         >
           <img src={product_image} alt="exclusive jewelry by Shringaar" />
           <div className="cardTextContent">
-            <h3>{product_name.slice(0, 15)}</h3>
+            <h3>{name.slice(0, 15)}</h3>
             <p className="price">
-              {product_prevPrice && (
-                <span className="stikeThrough">{product_prevPrice} VNĐ</span>
+              {prevPrice && (
+                <span className="stikeThrough">{prevPrice} VNĐ</span>
               )}
-              <b> {product_price} VNĐ </b> (Giảm {discount} %)
+              <b> {price} VNĐ </b> (Giảm {discount} %)
             </p>
             
           </div>
           <span className="favorite" title= "Thêm vào WishList" onClick={(e)=>{e.preventDefault();
-          token && isAvailableInWishList(_id)>=0 ?deleteWishListData(_id):addWishListData(item)
+          token && isAvailableInWishList(id)>=0 ?deleteWishListData(id):addWishListData(item)
           }}>
            {
-           token&&isAvailableInWishList(_id)>=0 ?<FavoriteRoundedIcon/>:
+           token&&isAvailableInWishList(id)>=0 ?<FavoriteRoundedIcon/>:
             <FavoriteTwoToneIcon/>
           
             
 }
           </span>
-          <span title={product_isBadge} className="trendingIcon">
-            {product_isBadge.length > 0 ? (
+          <span title={productIsBadge} className="trendingIcon">
+            {productIsBadge.length > 0 ? (
               <div className="ribbon ribbon-top-left">
-                <span>{product_isBadge}</span>
+                <span>{productIsBadge}</span>
               </div>
             ) : null}
 
@@ -66,7 +70,7 @@ export default function ProductCard({ item, inWishlist }) {
 
           <div className="buttons">
             <div className="addToCartButton" title= "Add to Cart">
-              {token && isItemInCart(_id) ? (
+              {token && isItemInCart(id) ? (
                 <span
                   title="Thêm vào giỏ"
                   className="moveToCart"
@@ -88,11 +92,11 @@ export default function ProductCard({ item, inWishlist }) {
 
             
         </div>
-        {isItemInCart(_id)&& inWishlist ? (
+        {isItemInCart(id)&& inWishlist ? (
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  changeQuantity(_id, token, "increment");
+                  changeQuantity(id, token, "increment");
                 }}
               >
                 Thêm 1 đơn vị của sản phẩm này

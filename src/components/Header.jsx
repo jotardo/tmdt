@@ -9,6 +9,8 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 import PersonIcon from "@mui/icons-material/Person";
 
 import { useData, useCart, useWish } from "../";
+import { AdminPanelSettings } from "@mui/icons-material";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const [isMenuClicked, setIsMenuClicked] = useState(false);
@@ -18,7 +20,8 @@ export default function Header() {
   const [category, setCategory] = useState("");
 
   const { setFiltersUsed, categoriesData } = useData();
-  const token = localStorage.getItem("jwtToken")
+  const token = localStorage.getItem("jwtToken");
+  const { user } = useAuth();
   const { wishlistCount } = useWish();
   const { cartCount } = useCart();
   const navigate = useNavigate();
@@ -32,7 +35,7 @@ export default function Header() {
   const handleCategory = (e) => {
     setCategory(() => e.target.value);
     setFiltersUsed({ type: "CATEGORY", inputValue: e.target.value });
-    navigate("/browse");
+    navigate("/shop");
   };
 
   return (
@@ -42,13 +45,18 @@ export default function Header() {
           <img src="/assets/logo.jpg" alt="Logo"/>
         </div>
         <div className="categories">
-          {categoriesData.map((item) => (
-              <CategoryList
-                  item={item}
-                  navigate={navigate}
-                  setFiltersUsed={setFiltersUsed}
-              />
-          ))}
+          {Array.isArray(categoriesData) && categoriesData.length > 0 ? (
+              categoriesData.map((item) => (
+                  <CategoryList
+                      item={item}
+                      navigate={navigate}
+                      setFiltersUsed={setFiltersUsed}
+                      key={item.id || item.categoryName}
+                  />
+              ))
+          ) : (
+              <p>...</p>
+          )}
         </div>
         <div className="headerLeft">
           <div
@@ -101,7 +109,7 @@ export default function Header() {
                       onClick={() => {
                         setFiltersUsed({type: "SEARCH", inputValue: inputValue});
                         setIsSearchedClicked(!isSearchclicked);
-                        if (inputValue.length > 0) navigate("/browse");
+                        if (inputValue.length > 0) navigate("/shop");
                       }}
                   />
                 </div>
@@ -135,6 +143,11 @@ export default function Header() {
               </NavLink>
             </Badge>
           </span>
+          <span className={user?.role !== "Admin" ? "admin" : "hiddenElement"}>
+                <NavLink to="/admin/dashboard">
+                  <AdminPanelSettings/>
+                </NavLink>
+          </span>
           <span className="login">
             {token ? (
                 <NavLink to="/profile">
@@ -150,25 +163,25 @@ export default function Header() {
       </div>
       {isMenuClicked && (
           <div title="Menu bar" className="sideNav">
-          <ul>
-            <NavLink to="/">
-              <li onClick={handleMenu}>TRANG CHỦ</li>
-            </NavLink>
-            <NavLink to="/about">
-              <li onClick={handleMenu}>VỀ CHÚNG TÔI</li>
-            </NavLink>
-            <NavLink to="contact">
-              <li onClick={handleMenu}>LIÊN HỆ</li>
-            </NavLink>
+            <ul>
+              <NavLink to="/">
+                <li onClick={handleMenu}>TRANG CHỦ</li>
+              </NavLink>
+              <NavLink to="/about">
+                <li onClick={handleMenu}>VỀ CHÚNG TÔI</li>
+              </NavLink>
+              <NavLink to="contact">
+                <li onClick={handleMenu}>LIÊN HỆ</li>
+              </NavLink>
 
-            <li>
-              <select
-                value={category}
-                name="categoryChoose"
-                onChange={handleCategory}
-                id="chooseCategory"
-              >
-                <option value="SHOP">DANH MỤC</option>
+              <li>
+                <select
+                    value={category}
+                    name="categoryChoose"
+                    onChange={handleCategory}
+                    id="chooseCategory"
+                >
+                  <option value="SHOP">DANH MỤC</option>
                 <option value="rings">NHẪN</option>
                 <option value="bracelet">VÒNG TAY</option>
                 <option value="earring">BÔNG TAI</option>
@@ -193,7 +206,7 @@ const CategoryList = ({ item, navigate, setFiltersUsed }) => {
           inputValue: "",
         });
         setFiltersUsed({ type: "CATEGORY", inputValue: item.categoryName });
-        navigate("/browse");
+        navigate("/shop");
       }}
     >
       {item.categoryName}

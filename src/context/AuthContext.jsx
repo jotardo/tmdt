@@ -3,31 +3,44 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { clearAuthData } from "../utils/authUtils";
+import userApi from "../backend/db/userApi";
 
 export const AuthContext = createContext();
 
 export default function AuthProvider({ children }) {
-  const [isLoading, setIsLoading] = useState(true);
+  
+  // Upon login, request a get info request to set user
+  // Since this works using promise, setUser is set here
+  const requestUserInfo = (user_id) => {
+    return userApi.getDetail(user_id);
+  }
+
+  // const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("jwtToken"));
-  const [user, setUser] = useState(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+  const [user, setUser] = useState(null);
 
-  const login = (token, userData) => {
+  const login = (token, userID) => {
     localStorage.setItem("jwtToken", token);
-    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("user", userID);
+
     setIsLoggedIn(true);
-    setUser(userData); // ✅ Cập nhật state user
+    requestUserInfo(userID).then(userDetails => {
+      console.log(userDetails)
+      setUser(userDetails.data)
+      // Điều hướng dựa trên role
+      if (userDetails?.role === "Admin") {
+        navigate("/admin/dashboard");
+      }
+      else {
+        navigate("/");
+      }
+    }) // ✅ Cập nhật state user
+    .catch(err => {
+      logout()
+      toast.error("Something was wrong, please relogin!" + err);
+    })
     
-    // Điều hướng dựa trên role
-    if (userData?.role !== null) {
-      navigate("/");
-    }
-    else {
-      navigate("/");
-    }
   };
 
   const logout = () => {
@@ -42,11 +55,11 @@ export default function AuthProvider({ children }) {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("jwtToken");
-    const storedUser = localStorage.getItem("user");
+    const storedUserID = localStorage.getItem("user");
   
-    if (storedToken && storedUser) {
+    if (storedToken && storedUserID) {
       setIsLoggedIn(true);
-      setUser(JSON.parse(storedUser)); // ✅ Gán user từ localStorage
+      requestUserInfo(storedUserID).then(userDetails => setUser(userDetails.data)); // ✅ Gán user từ localStorage
     }
   }, []);
 
@@ -56,4 +69,8 @@ export default function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
   
+}
+
+export function useAuth() {
+  return useContext(AuthContext);
 }

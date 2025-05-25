@@ -30,7 +30,6 @@ import VerifyEmail from "./mainPages/Login/VerifyEmail";
 import AdminLayout from "./admin";
 import Dashboard from "./admin/pages/Dashboard";
 import Customers from "./admin/pages/Customer";
-import OrdersAdmin from "./admin/pages/Orders";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CategoryManagement from "./admin/pages/CategoryManagement";
 import { useContext, useEffect } from "react";
@@ -63,9 +62,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route
           path="/admin"
-          element={
-              <AdminLayout />
-          }
+          element={<AdminLayout />}
         >
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
@@ -117,16 +114,15 @@ function App() {
         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         <Route path="/login/oauth2/code/facebook" element={<FacebookOAuthCallback />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="reset-password" element={<ResetPassword />} />
-
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         {/* <Route path="/register" element={<Register />} /> */}
 
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="*" element={<Error />} />
         <Route path="/register-ctv" element={<RegisterCTV />} />
+        <Route path="*" element={<Error />} />
 
       </Routes>
       <ToastContainer
