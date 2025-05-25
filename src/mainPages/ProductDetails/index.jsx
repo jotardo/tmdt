@@ -111,8 +111,8 @@ export default function ProductDetails() {
                   {/* <li>Màu: {product_color}</li> */}
                   <li>Loại đá : {productMaterial}</li>
                   <li>Dịp lễ : {occasion}</li>
-                  <li>Điểm đánh giá : {product_rating} ⭐</li>
-                  <li>Tổng số đánh giá : {product_reviews}</li>
+                  {/* <li>Điểm đánh giá : {product_rating} ⭐</li> */}
+                  {/* <li>Tổng số đánh giá : {product_reviews}</li> */}
                 </ul>
               </div>
 

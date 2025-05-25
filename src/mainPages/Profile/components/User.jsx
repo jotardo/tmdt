@@ -19,11 +19,11 @@ export default function User() {
     avatar: user.avatar,
   });
 
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmNewPassword: "",
-  });
+  // const [passwordData, setPasswordData] = useState({
+  //   currentPassword: "",
+  //   newPassword: "",
+  //   confirmNewPassword: "",
+  // });
 
   const cartCount = useCart()?.length || 0;
   const wishlistCount = useWish()?.length || 0;
