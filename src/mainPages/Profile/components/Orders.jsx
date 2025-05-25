@@ -117,7 +117,7 @@ const {getSingleProduct} = useData()
         ) : (
           <div>
             <p> "Bạn chưa có đơn hàng nào"</p>
-            <button onClick={()=>{navigate("/browse")}}>Đi đến Cửa hàng</button>
+            <button onClick={()=>{navigate("/shop")}}>Đi đến Cửa hàng</button>
           </div>
         )}
       </div>

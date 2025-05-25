@@ -1,23 +1,26 @@
 import { v4 as uuid } from "uuid";
+import deliveryAddressApi from "../backend/db/deliveryAddressApi";
 export const initialAddressData=
 [
-  {
-    id: uuid(),
-    fullName: "JS Kumari",
-    mobile: "+91 91111111110", //sđt
-    building: "86/4",  // số nhà
-    quarter: "Khu phố 11",  // khu phố
-    ward: "Tân Hòa",  // phường
-    district: "Biên Hòa",  // quận huyện
-    province: "Đồng Nai", // tỉnh
-    pincode: "530005",  
-    home: false,
-    work: true,
-  },
+  // {
+  //   id: uuid(),
+  //   fullName: "JS Kumari",
+  //   mobile: "+91 91111111110", //sđt
+  //   building: "86/4",  // số nhà
+  //   quarter: "Khu phố 11",  // khu phố
+  //   ward: "Tân Hòa",  // phường
+  //   district: "Biên Hòa",  // quận huyện
+  //   province: "Đồng Nai", // tỉnh
+  //   pincode: "530005",  
+  //   home: false,
+  //   work: true,
+  // },
 ]
 export const reducer = (state, action) => {
   
   switch (action.type) {
+    case "SETADD":
+      return [...action.payload];
     case "ADDRESSADD":
       return [...state, action.payload];
     case "DELETEADD":

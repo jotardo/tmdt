@@ -65,7 +65,7 @@ export default function Home() {
         <p>Browse through your favorite categories. we have got them all!</p>
         <div className="categoryBox">
           {
-            categoriesData.map(({ _id, categoryName, thumbnail }) => <div key={_id} className={categoryName}
+            categoriesData.map(({ id:_id, name:categoryName, thumbnail }) => <div key={_id} className={categoryName}
               onClick={() => {
                 setFiltersUsed({
                   type: "CLEARFILTER",
@@ -73,9 +73,9 @@ export default function Home() {
                 });
 
                 setFiltersUsed({ type: "CATEGORY", inputValue: categoryName });
-                navigate('/browse')
+                navigate('/shop')
               }}>
-              <img src={thumbnail} alt={`${categoryName}`} />
+              <img src={`http://localhost:8080/api/category/${thumbnail}`} alt={`${categoryName}`} />
               <p>{categoryName}</p>
             </div>
             )

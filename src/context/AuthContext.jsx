@@ -28,7 +28,7 @@ export default function AuthProvider({ children }) {
       console.log(userDetails)
       setUser(userDetails.data)
       // Điều hướng dựa trên role
-      if (userDetails?.role !== null) {
+      if (userDetails?.role === "Admin") {
         navigate("/admin/dashboard");
       }
       else {
@@ -57,8 +57,7 @@ export default function AuthProvider({ children }) {
   
     if (storedToken && storedUserID) {
       setIsLoggedIn(true);
-      const userDetails = requestUserInfo(storedUserID);
-      setUser(userDetails); // ✅ Gán user từ localStorage
+      requestUserInfo(storedUserID).then(userDetails => setUser(userDetails.data)); // ✅ Gán user từ localStorage
     }
   }, []);
 
