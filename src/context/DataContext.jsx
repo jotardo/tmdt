@@ -42,7 +42,7 @@ export function DataProvider({ children }) {
   const getBackendData = async () => {
     try {
       const response = await productApi.fetchExistingProducts();
-      const productList = response?.data?.productDTOs;
+      const productList = response?.data;
       setBackendData({
         ...backendData,
         loading: false,
@@ -69,7 +69,7 @@ export function DataProvider({ children }) {
       const response = await productApi.fetchProductDetail(id);
       const {
         status,
-        data: { productDTO: {...productDB} },
+        data: { ...productDB },
       } = response;
       if (status === 200) {
         setSingleProduct({
