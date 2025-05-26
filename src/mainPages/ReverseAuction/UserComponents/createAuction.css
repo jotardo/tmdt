@@ -1,0 +1,38 @@
+.auction-form {
+    display: flex;
+    flex-direction: column; /* sắp xếp dọc */
+    background: #fdf3e7;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 600px;
+    margin-top: 20px;
+    gap: 15px; /* tạo khoảng cách dọc giữa các form-group */
+}
+
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+textarea,
+input[type="number"],
+input[type="file"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 4px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #e68900;
+}

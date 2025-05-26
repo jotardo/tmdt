@@ -1,169 +1,186 @@
 import {
-  useContext,
-  createContext,
-  useEffect,
-  useState,
-  useReducer,  
+    useContext,
+    createContext,
+    useEffect,
+    useReducer,
+    useCallback,
 } from "react";
-import {useNavigate, useLocation} from 'react-router-dom'
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { isLoggedIn } from "../";
 import {
-  getCartList,
-  addToCart,
-  incDecQuantity,
-  deleteFromCart,
+    getCartList,
+    addToCart,
+    incDecQuantity,
+    deleteFromCart,
 } from "../services/shopingService/cartService";
 import { initialCartData, cartReducer } from "../allReducers/cartReducer";
+
 export const CartContext = createContext();
 
 export function CartProvider({ children }) {
-  const [cartManager, setCartManager] = useReducer(
-    cartReducer,
-    initialCartData
-  );
-  const token = localStorage.getItem("jwtToken");
- const navigate = useNavigate()
- const location = useLocation()
-  const getAllCartItems = async (encodedToken) => {
-    try {
-      const response = await getCartList(encodedToken);
-      const {
-        status,
-        data: { cart },
-      } = response;
-      if (status === 200) {
-        setCartManager({ type: "DISPLAYCART", payload: [...cart] });
-      }
-    } catch (error) {
-      if (token)
-        toast.error(error?.message, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
-      console.error(error);
-    }
-  };
+    const [cartManager, dispatch] = useReducer(cartReducer, initialCartData);
+    const token = localStorage.getItem("jwtToken");
+    const navigate = useNavigate();
+    const location = useLocation();
 
-  const addToCardFunction = async (product, encodedToken) => {
-    try {
-      const response = await addToCart(product, encodedToken);
-      const {
-        status,
-        data: { cart },
-      } = response;
-      if (status === 201) {
-        setCartManager({ type: "ADDTOCART", payload: cart });
-        toast.success("Đã thêm vào giỏ thành công!", {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        });
-      }
-    } catch (error) {
-      toast.warn("Bạn cần đăng nhập để sử dụng tính năng này", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
-      navigate('/login', {state:{from :location}})
-      
-    }
-  };
-  const deleteFromCartFunction = async (id, title, encodedToken,showNotification) => {
-    try {
-      const response = await deleteFromCart(id, encodedToken);
-      const {
-        status,
-        data: { cart },
-      } = response;
+    // Chuẩn hóa cart item backend => frontend
+    const normalizeCartItem = (item) => ({
+        ...item,
+        qty: item.quantity,
+        product_price: item.product?.price || 0,
+        product_prevPrice: item.product?.prevPrice || 0,
+        product_name: item.product?.name || "",
+        _id: item.product?.id || "",
+    });
 
-      if (status === 200) {
-        setCartManager({ type: "DELETEFROMCART", payload: cart });
-       if( showNotification)toast.success(`${title} đã xóa khỏi giỏ hàng!`, {
-          position: toast.POSITION.BOTTOM_RIGHT,
-        })
-      }
-    } catch (error) {
-     
-      if( showNotification) toast.error("Lỗi: Không thể xóa sản phẩm này khỏi giỏ hàng", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
-    }
-  };
+    // Lấy tất cả sản phẩm trong giỏ hàng
+    const getAllCartItems = useCallback(async (encodedToken) => {
+        try {
+            const userId = localStorage.getItem("user");
+            if (!userId) throw new Error("User chưa đăng nhập");
 
-  const changeQuantity = async (productId, encodedToken, type) => {
-    try {
-      const response = await incDecQuantity(productId, encodedToken, type);
-      const {
-        status,
-        data: { cart },
-      } = response;
-      if (status === 200) {
-        if (type === "increment")
-          setCartManager({ type: "INCREASEQUANT", payload: cart });
-        else setCartManager({ type: "DECREASEQUANT", payload: cart });
-        toast.success(
-          type === "increment"
-            ? `Tăng số lượng sản phẩm thành công!`
-            : `Giảm số lượng sản phẩm thành công!`,
-          {
-            position: toast.POSITION.BOTTOM_RIGHT,
-          }
-        );
-      }
-    } catch (error) {
-      toast.error(error.message);
-      console.log(error);
-    }
-  };
+            const response = await getCartList(encodedToken, userId);
+            if (response.status === 200) {
+                const normalizedCart = response.data.map(normalizeCartItem);
+                dispatch({ type: "DISPLAYCART", payload: normalizedCart });
+            }
+        } catch (error) {
+            if (token) {
+                toast.error(error?.message || "Lỗi lấy giỏ hàng", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+            console.error("ERROR GET CART:", error);
+        }
+    }, [token]);
 
-const addItemstoOrdersPlaced = (orderDetailsObj)=>{
-  setCartManager({ type: "ORDERPLACED", payload: orderDetailsObj });
-}
+    // Thêm sản phẩm vào giỏ hàng
+    const addToCartFunction = async (product, encodedToken) => {
+        try {
+            const userId = localStorage.getItem("user");
+            if (!userId) throw new Error("User chưa đăng nhập");
 
+            const response = await addToCart(userId, product.id, 1, encodedToken);
 
+            if (response.status === 200) {
+                dispatch({ type: "ADDTOCART", payload: normalizeCartItem(response.data) });
+                toast.success("Đã thêm vào giỏ thành công!", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            toast.warn("Bạn cần đăng nhập để sử dụng tính năng này", {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
+            navigate("/login", { state: { from: location } });
+        }
+    };
 
-const isItemInCart = (prodId)=>{
-  return cartManager?.cartData.find(item=> item._id === prodId)?true:false
-}
+    // Xóa sản phẩm khỏi giỏ hàng
+    const deleteFromCartFunction = async (cartItemId, productName, encodedToken, showNotification = true) => {
+        try {
+            const userId = localStorage.getItem("user");
+            if (!userId) throw new Error("User chưa đăng nhập");
 
-  const totalPrevPrice = token && cartManager?.cartData
-  ? Math.floor(cartManager?.cartData.reduce(
-      (acc, curr) => curr.product_prevPrice * curr.qty + acc,
-      0
-    ))
-  : 0;
+            const response = await deleteFromCart(userId, cartItemId, encodedToken);
 
-  const totalPrice =  token && cartManager?.cartData
-    ? Math.floor(cartManager?.cartData.reduce(
-        (acc, curr) => curr.product_price * curr.qty + acc,
-        0
-      ))
-    : 0;
-  const totalDiscount = token && cartManager?.cartData? Math.floor(
-    100 - ((totalPrice / totalPrevPrice) * 100)
-  ):0
+            if (response.status === 200 && response.data.success) {
+                // Có thể gọi lại để đồng bộ giỏ hàng từ server
+                await getAllCartItems(encodedToken);
 
+                if (showNotification) {
+                    toast.success(`${productName} đã xóa khỏi giỏ hàng!`, {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                    });
+                }
+            } else if (showNotification) {
+                toast.error(response.data.responseMessage || "Xóa sản phẩm thất bại", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            if (showNotification) {
+                toast.error("Lỗi: Không thể xóa sản phẩm khỏi giỏ hàng", {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        }
+    };
 
-  useEffect(() => {
-    if (token) getAllCartItems(token);
-  }, [token]);
-  return (
-    <CartContext.Provider
-      value={{
-        changeQuantity,
-        cartManager,
-        addToCardFunction,
-        deleteFromCartFunction,
-        isItemInCart,
-        totalPrice,
-        totalPrevPrice,
-        totalDiscount,
-        cartCount:  cartManager?.cartData?cartManager?.cartData.length:0,
-        addItemstoOrdersPlaced,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+    // Tăng hoặc giảm số lượng sản phẩm trong giỏ
+    const changeQuantity = async (cartItemId, encodedToken, actionType) => {
+        try {
+            const userId = localStorage.getItem("user");
+            if (!userId) throw new Error("User chưa đăng nhập");
+
+            const response = await incDecQuantity(userId, cartItemId, encodedToken, actionType);
+
+            if (response.status === 200) {
+                await getAllCartItems(encodedToken);
+                toast.success(
+                    actionType === "increment"
+                        ? "Tăng số lượng sản phẩm thành công!"
+                        : "Giảm số lượng sản phẩm thành công!",
+                    { position: toast.POSITION.BOTTOM_RIGHT }
+                );
+            }
+        } catch (error) {
+            toast.error(error.message || "Lỗi cập nhật số lượng");
+            console.error(error);
+        }
+    };
+
+    // Thêm đơn hàng đã đặt
+    const addItemstoOrdersPlaced = (orderDetailsObj) => {
+        dispatch({ type: "ORDERPLACED", payload: orderDetailsObj });
+    };
+
+    // Kiểm tra sản phẩm đã có trong giỏ chưa
+    const isItemInCart = (prodId) => {
+        return cartManager.cartData.some(item => item._id === prodId);
+    };
+
+    // Tổng tiền gốc, tổng tiền hiện tại, tổng giảm giá
+    const totalPrevPrice = token && cartManager.cartData.length > 0
+        ? Math.floor(cartManager.cartData.reduce((acc, curr) => acc + curr.product_prevPrice * curr.qty, 0))
+        : 0;
+
+    const totalPrice = token && cartManager.cartData.length > 0
+        ? Math.floor(cartManager.cartData.reduce((acc, curr) => acc + curr.product_price * curr.qty, 0))
+        : 0;
+
+    const totalDiscount = token && totalPrevPrice > 0
+        ? Math.floor(100 - (totalPrice / totalPrevPrice) * 100)
+        : 0;
+
+    useEffect(() => {
+        if (token) {
+            getAllCartItems(token);
+        }
+    }, [token, getAllCartItems]);
+
+    return (
+        <CartContext.Provider
+            value={{
+                cartManager,
+                addToCartFunction,
+                deleteFromCartFunction,
+                changeQuantity,
+                isItemInCart,
+                totalPrice,
+                totalPrevPrice,
+                totalDiscount,
+                cartCount: cartManager.cartData.length,
+                addItemstoOrdersPlaced,
+            }}
+        >
+            {children}
+        </CartContext.Provider>
+    );
 }
 
 export function useCart() {
-  return useContext(CartContext);
+    return useContext(CartContext);
 }

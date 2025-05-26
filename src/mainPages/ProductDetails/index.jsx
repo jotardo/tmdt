@@ -5,12 +5,12 @@ import FavoriteTwoToneIcon from "@mui/icons-material/FavoriteTwoTone";
 
 import { useData, useWish, useCart } from "../../";
 import Loader from "../../components/Loader";
-import ProductImageContainer from "../../components/ProductImageContainer";
 import { useEffect } from "react";
+import ProductImageContainer from "../../components/ProductImageContainer";
 import ProductReviews from "../../components/ProductReviews";
 
 export default function ProductDetails() {
-  const { singleProduct } = useData();
+  const { singleProduct, getSingleProduct } = useData();
   const { addToCardFunction, isItemInCart } = useCart();
   const token = localStorage.getItem("jwtToken");
   const currentUserId = token ? parseInt(localStorage.getItem("user")) : null;
@@ -22,9 +22,10 @@ export default function ProductDetails() {
 
   const product = singleProduct?.product;
 
-    useEffect(()=> {
-      console.log("Current details:", product)
-    })
+  // useEffect(() => {
+  //   if (!singleProduct.product)
+  //     getSingleProduct()
+  // }, [])
 
   if (product) {
     const {
@@ -42,7 +43,8 @@ export default function ProductDetails() {
       price,
       averageRating=0,
       totalRating=0,
-
+      product_rating,
+      product_reviews,
     } = product;
     const mainImage = imageURLs && imageURLs.length > 0 ? imageURLs[0].url : "/no-image.jpg";
 
@@ -60,29 +62,29 @@ export default function ProductDetails() {
               return {...img, url: `http://localhost:8080/api/product/${img.url}`}
             }) } />
 
-              <div className="buttons">
-                <button
-                    onClick={() => {
-                      token && isItemInCart(id)
-                          ? navigate("/cart")
-                          : addToCardFunction(product, token);
-                    }}
-                >
-                  {token && isItemInCart(id) ? "Đi đến giỏ" : "Thêm vào giỏ"}
-                </button>
-                <button
-                    onClick={() => {
-                      if (token && isAvailableInWishList(id) >= 0) deleteWishListData(id);
-                      else addWishListData(product);
-                    }}
-                >
-                  {token && isAvailableInWishList(id) >= 0 ? (
-                      <span class="removeWish">
-                    Xóa Wishlist <FavoriteRoundedIcon/>{" "}
+            <div className="buttons">
+              <button
+                onClick={() => {
+                  token && isItemInCart(id)
+                    ? navigate("/cart")
+                    : addToCardFunction(product, token);
+                }}
+              >
+                {token && isItemInCart(id) ? "Đi đến giỏ" : "Thêm vào giỏ"}
+              </button>
+              <button
+                onClick={() => {
+                  if (token && isAvailableInWishList(id) >= 0) deleteWishListData(id);
+                  else addWishListData(product);
+                }}
+              >
+                {token && isAvailableInWishList(id) >= 0 ? (
+                  <span class="removeWish">
+                    Xóa Wishlist <FavoriteRoundedIcon />{" "}
                   </span>
-                  ) : (
-                      <span class="removeWish">
-                    Thêm Wishlist <FavoriteTwoToneIcon/>{" "}
+                ) : (
+                  <span class="removeWish">
+                    Thêm Wishlist <FavoriteTwoToneIcon />{" "}
                   </span>
                   )}
                 </button>
@@ -106,7 +108,7 @@ export default function ProductDetails() {
 
             <div className="highlights">
               <div>
-                <p class="head">Đặc điểm nổi bật</p>
+                <p className="head">Đặc điểm nổi bật</p>
                 <ul>
                   {/* <li>Màu: {product_color}</li> */}
                   <li>Loại đá : {productMaterial}</li>
@@ -126,12 +128,12 @@ export default function ProductDetails() {
                   </ul>
                 </div>
 
-                <div className="description">
-                  <p className="head">Mô tả</p>
-                  <p>{description}</p>
-                </div>
+              <div className="description">
+                <p class="head">Mô tả</p>
+                <p>{description}</p>
               </div>
             </div>
+          </div>
           </div>
           <hr className="divider"/>
 

@@ -1,37 +1,47 @@
-import axios from "axios";
+import axiosClient from "../../backend/api/axiosClient";
 
-export const getCartList = async (encodedToken) =>
-  await axios.get("/api/user/cart", {
-    headers: {
-      authorization: encodedToken,
-    },
-  });
+export async function getCartList(encodedToken, userId) {
+    return await axiosClient.get(`/cart/get?userId=${userId}`, {
+        headers: {
+            Authorization: `Bearer ${encodedToken}`,
+        },
+    });
+}
 
-export const addToCart = async ( product, encodedToken ) =>
-  await axios.post(
-    "/api/user/cart",
-    { product },
-    {
-      headers: {
-        authorization: encodedToken,
-      },
-    }
-  );
 
-export const incDecQuantity = async ( productId, encodedToken, type ) =>
-  await axios.post(
-    `/api/user/cart/${productId}`,
-    {
-      action: { type },
-    },
-    {
-      headers: {
-        authorization: encodedToken,
-      },
-    }
-  );
-export const deleteFromCart = async ( productId, encodedToken ) => {
-  return axios.delete(`/api/user/cart/${productId}`, {
+export const addToCart = async (userId, productId, quantity = 1, encodedToken) => {
+    return await axiosClient.post(
+        `/cart/add?userId=${userId}&productId=${productId}&quantity=${quantity}`,
+        {},
+        {
+            headers: {
+                authorization: encodedToken,
+            },
+        }
+    );
+};
+
+
+export const incDecQuantity = async (userId, cartItemId, token, action) => {
+    return await axiosClient.put(
+        `/cart/update-quantity`,
+        null,
+        {
+            params: {
+                userId,
+                cartItemId,
+                action,
+            },
+            headers: {
+                authorization: token,
+            },
+        }
+    );
+};
+
+
+export const deleteFromCart = async (userId, cartItemId, encodedToken ) => {
+  return axiosClient.delete(`/cart/remove?userId=${userId}&cartItemId=${cartItemId}`, {
     headers: {
       authorization: encodedToken,
     },
