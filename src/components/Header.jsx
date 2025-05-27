@@ -28,7 +28,6 @@ export default function Header() {
 
   const handleMenu = () => {
     setIsMenuClicked(!isMenuClicked);
-   
       window.scrollTo({top:0, left:0, behavior: "smooth"});
     
   };
@@ -44,14 +43,14 @@ export default function Header() {
         <div className="logo">
           <img src="/assets/logo.jpg" alt="Logo"/>
         </div>
-        <div className="categories">
+        <div className="categories" style={{overflow: "auto", minWidth: "40px", maxWidth: "20%"}}>
           {Array.isArray(categoriesData) && categoriesData.length > 0 ? (
               categoriesData.map((item) => (
                   <CategoryList
                       item={item}
                       navigate={navigate}
                       setFiltersUsed={setFiltersUsed}
-                      key={item.id || item.categoryName}
+                      key={item.id || item.name}
                   />
               ))
           ) : (
@@ -185,10 +184,19 @@ export default function Header() {
                     id="chooseCategory"
                 >
                   <option value="SHOP">DANH MỤC</option>
-                <option value="rings">NHẪN</option>
-                <option value="bracelet">VÒNG TAY</option>
-                <option value="earring">BÔNG TAI</option>
-                <option value="necklace">DÂY CHUYỀN</option>
+                  {
+                    Array.isArray(categoriesData) && categoriesData.length > 0 && (
+                      categoriesData.map((item) => (
+                      <option value={item.name} key={item.id || item.name}>
+                        {item.name}
+                      </option>
+                      ))
+                    )
+                  }
+                  <option value="rings">NHẪN</option>
+                  <option value="bracelet">VÒNG TAY</option>
+                  <option value="earring">BÔNG TAI</option>
+                  <option value="necklace">DÂY CHUYỀN</option>
               </select>
             </li>
           </ul>
@@ -201,18 +209,18 @@ export default function Header() {
 const CategoryList = ({ item, navigate, setFiltersUsed }) => {
   return (
     <li className="NavItem"
-      key={item._id}
-      value={item.categoryName}
+      key={item.id}
+      value={item.name}
       onClick={(e) => {
         setFiltersUsed({
           type: "CLEARFILTER",
           inputValue: "",
         });
-        setFiltersUsed({ type: "CATEGORY", inputValue: item.categoryName });
+        setFiltersUsed({ type: "CATEGORY", inputValue: item.name });
         navigate("/shop");
       }}
     >
-      {item.categoryName}
+      {item.name}
     </li>
   );
 };

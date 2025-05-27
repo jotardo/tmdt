@@ -51,6 +51,7 @@ section {
 .logoContatiner h2 {
   font-size: 1.1em;
   margin-bottom: 10px;
+  line-height: 25px;
 }
 
 .overlay {
@@ -70,7 +71,7 @@ section {
 
 .categories {
   display: none;
-  margin-left: -200px;
+  /* margin-left: -200px; */
 }
 
 .headerLeft {
@@ -83,10 +84,10 @@ section {
 .logoContatiner p {
   font-family: abel, sans-serif;
   color: grey;
-  line-height: 0px;
+  line-height: 10px;
   width: 100%;
   font-size: 0.7em;
-  margin-top: 0;
+  margin-top: -10px;
 }
 
 .menuBar,
@@ -988,6 +989,7 @@ text-decoration:  overline var(--primary-theme-color);
     font-family: abel;
     font-size: 1.1em;
     cursor: pointer;
+    scrollbar-width: thin;
   }
 
   .menuBar,

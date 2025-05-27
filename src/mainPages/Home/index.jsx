@@ -75,7 +75,7 @@ export default function Home() {
                 setFiltersUsed({ type: "CATEGORY", inputValue: categoryName });
                 navigate('/shop')
               }}>
-              <img src={`http://localhost:8080/api/category/${thumbnail}`} alt={`${categoryName}`} />
+              <img src={`http://localhost:8080/api/category/${thumbnail}`} alt={`${categoryName}`} width={200} height={200} />
               <p>{categoryName}</p>
             </div>
             )
