@@ -8,6 +8,7 @@ export default function AddressCard({
   addressDispatch,
   isPresentinCheckout
 }) {
+  if (!addObj) return null;
   const {
     id,
     receiverName,
@@ -47,7 +48,7 @@ export default function AddressCard({
           <button
             onClick={() => {
               handleEdit(id, true);
-              setIsEditClicked(() => true);
+              setIsEditClicked(() => false);
             }}
           >
             Sửa

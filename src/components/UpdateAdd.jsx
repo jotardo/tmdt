@@ -1,64 +1,114 @@
 import { toast } from "react-toastify";
 import { useAddress } from "../context/AddressContext";
+import React, { useEffect, useState } from "react";
+import deliveryAddressApi from "../backend/db/deliveryAddressApi";
 
 export default function UpdateAddress({
-  clickF,
+  closeForm,
   isEditClicked,
   setIsEditClicked,
 }) {
-  const { addressState, setAddressState, dummyAddress, addressDispatch } =
-    useAddress();
+  const { addressState, setAddressState, dummyAddress, addressDispatch } = useAddress();
+
+  const [filteredDistricts, setFilteredDistricts] = useState([]);
+  const [filteredWards, setFilteredWards] = useState([]);
 
   const handleAddressInput = (e) => {
     const input = e.target.value;
     let prop = e.target.id;
 
     if (e.target.type === "radio") {
-      // same name instead xdx
-      prop = e.target.name
-      setAddressState(() => ({ ...addressState, [prop]: e.target.checked }));
-    } else setAddressState(() => ({ ...addressState, [prop]: input }));
+      prop = e.target.name;
+      setAddressState(prev => ({ ...prev, [prop]: e.target.checked }));
+    } else setAddressState(prev => ({ ...prev, [prop]: input }));
   };
 
-  const handleAddressFormSubmit = (e) => {
+  const handleAddressFormSubmit = async (e) => {
     e.preventDefault();
 
     if (!isEditClicked) {
-      addressDispatch({ type: "ADDRESSADD", payload: addressState });
-      toast.success("Địa chỉ mới đã được thêm thành công!", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
-    } else if (isEditClicked) {
-      addressDispatch({ type: "EDITADD", payload: addressState });
-      toast.success("Địa chỉ đã được cập nhật thành công!", {
-        position: toast.POSITION.BOTTOM_RIGHT,
-      });
+      const res = await deliveryAddressApi.addNewAddress(addressState);
+      if(res.success) {
+        addressDispatch({ type: "ADD_ADDRESS", payload: res });
+        toast.success("Địa chỉ mới đã được thêm thành công!");
+      }else{
+        toast.warn("Không xong rồii :((");
+      }
+
+    } else {
+      // const res = await deliveryAddressApi.updateAddress(addressState);
+      // addressDispatch({ type: "UPDATE_ADDRESS", payload: res });
+      toast.success("Địa chỉ đã được cập nhật thành công!");
     }
-    clickF(false);
+    closeForm();
     if (isEditClicked) setIsEditClicked(false);
   };
 
-  const handleChangeprovinceName = () => {
-  };
-  const handleChangedistrictName = () => {
 
-  };
-  const handleChangewardName = () => {
-  };
+  useEffect(() => {
+
+    if (addressState.provinceName) {
+      const provinceObj = provinces.find(p => p.name === addressState.provinceName);
+      if (provinceObj) {
+        const newDistricts = districts.filter(d => d.provinceId === provinceObj.id);
+        setFilteredDistricts(newDistricts);
+
+        // Reset district & ward nếu province thay đổi
+        setAddressState(prev => ({
+          ...prev,
+          districtName: "",
+          wardName: "",
+        }));
+        setFilteredWards([]);
+      }
+    }
+  }, [addressState.provinceName]);
+
+  useEffect(() => {
+    if (addressState.districtName) {
+      const districtObj = districts.find(d => d.name === addressState.districtName);
+      if (districtObj) {
+        const newWards = wards.filter(w => w.districtId === districtObj.id);
+        setFilteredWards(newWards);
+
+        // Reset ward nếu district thay đổi
+        setAddressState(prev => ({
+          ...prev,
+          wardName: "",
+        }));
+      }
+    }
+  }, [addressState.districtName]);
+
+  const provinces = [
+    { id: 1, name: "Hà Nội" },
+    { id: 2, name: "Hồ Chí Minh" },
+  ];
+
+  const districts = [
+    { id: 1, provinceId: 1, name: "Quận Ba Đình" },
+    { id: 2, provinceId: 1, name: "Quận Hoàn Kiếm" },
+    { id: 3, provinceId: 2, name: "Quận 1" },
+    { id: 4, provinceId: 2, name: "Quận 3" },
+  ];
+
+  const wards = [
+    { id: 1, districtId: 1, name: "Phường Phúc Xá" },
+    { id: 2, districtId: 1, name: "Phường Trúc Bạch" },
+    { id: 3, districtId: 3, name: "Phường Bến Nghé" },
+  ];
 
   return (
     <>
       <div className="addFormBox">
         <form className="addressForm" onSubmit={handleAddressFormSubmit}>
           <div
-            className="closeAdd"
-            onClick={() => {
-              setIsEditClicked(false);
-              clickF(false);
-            }}
+              className="closeAdd"
+              onClick={closeForm}
           >
             X
           </div>
+
           <div className="receiverNameAdd">
             <input
               type="text"
@@ -92,45 +142,57 @@ export default function UpdateAddress({
               onChange={handleAddressInput}
             />
           </div>
-          <div className="wardNameAdd">
+          <div className="provinceNameAdd">
             <select
-              type="text"
-              name="wardName"
-              id="wardName"
-              required
-              placeholder="Tên Thành Phố"
-              value={addressState.wardName}
-              onChange={handleAddressInput}
+                name="provinceName"
+                id="provinceName"
+                required
+                value={addressState.provinceName}
+                onChange={handleAddressInput}
             >
-              <option hidden selected value="">Tên Thành Phố</option>
+              <option hidden value="">Tên Tỉnh</option>
+              {provinces.map((province) => (
+                  <option key={province.id} value={province.name}>
+                    {province.name}
+                  </option>
+              ))}
             </select>
           </div>
           <div className="cityAdd">
             <select
-              type="text"
-              name="districtName"
-              id="districtName"
-              required
-              value={addressState.districtName}
-              placeholder="Tên Quận/Huyện"
-              onChange={handleAddressInput}
+                name="districtName"
+                id="districtName"
+                required
+                value={addressState.districtName}
+                onChange={handleAddressInput}
+                disabled={!addressState.provinceName}
             >
-              <option hidden selected value="">Tên Quận/Huyện</option>
+              <option hidden value="">Tên Quận/Huyện</option>
+              {filteredDistricts.map((district) => (
+                  <option key={district.id} value={district.name}>
+                    {district.name}
+                  </option>
+              ))}
             </select>
           </div>
-          <div className="provinceNameAdd">
+          <div className="wardNameAdd">
             <select
-              type="text"
-              name="provinceName"
-              id="provinceName"
-              required
-              value={addressState.provinceName}
-              placeholder="Tên Tỉnh"
-              onChange={handleAddressInput}
+                name="wardName"
+                id="wardName"
+                required
+                value={addressState.wardName}
+                onChange={handleAddressInput}
+                disabled={!addressState.districtName}
             >
-              <option hidden selected value="">Tên Tỉnh</option>
+              <option hidden value="">Tên Phường/Xã</option>
+              {filteredWards.map((ward) => (
+                  <option key={ward.id} value={ward.name}>
+                    {ward.name}
+                  </option>
+              ))}
             </select>
           </div>
+
           <div className="pinCodeAdd">
             <input
               type="number"

@@ -4,15 +4,9 @@ import {
     useReducer,
     useState,
     useEffect,
-    useCallback,
 } from "react";
 import { toast } from "react-toastify";
 import { reducerFilterFunction } from "../allReducers/filtersReducer";
-import {
-    getProduct,
-    getAllProducts,
-} from "../services/shopingService/shopService";
-import { getAllCategories } from "../services/shopingService/categoryService";
 import productApi from "../backend/db/productApi";
 import categoryApi from "../backend/db/categoryApi";
 
@@ -32,7 +26,6 @@ export function DataProvider({ children }) {
   });
   const [categoriesData, setCategoriesData] = useState([]);
   const [brandData, setBrandData] = useState([]);
-  const [materialData, setMaterialData] = useState([]);
   const [occasionData, setOccasionData] = useState([]);
   const [singleProduct, setSingleProduct] = useState({
     product: {},
@@ -42,7 +35,9 @@ export function DataProvider({ children }) {
   const getBackendData = async () => {
     try {
       const response = await productApi.fetchExistingProducts();
-      const productList = response?.data?.productDTOs;
+
+
+        const productList = response?.data;
       setBackendData({
         ...backendData,
         loading: false,
@@ -67,13 +62,14 @@ export function DataProvider({ children }) {
     });
     try {
       const response = await productApi.fetchProductDetail(id);
+        console.log("Product API response:", response);
       const {
         status,
-        data: { productDTO: {...productDB} },
+        data: { productDTO: data },
       } = response;
       if (status === 200) {
         setSingleProduct({
-          product: productDB,
+          product: data,
           loading: false,
         });
       }

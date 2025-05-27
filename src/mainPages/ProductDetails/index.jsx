@@ -77,7 +77,7 @@ export default function ProductDetails() {
                     }}
                 >
                   {token && isAvailableInWishList(id) >= 0 ? (
-                      <span class="removeWish">
+                      <span className="removeWish">
                     Xóa Wishlist <FavoriteRoundedIcon/>{" "}
                   </span>
                   ) : (
@@ -111,14 +111,14 @@ export default function ProductDetails() {
                   {/* <li>Màu: {product_color}</li> */}
                   <li>Loại đá : {productMaterial}</li>
                   <li>Dịp lễ : {occasion}</li>
-                  <li>Điểm đánh giá : {product_rating} ⭐</li>
-                  <li>Tổng số đánh giá : {product_reviews}</li>
+                  {/*<li>Điểm đánh giá : {product_rating} ⭐</li>*/}
+                  {/*<li>Tổng số đánh giá : {product_reviews}</li>*/}
                 </ul>
               </div>
 
               <div className="highlights">
                 <div>
-                  <p class="head">Đặc điểm nổi bật</p>
+                  <p className="head">Đặc điểm nổi bật</p>
                   <ul>
                     <li>Loại đá : {productMaterial}</li>
                     <li>Dịp lễ : {occasion}</li>

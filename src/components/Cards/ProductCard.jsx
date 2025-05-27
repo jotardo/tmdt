@@ -4,6 +4,7 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
+import {useMemo} from "react";
 
 export default function ProductCard({ item, inWishlist }) {
     const token = useMemo(() => localStorage.getItem("jwtToken"), []);
