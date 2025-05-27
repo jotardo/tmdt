@@ -5,47 +5,64 @@ import UpdateAddress from "../../../components/UpdateAdd";
 import AddressCard from "../../../components/AddressCard";
 import deliveryAddressApi from "../../../backend/db/deliveryAddressApi";
 import { useAuth } from "../../../context/AuthContext";
-export default function Address({ isPresentinCheckout, setSelectedAddress ,id}) {
-  const [isAddClicked, setIsAddClicked] = useState(false);
+export default function Address({ isPresentinCheckout, setSelectedAddress, selectedAddress}) {
   const [isEditClicked, setIsEditClicked] = useState(false);
   const { user } = useAuth();
   const { address, handleEdit, addressDispatch } = useAddress();
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const closeForm = () => {
+        setIsFormOpen(false);
+        setIsEditClicked(false);
+    };
 
-  useEffect(() => {
-    if (!user)
-      return;
-    deliveryAddressApi.fetchByUser(user?.id).then(result => {
-      console.log(result)
-      addressDispatch({type: "SETADD", payload: result.addresses})
-  })
-  }, [user])
+    useEffect(() => {
+        if (!user) return;
 
-  return (
+        deliveryAddressApi.fetchByUser(user?.id).then(result => {
+            addressDispatch({type: "SET_ADDRESS_LIST", payload: result.addresses});
+
+            if (result.addresses?.length > 0) {
+                setSelectedAddress(result.addresses[0]);
+            }
+        });
+    }, [user]);
+
+
+    return (
     <div className="address">
       <div
         className="addAddress"
         onClick={() => {
-          handleEdit(123, false);
-          setIsAddClicked(!isAddClicked);
+            handleEdit(null, false);
+            setIsEditMode(false);
+            setIsFormOpen(true);
         }}
+
       >
         <span className="plus">+</span>
         Thêm địa chỉ
       </div>
       {address.length<1? <h6>Xin thêm ít nhất 1 địa chỉ trong sổ</h6>:
-      address.map((item) => {
-        return isPresentinCheckout ? (
-          <label htmlFor="" class="checkoutLabel">
-            <input
-              type="radio"
-              name="setAddress"
-              onChange={() => {
-                setSelectedAddress(item);
-              }}
-            />
-            <div>
+          address.map((item) => {
+                  if (!item) return null;
+
+                  return isPresentinCheckout ? (
+                      <label htmlFor="" className="checkoutLabel" key={item.id}>
+              <input
+                  type="radio"
+                  name="setAddress"
+                  checked={selectedAddress?.id === item?.id}
+                  onChange={() => {
+                      setSelectedAddress(item);
+                  }}
+              />
+
+
+              <div>
               <AddressCard
-              addObj={item}
+                  key={item.id}
+                  addObj={item}
               addressDispatch={addressDispatch}
               isEditClicked={isEditClicked}
               setIsEditClicked={setIsEditClicked}
@@ -65,15 +82,16 @@ export default function Address({ isPresentinCheckout, setSelectedAddress ,id}) 
           />
         );
       })}
-      {isAddClicked || isEditClicked ? (
-        <div className="overlay">
-          <UpdateAddress
-            clickF={setIsAddClicked}
-            isEditClicked={isEditClicked}
-            setIsEditClicked={setIsEditClicked}
-          />
-        </div>
-      ) : null}
+        {isFormOpen && (
+            <div className="overlay">
+                <UpdateAddress
+                    closeForm={closeForm}
+                    isEditMode={isEditMode}
+                    setIsEditMode={setIsEditMode}
+                    setIsEditClicked={setIsEditClicked}
+                />
+            </div>
+        )}
     </div>
   );
 }

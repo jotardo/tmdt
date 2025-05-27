@@ -10,7 +10,7 @@ import ProductImageContainer from "../../components/ProductImageContainer";
 import ProductReviews from "../../components/ProductReviews";
 
 export default function ProductDetails() {
-  const { singleProduct, getSingleProduct } = useData();
+  const { singleProduct } = useData();
   const { addToCartFunction, isItemInCart } = useCart();
   const token = localStorage.getItem("jwtToken");
   const currentUserId = token ? parseInt(localStorage.getItem("user")) : null;
@@ -22,10 +22,9 @@ export default function ProductDetails() {
 
   const product = singleProduct?.product;
 
-  // useEffect(() => {
-  //   if (!singleProduct.product)
-  //     getSingleProduct()
-  // }, [])
+    useEffect(()=> {
+      console.log("Current details:", product)
+    })
 
   if (product) {
     const {
@@ -113,14 +112,14 @@ export default function ProductDetails() {
                   {/* <li>Màu: {product_color}</li> */}
                   <li>Loại đá : {productMaterial}</li>
                   <li>Dịp lễ : {occasion}</li>
-                  <li>Điểm đánh giá : {product_rating} ⭐</li>
-                  <li>Tổng số đánh giá : {product_reviews}</li>
+                  {/*<li>Điểm đánh giá : {product_rating} ⭐</li>*/}
+                  {/*<li>Tổng số đánh giá : {product_reviews}</li>*/}
                 </ul>
               </div>
 
               <div className="highlights">
                 <div>
-                  <p class="head">Đặc điểm nổi bật</p>
+                  <p className="head">Đặc điểm nổi bật</p>
                   <ul>
                     <li>Loại đá : {productMaterial}</li>
                     <li>Dịp lễ : {occasion}</li>
@@ -128,12 +127,12 @@ export default function ProductDetails() {
                   </ul>
                 </div>
 
-              <div className="description">
-                <p class="head">Mô tả</p>
-                <p>{description}</p>
+                <div className="description">
+                  <p className="head">Mô tả</p>
+                  <p>{description}</p>
+                </div>
               </div>
             </div>
-          </div>
           </div>
           <hr className="divider"/>
 

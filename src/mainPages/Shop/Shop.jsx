@@ -1,6 +1,5 @@
 import "./shop.css";
 import React, { useEffect, useRef, useState } from 'react';
-import { getAllProducts } from '../../services/shopingService/shopService';
 import ProductCard from "../../components/Cards/ProductCard";
 import { useData } from '../../context/DataContext';
 import TuneIcon from "@mui/icons-material/Tune";
@@ -32,18 +31,21 @@ const Shop = () => {
     // yipee
     useEffect(() => {
         if (!backendData.loading) {
-            const startIndex = page * resultsPerPage;
-            const endIndex = page * resultsPerPage + resultsPerPage;
-            setData(finalPriceSortedData.slice(startIndex, endIndex));
-
             const totalPages = Math.ceil(finalPriceSortedData.length / resultsPerPage);
-            setPage((prev) => prev < 0 ? 0 : prev > totalPages - 1 ? totalPages - 1 : prev)
+            if (page < 0 || page >= totalPages) {
+                setPage(Math.max(0, Math.min(page, totalPages - 1)));
+                return;
+            }
+
+            const startIndex = page * resultsPerPage;
+            const endIndex = startIndex + resultsPerPage;
+            setData(finalPriceSortedData.slice(startIndex, endIndex));
 
             if (productDiv.current) {
                 productDiv.current.scrollIntoView();
             }
         }
-    }, [finalPriceSortedData, page, resultsPerPage])
+    }, [finalPriceSortedData, page, resultsPerPage]);
 
 
     return (
@@ -97,7 +99,7 @@ const Shop = () => {
                                             name={category.name}
                                             checked={filtersUsed.categoryFilters.includes(category.name)}
                                             value={category.name}
-                                            onClick={(e) => {
+                                            onChange={(e) => {
                                                 setFiltersUsed({
                                                     type: "CATEGORY",
                                                     inputValue: e.target.value,

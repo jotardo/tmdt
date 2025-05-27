@@ -102,19 +102,19 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
 
   };
 
-
+  
 
   const handleSubmit = async () => {
     const formData = new FormData();
 
     console.log("Category ID and CTV ID:", form.categoryId, form.ctvOrAdminId);
-
+  
     // Validate trước
     if (!form.categoryId || !user?.id) {
       toast.warning("Vui lòng nhập đầy đủ tên, danh mục, giá và người tạo.");
       return;
     }
-
+  
     // Parse chính xác kiểu dữ liệu
     formData.append("name", form.name);
     formData.append("description", form.description);
@@ -128,7 +128,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
     formData.append("status", form.status);
     formData.append("categoryId", parseInt(form.categoryId));
     formData.append("ctvOrAdminId", parseInt(user.id));
-
+  
     // Append images
     images.forEach((img) => {
       formData.append("images", img);

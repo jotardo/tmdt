@@ -33,7 +33,6 @@ export function CartProvider({ children }) {
         _id: item.product?.id || "",
     });
 
-    // Lấy tất cả sản phẩm trong giỏ hàng
     const getAllCartItems = useCallback(async (encodedToken) => {
         try {
             const userId = localStorage.getItem("user");
@@ -54,7 +53,6 @@ export function CartProvider({ children }) {
         }
     }, [token]);
 
-    // Thêm sản phẩm vào giỏ hàng
     const addToCartFunction = async (product, encodedToken) => {
         try {
             const userId = localStorage.getItem("user");
@@ -77,7 +75,6 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Xóa sản phẩm khỏi giỏ hàng
     const deleteFromCartFunction = async (cartItemId, productName, encodedToken, showNotification = true) => {
         try {
             const userId = localStorage.getItem("user");
@@ -109,7 +106,6 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Tăng hoặc giảm số lượng sản phẩm trong giỏ
     const changeQuantity = async (cartItemId, encodedToken, actionType) => {
         try {
             const userId = localStorage.getItem("user");
@@ -132,17 +128,14 @@ export function CartProvider({ children }) {
         }
     };
 
-    // Thêm đơn hàng đã đặt
     const addItemstoOrdersPlaced = (orderDetailsObj) => {
         dispatch({ type: "ORDERPLACED", payload: orderDetailsObj });
     };
 
-    // Kiểm tra sản phẩm đã có trong giỏ chưa
     const isItemInCart = (prodId) => {
         return cartManager.cartData.some(item => item._id === prodId);
     };
 
-    // Tổng tiền gốc, tổng tiền hiện tại, tổng giảm giá
     const totalPrevPrice = token && cartManager.cartData.length > 0
         ? Math.floor(cartManager.cartData.reduce((acc, curr) => acc + curr.product_prevPrice * curr.qty, 0))
         : 0;
