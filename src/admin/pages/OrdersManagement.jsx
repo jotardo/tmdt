@@ -15,7 +15,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import PageTitle from "../../components/Typography/PageTitle";
 import OrdersTable from "../../components/OrdersTable";
 
-const Orders = () => {
+const OrdersAdmin = () => {
   const [resultsPerPage, setResultPerPage] = useState(10);
   const [filter, setFilter] = useState("all");
 
@@ -28,10 +28,10 @@ const Orders = () => {
 
   return (
     <Box>
-      <PageTitle>Orders</PageTitle>
+      <PageTitle>Quản lý đơn hàng</PageTitle>
 
       {/* Breadcrumb */}
-      <Box display="flex" alignItems="center" color="text.primary" mb={2}>
+      {/* <Box display="flex" alignItems="center" color="text.primary" mb={2}>
         <HomeIcon sx={{ color: "primary.main", mr: 1 }} />
         <NavLink to="/app/dashboard" style={{ marginRight: 8, color: "#6b46c1", textDecoration: "none" }}>
           Dashboard
@@ -40,14 +40,14 @@ const Orders = () => {
         <Typography variant="body2" sx={{ mx: 1 }}>
           Orders
         </Typography>
-      </Box>
+      </Box> */}
 
       {/* Filters */}
       <Card sx={{ mt: 3, mb: 4, boxShadow: 2 }}>
         <CardContent>
           <Box display="flex" alignItems="center" gap={2}>
             <Typography variant="body2" color="text.secondary">
-              Filter Orders
+              Bộ lọc
             </Typography>
 
             <FormControl size="small" sx={{ minWidth: 180 }}>
@@ -83,4 +83,4 @@ const Orders = () => {
   );
 };
 
-export default Orders;
+export default OrdersAdmin;

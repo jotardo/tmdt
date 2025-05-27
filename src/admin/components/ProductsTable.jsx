@@ -39,7 +39,6 @@ const ProductsTable = ({ apiData, resultsPerPage, filter, loading, onDelete, onH
         elevation={3}
         sx={{
           borderRadius: 3,
-          overflow: "scroll",
           boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
         }}>
       {/* Table */}
@@ -56,11 +55,10 @@ const ProductsTable = ({ apiData, resultsPerPage, filter, loading, onDelete, onH
             },
             "&::-webkit-scrollbar-track": {
               backgroundColor: "#e3f2fd",
-            },
-            overflow: "scroll"
+            }
           }}
         >
-          <Table stickyHeader size="small" >
+          <Table stickyHeader size="small" style={{overflow: "hidden",}} >
             <TableHead sx={{ bgcolor: "#e3f2fd" }}>
               <TableRow>
                 {[
@@ -180,45 +178,7 @@ const ProductsTable = ({ apiData, resultsPerPage, filter, loading, onDelete, onH
           />
         </TableFooter>
         </TableContainer>
-      {/* <TableContainer sx={{ mb: 3 }}>
-        <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Tên</TableCell>
-                      <TableCell>Giá</TableCell>
-                      <TableCell>Tồn kho</TableCell>
-                      <TableCell align="center">Hành động</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {data != null && data.map((p) => (
-                      <TableRow key={p.id}>
-                        <TableCell>{p.id}</TableCell>
-                        <TableCell>{p.name}</TableCell>
-                        <TableCell>{p.price.toLocaleString()}₫</TableCell>
-                        <TableCell>{p.stock}</TableCell>
-                        <TableCell align="center">
-                          <Button variant="outlined" size="small" sx={{ mr: 1 }}>
-                            Sửa
-                          </Button>
-                          <Button variant="outlined" size="small" color="error">
-                            Xóa
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-        <TableFooter>
-          <Pagination
-            count={Math.ceil(apiData.length / resultsPerPage)}
-            page={page}
-            onChange={onPageChange}
-            color="primary"
-          />
-        </TableFooter>
-      </TableContainer> */}
+      
 
     </Box>
   );

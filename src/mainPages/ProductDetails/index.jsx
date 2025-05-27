@@ -11,7 +11,7 @@ import ProductReviews from "../../components/ProductReviews";
 
 export default function ProductDetails() {
   const { singleProduct, getSingleProduct } = useData();
-  const { addToCardFunction, isItemInCart } = useCart();
+  const { addToCartFunction, isItemInCart } = useCart();
   const token = localStorage.getItem("jwtToken");
   const currentUserId = token ? parseInt(localStorage.getItem("user")) : null;
 
@@ -67,7 +67,7 @@ export default function ProductDetails() {
                 onClick={() => {
                   token && isItemInCart(id)
                     ? navigate("/cart")
-                    : addToCardFunction(product, token);
+                    : addToCartFunction(product, token);
                 }}
               >
                 {token && isItemInCart(id) ? "Đi đến giỏ" : "Thêm vào giỏ"}
