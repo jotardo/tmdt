@@ -57,7 +57,12 @@ export default function AuthProvider({ children }) {
   
     if (storedToken && storedUserID) {
       setIsLoggedIn(true);
-      requestUserInfo(storedUserID).then(userDetails => setUser(userDetails.data)); // ✅ Gán user từ localStorage
+      requestUserInfo(storedUserID)
+      .then(userDetails => setUser(userDetails.data))
+      .catch(error => {
+        toast.error(JSON.stringify(error.data))
+        logout()
+      }); // ✅ Gán user từ localStorage
     }
   }, []);
 

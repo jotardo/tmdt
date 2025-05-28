@@ -11,9 +11,8 @@ import {
   InputLabel,
   TextField,
 } from "@mui/material";
-import HomeIcon from "@mui/icons-material/Home";
 import PageTitle from "../../components/Typography/PageTitle";
-import OrdersTable from "../../components/OrdersTable";
+import AdminOrdersTable from "../components/AdminOrdersTable";
 
 const OrdersAdmin = () => {
   const [resultsPerPage, setResultPerPage] = useState(10);
@@ -78,7 +77,7 @@ const OrdersAdmin = () => {
       </Card>
 
       {/* Table */}
-      <OrdersTable resultsPerPage={resultsPerPage} filter={filter} />
+      <AdminOrdersTable resultsPerPage={resultsPerPage} filter={filter} />
     </Box>
   );
 };

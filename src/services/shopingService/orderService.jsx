@@ -1,4 +1,5 @@
 import axiosClient from "../../backend/api/axiosClient";
+import orderApi from "../../backend/db/orderApi";
 
 export async function createOrder(orderData, token) {
     try {
@@ -58,4 +59,17 @@ export async function resendOTP(orderId, token) {
         throw error;
     }
 }
+
+export async function fetchAllOrderData() {
+    try {
+        const response = await orderApi.fetchAllOrderData();
+        console.log("Đã gửi:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Lỗi khi fetchAllOrderData:", error.response?.data || error.message || error.data);
+        return error
+    }
+}
+
+
 
