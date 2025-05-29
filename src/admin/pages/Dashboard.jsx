@@ -43,9 +43,9 @@ const Dashboard = () => {
   const theme = useTheme();
 
   const legendData = [
-    { title: "Shirts", color: "bg-blue-500" },
-    { title: "Shoes", color: "bg-teal-500" },
-    { title: "Bags", color: "bg-purple-600" },
+    { title: "Bông Tai", color: "bg-blue-500" },
+    { title: "Nhẫn", color: "bg-teal-500" },
+    { title: "Vòng tay", color: "bg-purple-600" },
   ];
 
   return (

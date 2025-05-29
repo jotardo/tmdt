@@ -22,7 +22,7 @@
 
 }
 .userDetails {
-  font-family: abel;
+  font-family: 'Abel', sans-serif;
   padding: 10px;
 }
 .userDetails img {
@@ -48,13 +48,13 @@
 .addressContainer,
 .addAddress {
   margin: 5px;
-  font-family: abel;
+  font-family: 'Abel', sans-serif;
   text-align: left;
   padding: 5px 0;
   border: 1px solid var(--primary-text-color);
 }
 .addressContainer p {
-  margin: 0px;
+  margin: 0;
   margin-left: 20px;
 }
 .addAddress {
@@ -62,7 +62,7 @@
 }
 .addType {
   padding: 3px;
-  margin: 0px;
+  margin: 0;
   border-radius: 3px;
   display: inline-block;
   background-color: rgb(212, 212, 212);
@@ -91,7 +91,7 @@
   background-color: rgba(255, 255, 255, 0.233);
   border: 2px solid var(--primary-theme-color);
   border-radius: 20px;
-  font-family: abel;
+  font-family: 'Abel', sans-serif;
   letter-spacing: 1px;
   backdrop-filter: blur(4px);
 }
@@ -147,7 +147,7 @@
 .userProfileDetails .formBox .formValue{
   display: flex;
   flex-direction: column;
-  justify-content: conter;
+  justify-content: center;
   align-items: flex-start;
   gap:10px;
   padding:20px;
@@ -240,11 +240,10 @@
       margin-left: 50%;
     }
     .profileButtons {
-     
       margin-bottom:0;
-display: flex;
-flex-direction: row;
-width: 100%;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
     }
     .profileButtons button{
       margin:0;

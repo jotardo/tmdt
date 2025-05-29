@@ -1,20 +1,20 @@
-import axios from "axios";
+import axiosClient from "../../backend/api/axiosClient";
 
-export const getWishList = async (encodedToken) =>
-  await axios.get("/api/user/wishlist", {
-    headers: { authorization: encodedToken },
-  });
+export const getWishList = async (userId, encodedToken) =>
+    await axiosClient.get('/wishlist', {
+        headers: { Authorization: `Bearer ${encodedToken}` },
+        params: { userId }
+    });
 
-export const addToWishList = async (product, encodedToken) =>
-  await axios.post(
-    "/api/user/wishlist",
-    { product },
-    { headers: { authorization: encodedToken } }
-  );
+export const addToWishlist = async (userId, productId, encodedToken) =>
+    await axiosClient.post('/wishlist/add', null, {
+        headers: { Authorization: `Bearer ${encodedToken}` },
+        params: { userId, productId }
+    });
 
-export const removeFromWishList = async (productId, encodedToken) =>
-  await axios.delete(`/api/user/wishlist/${productId}`, {
-    headers: {
-      authorization: encodedToken,
-    },
-  });
+export const removeFromWishlist = async (userId, productId, encodedToken) =>
+    await axiosClient.delete('/wishlist/remove', {
+        headers: { Authorization: `Bearer ${encodedToken}` },
+        params: { userId, productId }
+    });
+

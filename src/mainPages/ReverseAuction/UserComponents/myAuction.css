@@ -1,0 +1,123 @@
+.auction-layout {
+    display: flex;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+}
+
+.auction-sidebar {
+    width: 250px;
+    background-color: #f0f0f0;
+    padding: 20px;
+    overflow-y: auto;
+    border-right: 1px solid #ccc;
+}
+
+.auction-name {
+    padding: 10px;
+    margin-bottom: 8px;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.auction-name:hover {
+    background-color: #e0e0e0;
+}
+
+.auction-name.active {
+    background-color: #d0d0ff;
+    font-weight: bold;
+}
+
+.auction-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.auction-info {
+    flex-shrink: 0;
+    margin-bottom: 20px;
+
+    /* Thêm phần khung và hiệu ứng */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+.images {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.image-box {
+    width: 100px;
+    height: 100px;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 6px;
+}
+
+.details {
+    margin-top: 10px;
+}
+
+.auction-chat {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+.auction-content {
+    padding: 20px;
+    flex: 1;
+}
+
+.auction-main-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.auction-info {
+    flex: 2;
+    background-color: #fdfdfd;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.auction-chat {
+    flex: 1;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+.button-group {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.button-group button {
+    padding: 8px 14px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.button-group button:hover {
+    background-color: #0056b3;
+}

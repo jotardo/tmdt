@@ -39,7 +39,6 @@ const {getSingleProduct} = useData()
                   pincode,
                   state,
                 } = item.address;
-                const showAddress = false;
                 return (
                   <>
                     <div className="placedOrderSummary" key={item.orderId}>
