@@ -140,7 +140,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
           } else {
             response = await productApi.addProduct(formData);
           }
-          
+
           if (response.data?.success) {
             toast.success("Cập nhật thành công");
             onAddProduct();
@@ -156,8 +156,8 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
         }
   };
   
-  
-  
+
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>{editProduct ? "Chỉnh sửa danh mục" : "Thêm danh mục"}</DialogTitle>

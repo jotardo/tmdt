@@ -23,14 +23,14 @@ export default function Contact() {
               <span>
                 <LocationOnIcon />
               </span>
-              156 Sixth Avenue, Nashik Nagar, NN 20990
+              Đại Học Nông Lâm TPHCM
             </p>
             <p>
               {" "}
               <span>
                 <EmailTwoToneIcon />
               </span>{" "}
-              shringaarcontact@gmail.com
+              auroraveneriscontact@gmail.com
             </p>
             <p>
               <span>

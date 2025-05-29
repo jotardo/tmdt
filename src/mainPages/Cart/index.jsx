@@ -1,22 +1,41 @@
+import { NavLink, Outlet } from "react-router-dom";
+import { useCart } from "../../";
+import "./cart.css";
 
-import { NavLink,Outlet } from "react-router-dom";
+export default function Cart() {
+    const { cartCount } = useCart();
 
-import {useCart} from '../../'
-import './cart.css'
+    const checkoutPath = cartCount ? "/cart/checkout" : "#";
 
-export default function Cart(){
-const {cartCount} = useCart()
-  return <div className="mainCartContainerPage">
-         <h3>Giỏ hàng của bạn</h3>
-        <nav className= "cartNav">
-        <NavLink to=''> Giỏ hàng </NavLink> ----{`>`}
-        <NavLink to={cartCount?'/cart/checkout':""}> Thông tin thanh toán </NavLink>----{`>`}
-        <NavLink to={cartCount?'/cart/checkout':""}> Xác thực hóa đơn</NavLink>
-        </nav>
-       <div className="displayCart">
-          <Outlet/>
+    return (
+        <div className="mainCartContainerPage">
+            <h3>Giỏ hàng của bạn</h3>
+
+            <nav className="cartNav">
+                <NavLink to="" end>
+                    Giỏ hàng
+                </NavLink>
+
+                <span className="separator"> &gt; </span>
+
+                {cartCount ? (
+                    <NavLink to={checkoutPath}>Thông tin thanh toán</NavLink>
+                ) : (
+                    <span className="disabledLink">Thông tin thanh toán</span>
+                )}
+
+                <span className="separator"> &gt; </span>
+
+                {cartCount ? (
+                    <NavLink to={checkoutPath}>Xác thực hóa đơn</NavLink>
+                ) : (
+                    <span className="disabledLink">Xác thực hóa đơn</span>
+                )}
+            </nav>
+
+            <div className="displayCart">
+                <Outlet />
+            </div>
         </div>
-    </div>
+    );
 }
-
-

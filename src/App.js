@@ -43,6 +43,7 @@ import ApproveCTV from "./admin/pages/ApproveCTV";
 import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
 import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
+import OrdersAdmin from "./admin/pages/OrdersManagement";
 
 
 function App() {
@@ -65,7 +66,7 @@ function App() {
           element={<AdminLayout />}
         >
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="orders" element={<Orders />} />
+          <Route path="orders" element={<OrdersAdmin />} />
           <Route path="users" element={<Customers/>} />
           <Route path="products" element={<ProductManagement />} />
           <Route path="categories" element={<CategoryManagement />} />

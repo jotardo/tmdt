@@ -9,7 +9,7 @@ const userApi = {
       return response.data;
     } catch (error) {
       console.error("❌ Lỗi khi lấy danh sách người dùng:", error);
-      return this
+      return error.data
     }
   },
   getDetail: async (user_id) => {
@@ -19,7 +19,7 @@ const userApi = {
       return response.data;
     } catch (error) {
       console.error("❌ Lỗi khi lấy thông tin người dùng:", error);
-      return this;
+      return error.data;
     }
   },
 };

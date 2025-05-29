@@ -4,15 +4,9 @@ import {
     useReducer,
     useState,
     useEffect,
-    useCallback,
 } from "react";
 import { toast } from "react-toastify";
 import { reducerFilterFunction } from "../allReducers/filtersReducer";
-import {
-    getProduct,
-    getAllProducts,
-} from "../services/shopingService/shopService";
-import { getAllCategories } from "../services/shopingService/categoryService";
 import productApi from "../backend/db/productApi";
 import categoryApi from "../backend/db/categoryApi";
 
@@ -32,7 +26,6 @@ export function DataProvider({ children }) {
   });
   const [categoriesData, setCategoriesData] = useState([]);
   const [brandData, setBrandData] = useState([]);
-  const [materialData, setMaterialData] = useState([]);
   const [occasionData, setOccasionData] = useState([]);
   const [singleProduct, setSingleProduct] = useState({
     product: {},
@@ -40,27 +33,25 @@ export function DataProvider({ children }) {
   });
 
   const getBackendData = async () => {
-  try {
-    const response = await productApi.fetchExistingProducts();
-    const productList = response?.data;
-    
-    setBackendData({
-      ...backendData,
-      loading: false,
-      productsData: productList,
-    });
-
-    const brandList = productList.map(product => product.brand).filter(uniqueArrayFunc);
-    setBrandData(brandList);
-
-    const occasionList = productList.map(product => product.occasion).filter(uniqueArrayFunc);
-    setOccasionData(occasionList);
-  } catch (error) {
-    setBackendData({ ...backendData, loading: false, error: error });
-    console.error("Lỗi kết nối tới backend hoặc dữ liệu sai:", error);
-  }
-};
-
+    try {
+      const response = await productApi.fetchExistingProducts();
+      const productList = response?.data;
+      setBackendData({
+        ...backendData,
+        loading: false,
+        productsData: [...productList],
+      });
+      // brands
+      const brandList = productList.map(product => product.brand).filter(uniqueArrayFunc);
+      setBrandData(brandList);
+      // occasions
+      const occasionList = productList.map(product => product.occasion).filter(uniqueArrayFunc);
+      setOccasionData(occasionList);
+    } catch (error) {
+      setBackendData({ ...backendData, loading: false, error: error });
+      console.log("Lỗi kết nối tới backend:", error);
+    }
+  };
 
   const getSingleProduct = async (id) => {
     setSingleProduct({
@@ -69,9 +60,10 @@ export function DataProvider({ children }) {
     });
     try {
       const response = await productApi.fetchProductDetail(id);
+        console.log("Product API response:", response);
       const {
         status,
-        data: { productDTO: {...productDB} },
+        data: { ...productDB },
       } = response;
       if (status === 200) {
         setSingleProduct({
