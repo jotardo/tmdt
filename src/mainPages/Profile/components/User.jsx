@@ -11,12 +11,12 @@ export default function User() {
   const { user, logout, setUser } = useContext(AuthContext);
 
   const [newUserData, setNewUserData] = useState({
-    firstName: user.firstName,
-    lastName: user.lastName,
-    gender: user.gender,
-    emailId: user.emailId,
-    phoneNo: user.phoneNo,
-    avatar: user.avatar,
+    firstName: user.firstName || null,
+    lastName: user.lastName || null,
+    gender: user.gender || null,
+    emailId: user.emailId || null,
+    phoneNo: user.phoneNo || null,
+    avatar: user.avatar || null,
   });
 
   // const [passwordData, setPasswordData] = useState({
@@ -29,7 +29,7 @@ export default function User() {
   const wishlistCount = useWish()?.length || 0;
 
   const avatarUrl = newUserData.avatar
-    ? `${process.env.REACT_APP_BASE_URL}/user/${newUserData.avatar}`
+    ? `http://localhost/api/user/${newUserData.avatar}`
     : "/assets/model5.jpg";
 
   if (!user) return <p>Đang tải thông tin người dùng...</p>;
