@@ -44,6 +44,9 @@ import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
 import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
 import OrdersAdmin from "./admin/pages/OrdersManagement";
+import ReverseAuctionHome from "./mainPages/ReverseAuction";
+import MyAuction from "./mainPages/ReverseAuction/UserComponents/myAuction";
+import CreateAuction from "./mainPages/ReverseAuction/UserComponents/CreateAuction";
 
 
 function App() {
@@ -117,12 +120,15 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        {/* <Route path="/register" element={<Register />} /> */}
 
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/register-ctv" element={<RegisterCTV />} />
+        <Route path="/reverse-auction" element={<ReverseAuctionHome />} />
+          {/* <Route path="my" element={<MyAuction />} />
+          <Route path="create" element={<CreateAuction />} />
+        </Route> */}
         <Route path="*" element={<Error />} />
 
       </Routes>
