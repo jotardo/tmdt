@@ -47,6 +47,7 @@ import OrdersAdmin from "./admin/pages/OrdersManagement";
 import ReverseAuctionHome from "./mainPages/ReverseAuction";
 import MyAuction from "./mainPages/ReverseAuction/UserComponents/myAuction";
 import CreateAuction from "./mainPages/ReverseAuction/UserComponents/CreateAuction";
+import AuctionChatWindow from "./mainPages/ReverseAuction/Components/AuctionChatWindow";
 
 
 function App() {
@@ -128,6 +129,13 @@ function App() {
         <Route path="/reverse-auction" element={<ReverseAuctionHome />} />
           {/* <Route path="my" element={<MyAuction />} />
           <Route path="create" element={<CreateAuction />} />
+        </Route> */}
+
+        {/* <Route path="/reverse-auction" element={<ReverseAuctionHome />}>
+          <Route path="my" element={<MyAuction />} />
+          <Route path="create" element={<CreateAuction />} />
+          <Route path="waiting-rooms" element={<AuctionChatWindow />} />
+          <Route path="room/:roomId" element={<AuctionChatWindow />} />
         </Route> */}
         <Route path="*" element={<Error />} />
 

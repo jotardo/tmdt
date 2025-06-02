@@ -1,14 +1,15 @@
-import { NavLink } from "react-router-dom";
-import { useData, useWish, useCart } from "../../../index";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
-import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
-import { useMemo } from "react";
-import { toast } from "react-toastify";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useData } from "../../../index";
+import { useState } from "react";
+import { Button, Box } from "@mui/material";
+import AuctionRegistrationForm from "./AuctionRegistrationForm";
+import AuctionChatWindow from "./AuctionChatWindow";
 
 export default function AuctionProductCard({ item, inWishlist }) {
   const { getSingleProduct } = useData();
+  const navigate = useNavigate();
+  const [openRegistration, setOpenRegistration] = useState(false);
+  const [openChat, setOpenChat] = useState(false);
 
   console.log("AuctionProductCard item:", item);
   // Destructure auction product fields
@@ -26,8 +27,8 @@ export default function AuctionProductCard({ item, inWishlist }) {
   } = item;
 
   // Use first image if available, fallback to placeholder
-  const mainImage = Array.isArray(imageURLs) && imageURLs.length > 0 && imageURLs[0]?.url 
-    ? imageURLs[0].url 
+  const mainImage = Array.isArray(imageURLs) && imageURLs.length > 0 && imageURLs[0]?.url
+    ? imageURLs[0].url
     : "no-image.jpg";
 
   // Map status to display text
@@ -37,13 +38,20 @@ export default function AuctionProductCard({ item, inWishlist }) {
     CLOSED: "Đã đóng",
   }[status] || "Không xác định";
 
+  // Optional: Navigate to waiting rooms (uncomment to use instead of AuctionChatWindow)
+  // const handleWaitingRooms = () => {
+  //   navigate("/reverse-auction/waiting-rooms");
+  // };
+
   return (
-    <div className="ProductCard" onClick={() => getSingleProduct(id)}>
-      <NavLink to={`/reverse-auction/${id}`}>
-        <img 
-          src={`http://localhost:8080/api/product/${mainImage}`} 
-          alt={name || "Sản phẩm đấu giá"} 
-          onError={(e) => { e.target.src = "/no-image.jpg"; }} // Fallback on image load error
+    <div className="ProductCard">
+      {/* <NavLink to={`/reverse-auction/${id}`}> */}
+        <img
+          src={`http://localhost:8080/api/product/${mainImage}`}
+          alt={name || "Sản phẩm đấu giá"}
+          onError={(e) => {
+            e.target.src = "/no-image.jpg";
+          }}
         />
         <div className="cardTextContent">
           <h3>{name?.slice(0, 15) || "Sản phẩm"}</h3>
@@ -53,13 +61,51 @@ export default function AuctionProductCard({ item, inWishlist }) {
           <p className="price">
             <b>{price?.toLocaleString() || 0} VNĐ</b>
           </p>
-          <p className="status" style={{ color: status === "OPEN" ? "#4caf50" : status === "CLOSED" ? "#f44336" : "#ff9800" }}>
+          <p
+            className="status"
+            style={{
+              color: status === "OPEN" ? "#4caf50" : status === "CLOSED" ? "#f44336" : "#ff9800",
+            }}
+          >
             Trạng thái: {statusText}
           </p>
         </div>
-      </NavLink>
+      {/* </NavLink> */}
 
-      {/* 🎖️ Badge */}
+      {/* Action Buttons */}
+      <Box sx={{ display: "flex", gap: 1, mt: 2, justifyContent: "center" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setOpenRegistration(true)}
+          disabled={status !== "OPEN"}
+        >
+          Đăng ký đấu giá
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => setOpenChat(true)} // Replace with handleWaitingRooms() if using navigation
+          disabled={status === "CLOSED"}
+        >
+          Phòng chờ đấu giá
+        </Button>
+      </Box>
+
+      {/* Registration Form Dialog */}
+      <AuctionRegistrationForm
+        open={openRegistration}
+        onClose={() => setOpenRegistration(false)}
+        productId={id}
+      />
+
+      {/* Chat Window Dialog */}
+      <AuctionChatWindow
+        open={openChat}
+        onClose={() => setOpenChat(false)}
+        item={item}
+      />
+
+      {/* Badge */}
       {productIsBadge && (
         <span title={productIsBadge} className="trendingIcon">
           <div className="ribbon ribbon-top-left">
