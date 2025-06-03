@@ -53,6 +53,11 @@ export function DataProvider({ children }) {
     }
   };
 
+  // const dealInChatRoom = async (userId, productId, ctvId) => {
+    
+  // }
+
+
   const getSingleProduct = async (id) => {
     setSingleProduct({
       ...singleProduct,
