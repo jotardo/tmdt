@@ -23,6 +23,7 @@ import User from "./mainPages/Profile/components/User";
 import CheckoutDetails from "./mainPages/Cart/cartComponents/CheckoutDetails";
 import ShoppingCart from "./mainPages/Cart/cartComponents/ShoppingCart";
 import OrderComplete from "./mainPages/Cart/cartComponents/OrdersComplete";
+import StripeSuccess from "./mainPages/Cart/cartComponents/StripeSuccess";
 import Contact from "./mainPages/Contact/index";
 import ScrollToTop from "./components/ScrollUp";
 import VerifyEmail from "./mainPages/Login/VerifyEmail";
@@ -89,6 +90,8 @@ function App() {
           <Route path="checkout" element={<CheckoutDetails />} />
           
         </Route>
+
+        <Route path="/payment/success" element={<StripeSuccess />} />
 
         <Route
           path="/wishlist"

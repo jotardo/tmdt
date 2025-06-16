@@ -164,8 +164,8 @@ export default function Login() {
     navigate("/forgot-password");
   }
 
-  const GOOGLE_AUTH_URL = "http://localhost:8080/oauth2/authorization/google";
-  const FACEBOOK_AUTH_URL = "http://localhost:8080/oauth2/authorization/facebook";
+  const GOOGLE_AUTH_URL = `${process.env.REACT_APP_OAUTH_URL}/authorization/google`;
+  const FACEBOOK_AUTH_URL = `${process.env.REACT_APP_OAUTH_URL}/authorization/facebook`;
 
   const handleGoogleLogin = () => {
     window.location.href = GOOGLE_AUTH_URL;

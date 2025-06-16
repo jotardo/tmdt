@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter, Avatar, Pagination, Box,
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter,  Pagination, Box,
   Button
 } from "@mui/material";
-import { Block, Edit, EditAttributes, InfoRounded } from "@mui/icons-material";
 import UserDetailModal from "../model/AdminUserDetailsModal";
-import userApi from "../../backend/db/userApi";
 import orderApi from "../../backend/db/orderApi";
-//import response from "../../utils/demo/usersData"; // Giả lập dữ liệu từ server
 
 const AdminOrdersTable = ({ resultsPerPage, filter }) => {
   const [page, setPage] = useState(1);
