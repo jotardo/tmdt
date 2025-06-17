@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-// import MockApi from "./components/MockMan";
 import RequiresAuth from "./components/RequiresAuth";
 
 import Header from "./components/Header";
@@ -33,13 +32,15 @@ import Dashboard from "./admin/pages/Dashboard";
 import Customers from "./admin/pages/Customer";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CategoryManagement from "./admin/pages/CategoryManagement";
-import { useContext, useEffect } from "react";
+import {useContext, useEffect} from "react";
 import { AuthContext } from "./context/AuthContext";
 import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
 import ProductWarehouse from "./admin/pages/ProductWarehouse";
 import ForgotPassword from "./mainPages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
-
+import ReverseAuctionHome from "./mainPages/ReverseAuction/index";
+import MyAuction from "./mainPages/ReverseAuction/UserComponents/myAuction";
+import CreateAuction from "./mainPages/ReverseAuction/UserComponents/CreateAuction";
 import ApproveCTV from "./admin/pages/ApproveCTV";
 import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
@@ -50,9 +51,12 @@ import OrdersAdmin from "./admin/pages/OrdersManagement";
 function App() {
   const token = localStorage.getItem("jwtToken");
   const { logout } = useContext(AuthContext);
-  // useEffect(() => {
-  //  logout();
-  // }, [])
+    useEffect(() => {
+        if (!token) {
+            logout();
+        }
+    }, [token]);
+
   return (
     <div className="App">
       <Header />
@@ -91,7 +95,27 @@ function App() {
           
         </Route>
 
-        <Route path="/payment/success" element={<StripeSuccess />} />
+          <Route
+              path="/payment"
+              element={
+                  <RequiresAuth token={token}>
+                      <StripeSuccess />
+                  </RequiresAuth>
+              }
+          />
+
+          <Route
+              path="/reverse-auction"
+              element={
+                  <RequiresAuth token={token}>
+                      <ReverseAuctionHome />
+                  </RequiresAuth>
+              }
+          >
+              <Route path="my" element={<MyAuction />} />
+              <Route path="create" element={<CreateAuction />} />
+          </Route>
+
 
         <Route
           path="/wishlist"
