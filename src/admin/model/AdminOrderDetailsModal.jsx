@@ -16,7 +16,6 @@ import {
   Typography,
   Card,
 } from "@mui/material";
-import userApi from "../../backend/db/userApi";
 import orderApi from "../../backend/db/orderApi";
 import { toast } from "react-toastify";
 
@@ -36,11 +35,13 @@ const OrderDetailModal = ({ open, onClose, onType, orderID, onRefetch }) => {
   }
   const {
     id,
-    receiverName,
+    ownerName,
     deliveryAddress,
     items,
     status,
     totalPrice,
+    paymentDetails,
+    createdAt,
   } = orderDetail;
 
   const orderStatus = {
@@ -71,6 +72,51 @@ const OrderDetailModal = ({ open, onClose, onType, orderID, onRefetch }) => {
     }
   };
 
+    const formatDate = (dateInput) => {
+        if (!dateInput) {
+            return 'N/A';
+        }
+
+        try {
+            let dateObj;
+
+            if (Array.isArray(dateInput) && dateInput.length >= 6) {
+                const year = dateInput[0];
+                const month = dateInput[1] - 1; // Tháng trong JavaScript là 0-indexed (0-11)
+                const day = dateInput[2];
+                const hour = dateInput[3];
+                const minute = dateInput[4];
+                const second = dateInput[5];
+                const millisecond = dateInput.length > 6 ? Math.floor(dateInput[6] / 1000000) : 0; // Chuyển nano giây sang mili s
+
+                dateObj = new Date(year, month, day, hour, minute, second, millisecond);
+            } else if (typeof dateInput === 'string') {
+                // Xử lý trường hợp dateInput là chuỗi
+                dateObj = new Date(dateInput);
+            } else {
+                console.warn("Định dạng ngày không hợp lệ nhận được bởi formatDate:", dateInput);
+                return 'Ngày không hợp lệ';
+            }
+
+            // Kiểm tra xem dateObj có hợp lệ không sau khi tạo
+            if (isNaN(dateObj.getTime())) {
+                console.error("Không thể tạo đối tượng Date hợp lệ từ input:", dateInput);
+                return 'Invalid Date';
+            }
+
+            return dateObj.toLocaleDateString('vi-VN', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            console.error("Lỗi trong hàm formatDate:", dateInput, e);
+            return typeof dateInput === 'string' ? dateInput : 'Lỗi định dạng ngày';
+        }
+    };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
       <DialogTitle>
@@ -83,11 +129,13 @@ const OrderDetailModal = ({ open, onClose, onType, orderID, onRefetch }) => {
             <h5>
               Mã đơn hàng : <small>{id}</small>
             </h5>
-            <p>Tổng tiền thanh toán: {totalPrice} VNĐ</p>
-            <p>Phương thức thanh toán : { }</p>
-            <p>Ngày giao hàng : { }</p>
+            <p>Họ và tên tài khoản: {ownerName}</p>
+            <p>Email: {}</p>
+            <p>Ngày đặt hàng : {formatDate(createdAt)}</p>
             Địa chỉ giao hàng
-            {deliveryAddress && <div key={id} className="addressContainer">
+            {deliveryAddress && 
+            (<>
+            <div key={id} className="addressContainer">
               <div className="addressText">
                 <p className="addType">
                   <small>
@@ -110,7 +158,10 @@ const OrderDetailModal = ({ open, onClose, onType, orderID, onRefetch }) => {
                   {deliveryAddress.provinceName} - <b>{ }</b>
                 </p>
               </div>
-            </div>}
+            </div></>)}
+            
+            <p>Phương thức thanh toán : <span>{paymentDetails?.paymentMethod}</span></p>
+            <p>Trạng thái thanh toán : {paymentDetails?.paymentStatus}</p>
           </Grid>
           <Grid size={6}>
             <p>Chi tiết đơn hàng</p>
@@ -142,6 +193,7 @@ const OrderDetailModal = ({ open, onClose, onType, orderID, onRefetch }) => {
                 ))
               }
             </Box>
+            <p>Tổng tiền thanh toán: {totalPrice} VNĐ</p>
             <Box>
               <FormControl disabled={onType !== "update"}>
                 
