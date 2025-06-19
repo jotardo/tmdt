@@ -5,10 +5,10 @@ const IP_ADDRESS = process.env.REACT_APP_BASE_URL;
 console.log("BaseURL: ", IP_ADDRESS);
 
 const axiosClient = axios.create({
-  baseURL: IP_ADDRESS || "http://localhost:8080/api", // dùng fallback
+  baseURL: IP_ADDRESS,
   headers: {
     "Content-Type": "application/json",
-    "ngrok-skip-browser-warning": "6854"
+    "ngrok-skip-browser-warning": "true"
   },
 });
 
