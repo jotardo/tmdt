@@ -29,19 +29,15 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    price: "",
     material: "",
     size: "",
     occasion: "",
-    prevPrice: "",
-    productIsFavorite: false,
-    productIsCart: false,
-    productIsBadge: "",
+    budgetAuction: "",
     categoryId: "",
-    ctvOrAdminId: user?.id || "",
-    status: "OPEN",
+    userAddID: user?.id ?? null,
+    quantity: "",
+    status: "Open-Auction" || "OPEN", // Default status for auction
   });
-  console.log("User ID:", user?.id);
   
   const [errors, setErrors] = useState({});
   const [images, setImages] = useState([]);
@@ -92,7 +88,7 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
     const newErrors = {};
     if (!formData.name.trim()) newErrors.name = "Tên sản phẩm là bắt buộc";
     if (!formData.description.trim()) newErrors.description = "Mô tả là bắt buộc";
-    if (!formData.price || formData.price <= 0) newErrors.price = "Giá phải lớn hơn 0";
+    if (!formData.budgetAuction || formData.budgetAuction <= 0) newErrors.budgetAuction = "Ngân sách phải lớn hơn 0";
     if (!formData.categoryId) newErrors.categoryId = "Vui lòng chọn danh mục";
     if (images.length === 0) newErrors.images = "Vui lòng chọn ít nhất một hình ảnh";
     setErrors(newErrors);
@@ -104,23 +100,27 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
       toast.error("Vui lòng điền đầy đủ thông tin!");
       return;
     }
-
+  
     setSubmitting(true);
     try {
       const data = new FormData();
       data.append("name", formData.name);
       data.append("description", formData.description);
-      data.append("price", formData.price);
+      data.append("budgetAuction", formData.budgetAuction);
       data.append("productMaterial", formData.productMaterial);
       data.append("size", formData.size);
       data.append("occasion", formData.occasion);
-      data.append("prevPrice", formData.prevPrice || 0);
-      data.append("productIsFavorite", formData.productIsFavorite);
-      data.append("productIsCart", formData.productIsCart);
-      data.append("productIsBadge", formData.productIsBadge);
+      data.append("quantity", formData.quantity || 1);
       data.append("status", formData.status);
       data.append("categoryId", parseInt(formData.categoryId));
-      data.append("ctvOrAdminId", parseInt(formData.ctvOrAdminId));
+      // Kiểm tra người dùng tạo đấu giá
+      if (formData.userAddID != null) {
+        data.append("userAddID", parseInt(formData.userAddID));
+      } else {
+        toast.error("Không xác định được người dùng tạo sản phẩm!");
+        return;
+      }
+      
 
       images.forEach((image) => {
         data.append("images", image);
@@ -137,17 +137,14 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
         setFormData({
           name: "",
           description: "",
-          price: "",
-          productMaterial: "",
+          material: "",
           size: "",
           occasion: "",
-          prevPrice: "",
-          productIsFavorite: false,
-          productIsCart: false,
-          productIsBadge: "",
+          budgetAuction: "",
           categoryId: "",
-          ctvOrAdminId: user?.id || "",
-          status: "OPEN",
+          quantity: "",
+          userAddID: user?.id ?? null,
+          status: "Open-Auction" || "OPEN",
         });
         setImages([]);
         setImagePreviews([]);
@@ -162,6 +159,15 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
       setSubmitting(false);
     }
   };
+
+  useEffect(() => {
+    if (user?.id) {
+      setFormData((prev) => ({
+        ...prev,
+        userAddID: user.id,
+      }));
+    }
+  }, [user]);
 
   return (
     <Dialog 
@@ -209,29 +215,17 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Giá (VND)"
-                name="price"
+                label="Ngân sách mong muốn (VND)"
+                name="budgetAuction"
                 type="number"
                 fullWidth
-                value={formData.price}
+                value={formData.budgetAuction}
                 onChange={handleInputChange}
                 required
                 variant="outlined"
                 sx={{ bgcolor: 'white' }}
-                error={!!errors.price}
-                helperText={errors.price}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                label="Giá trước đây (VND)"
-                name="prevPrice"
-                type="number"
-                fullWidth
-                value={formData.prevPrice}
-                onChange={handleInputChange}
-                variant="outlined"
-                sx={{ bgcolor: 'white' }}
+                error={!!errors.budgetAuction}
+                helperText={errors.budgetAuction}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -269,10 +263,10 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
-                label="Badge"
-                name="productIsBadge"
+                label="Số lượng"
+                name="quantity"
                 fullWidth
-                value={formData.productIsBadge}
+                value={formData.quantity}
                 onChange={handleInputChange}
                 variant="outlined"
                 sx={{ bgcolor: 'white' }}
@@ -309,7 +303,7 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
                   label="Trạng thái"
                   onChange={handleInputChange}
                 >
-                  <MenuItem value="OPEN">Mở đấu giá</MenuItem>
+                  <MenuItem value="Open-Auction">Mở đấu giá</MenuItem>
                   <MenuItem value="IN_PROGRESS">Đang xử lý</MenuItem>
                   <MenuItem value="CLOSED">Đã đóng</MenuItem>
                 </Select>

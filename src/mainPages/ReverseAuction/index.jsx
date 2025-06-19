@@ -28,10 +28,8 @@ export default function ReverseAuctionHome() {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const userDetails = user || JSON.parse(localStorage.getItem("user"));
-  const role = userDetails?.role || "USER"; //
+  const role = userDetails?.role; //
   
-  console.log("User in ReverseAuctionHome:", userDetails);
-
   useEffect(() => {
     setLoading(true);
     axios
@@ -44,31 +42,15 @@ export default function ReverseAuctionHome() {
       })
       .catch((error) => {
         console.error("Error fetching products:", error);
-        toast.error("Không thể tải danh sách sản phẩm!");
+        // toast.error("Không thể tải danh sách sản phẩm!");
         setLoading(false);
       });
   }, []);
-
+  
   const handleAddProduct = (product) => {
     setProducts((prev) => [...prev, product]);
     setOpenCreateDialog(false);
   };
-
-  // Transform auction product to ProductCard-compatible format
-  const transformProduct = (product) => ({
-    id: product.id,
-    name: product.name || "Sản phẩm đấu giá",
-    price: product.price || 0,
-    prevPrice: product.prevPrice || null,
-    imageURLs: product.imageURLs || [], // Map images to imageURLs
-    productIsBadge: product.productIsBadge || "",
-    averageRating: 0, // No rating for auctions
-    brand: product.brand || null, // Optional
-    occasion: product.occasion || null,
-    status: product.status || "OPEN", // Auction-specific
-    material: product.material || null,
-    size: product.size || null,
-  });
 
   return (
     <Container maxWidth="lg" sx={{ py: 4, bgcolor: '#f5f7fa' }}>
@@ -95,7 +77,7 @@ export default function ReverseAuctionHome() {
           >
             Đấu Giá Ngược
           </Typography>
-          {(role === 'User' || role === 'CTV') && (
+          {(role === 'User') && (
             <Button
               variant="contained"
               startIcon={<AddCircle />}
@@ -160,7 +142,7 @@ export default function ReverseAuctionHome() {
             {products.map((product) => (
               <Grid item xs={12} sm={6} md={4} key={product.id}>
                 <AuctionProductCard 
-                  item={transformProduct(product)} 
+                  item={product} 
                   inWishlist={false} // Adjust if wishlist integration is needed
                 />
               </Grid>
