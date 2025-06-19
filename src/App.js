@@ -67,7 +67,10 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route
           path="/admin"
-          element={<AdminLayout />}
+          element={
+        <RequiresAuth token={token}>
+          <AdminLayout />
+        </RequiresAuth>}
         >
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<OrdersAdmin />} />
@@ -76,7 +79,6 @@ function App() {
           <Route path="categories" element={<CategoryManagement />} />
           <Route path="category-warehouse" element={<CategoryWarehouse />} />
           <Route path="product-warehouse" element={<ProductWarehouse />} />
-
           <Route path="approve-ctv" element={<ApproveCTV />} />
         </Route>
         <Route

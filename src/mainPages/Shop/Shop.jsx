@@ -30,16 +30,21 @@ const Shop = () => {
     // yipee
     useEffect(() => {
         if (!backendData.loading) {
+            // Filter first
+            const startIndex = page * resultsPerPage;
+            const endIndex = startIndex + resultsPerPage;
+
+            console.log(finalPriceSortedData)
+            setData(finalPriceSortedData.slice(startIndex, endIndex));
+
+            // Paging later
             const totalPages = Math.ceil(finalPriceSortedData.length / resultsPerPage);
             if (page < 0 || page >= totalPages) {
                 setPage(Math.max(0, Math.min(page, totalPages - 1)));
                 return;
             }
 
-            const startIndex = page * resultsPerPage;
-            const endIndex = startIndex + resultsPerPage;
-            setData(finalPriceSortedData.slice(startIndex, endIndex));
-
+            // Scroll 
             if (productDiv.current) {
                 productDiv.current.scrollIntoView();
             }
@@ -171,7 +176,7 @@ const Shop = () => {
                         backendData?.loading ? (<h3><Loader /></h3>) : backendData?.error ? (
                             <h3>Hiện tại dữ liệu có vấn đề</h3>
                         ) :
-                            (
+                            data && data.length > 0 ? (
                                 <>
                                 <div className="productsContainer">
                                     {
@@ -186,7 +191,7 @@ const Shop = () => {
                                         color="primary"
                                     />
                                 </>
-                            )
+                            ) : (<>Không có sản phẩm nào hợp với bộ lọc hiện tại</>)
                     }
                 </div>
             </div>
