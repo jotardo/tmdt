@@ -164,6 +164,17 @@ export default function Login() {
     navigate("/forgot-password");
   }
 
+  const GOOGLE_AUTH_URL = "http://localhost:8080/oauth2/authorization/google";
+  const FACEBOOK_AUTH_URL = "http://localhost:8080/oauth2/authorization/facebook";
+
+  const handleGoogleLogin = () => {
+    window.location.href = GOOGLE_AUTH_URL;
+  };
+
+  const handleFacebookLogin = () => {
+    window.location.href = FACEBOOK_AUTH_URL;
+  }
+
   return (
     <>
       {isSignedIn ? (
@@ -223,6 +234,20 @@ export default function Login() {
                     {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
                   </button>
                 </div>
+
+                {/* Login OAuth2 */}
+                <div className="googleLoginButton" style={{ marginTop: "20px", textAlign: "center" }}>
+                  <button type="button" onClick={handleGoogleLogin} disabled={isLoading}>
+                    Đăng nhập với Google
+                  </button>
+                </div>
+                <div className="facebookLoginButton" style={{ marginTop: "20px", textAlign: "center" }}>
+                  <button type="button" onClick={handleFacebookLogin} disabled={isLoading}>
+                    Đăng nhập với Facebook
+                  </button>
+                </div>
+
+
                 <div className="signUp">
                   <p>
                     Chưa có tài khoản?{" "}

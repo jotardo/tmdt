@@ -37,9 +37,16 @@ import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
 import ProductWarehouse from "./admin/pages/ProductWarehouse";
 import ForgotPassword from "./mainPages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
+
 import ApproveCTV from "./admin/pages/ApproveCTV";
 import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
+import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
+import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
 import OrdersAdmin from "./admin/pages/OrdersManagement";
+import ReverseAuctionHome from "./mainPages/ReverseAuction";
+import MyAuction from "./mainPages/ReverseAuction/UserComponents/myAuction";
+import CreateAuction from "./mainPages/ReverseAuction/UserComponents/CreateAuction";
+import AuctionChatWindow from "./mainPages/ReverseAuction/Components/AuctionChatWindow";
 
 
 function App() {
@@ -67,6 +74,7 @@ function App() {
           <Route path="categories" element={<CategoryManagement />} />
           <Route path="category-warehouse" element={<CategoryWarehouse />} />
           <Route path="product-warehouse" element={<ProductWarehouse />} />
+
           <Route path="approve-ctv" element={<ApproveCTV />} />
         </Route>
         <Route
@@ -81,6 +89,7 @@ function App() {
           <Route path="" element={<ShoppingCart />} />
           <Route path="completedorders" element={<OrderComplete />} />
           <Route path="checkout" element={<CheckoutDetails />} />
+          
         </Route>
 
         <Route
@@ -105,14 +114,27 @@ function App() {
           <Route path="address" element={<Address />} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+        <Route path="/login/oauth2/code/facebook" element={<FacebookOAuthCallback />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        {/* <Route path="/register" element={<Register />} /> */}
+
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/register-ctv" element={<RegisterCTV />} />
+        <Route path="/reverse-auction" element={<ReverseAuctionHome />} />
+          {/* <Route path="my" element={<MyAuction />} />
+          <Route path="create" element={<CreateAuction />} />
+        </Route> */}
+
+        {/* <Route path="/reverse-auction" element={<ReverseAuctionHome />}>
+          <Route path="my" element={<MyAuction />} />
+          <Route path="create" element={<CreateAuction />} />
+          <Route path="waiting-rooms" element={<AuctionChatWindow />} />
+          <Route path="room/:roomId" element={<AuctionChatWindow />} />
+        </Route> */}
         <Route path="*" element={<Error />} />
 
       </Routes>

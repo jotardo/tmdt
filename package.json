@@ -13,6 +13,7 @@
     "classnames": "^2.5.1",
     "dayjs": "^1.11.7",
     "dotenv": "^16.5.0",
+    "framer-motion": "^12.15.0",
     "jwt-decode": "^3.1.2",
     "jwt-encode": "^1.0.1",
     "miragejs": "^0.1.48",

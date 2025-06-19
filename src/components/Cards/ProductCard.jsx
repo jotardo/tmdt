@@ -11,7 +11,6 @@ export default function ProductCard({ item, inWishlist }) {
     const { deleteWishListData, addWishListData, isAvailableInWishList } = useWish();
     const { getSingleProduct } = useData();
     const { addToCartFunction, isItemInCart, changeQuantity } = useCart();
-
     const { id, name, price, prevPrice, imageURLs, productIsBadge, averageRating = 0, brand, occasion } = item;
 
     const isInWishList = useMemo(() => {

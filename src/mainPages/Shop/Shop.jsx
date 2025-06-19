@@ -22,7 +22,6 @@ const Shop = () => {
     const [data, setData] = useState([]);
     const [showFilters, setShowFilters] = useState(true);
     const productDiv = useRef(null);
-
     // pagination change control
     function onPageChange(event, p) {
         setPage(p - 1);

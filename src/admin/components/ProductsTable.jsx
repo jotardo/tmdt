@@ -34,6 +34,9 @@ const ProductsTable = ({ apiData, resultsPerPage, filter, loading, onDelete, onH
     setData(apiData.slice((page - 1) * resultsPerPage, page * resultsPerPage));
   }, [page, resultsPerPage, filter, apiData]);
 
+  console.log("Data ", data);
+  
+
   return (
     <Box 
         elevation={3}
