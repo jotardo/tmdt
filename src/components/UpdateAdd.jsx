@@ -28,13 +28,13 @@ export default function UpdateAddress({
 
     if (!isEditClicked) {
       const res = await deliveryAddressApi.addNewAddress(addressState);
-      if(res.success) {
+      console.log("response add address ", res);
+      if(res) {
         addressDispatch({ type: "ADD_ADDRESS", payload: res });
         toast.success("Địa chỉ mới đã được thêm thành công!");
       }else{
         toast.warn("Không xong rồii :((");
       }
-
     } else {
       // const res = await deliveryAddressApi.updateAddress(addressState);
       // addressDispatch({ type: "UPDATE_ADDRESS", payload: res });

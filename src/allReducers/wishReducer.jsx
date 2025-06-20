@@ -16,8 +16,6 @@ export const wishReducerFunction = (state, action) => {
 
     switch (type) {
         case "ALLWISHLIST":
-            console.log("Old wishlist:", state.backendWishList);
-            console.log("New wishlist:", action.payload);
             return { ...state, backendWishList: action.payload };
 
         case "ADDTOWISH":
