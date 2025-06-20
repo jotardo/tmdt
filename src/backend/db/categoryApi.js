@@ -25,7 +25,6 @@ const categoryApi = {
 
   // Lấy tất cả danh mục
   fetchAllCategories: async () => {
-    console.log("📤 Gửi yêu cầu lấy tất cả danh mục");
     return await axiosClient.get("/category/fetch/all");
   },
 

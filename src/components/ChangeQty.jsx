@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 export default function ChangeQty({_id,changeQuantity,qty}){
 
 const {token} = useAuth()
-  return(<div class="product-quantity" data-cell="Quantity :">
+  return(<div className="product-quantity" data-cell="Quantity :">
   <div className="counter">
     <span
       style={{ color: qty < 2 ? "#d1d1d1" : "" }}

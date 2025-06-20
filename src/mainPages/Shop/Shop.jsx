@@ -119,7 +119,7 @@ const Shop = () => {
                                             name={occasionName}
                                             checked={filtersUsed.ocassionFilters.includes(occasionName)}
                                             value={occasionName}
-                                            onClick={(e) => {
+                                            onChange={(e) => {
                                                 setFiltersUsed({
                                                     type: "OCCASION",
                                                     inputValue: e.target.value,
@@ -140,7 +140,7 @@ const Shop = () => {
                                             name={brand}
                                             checked={filtersUsed.brandFilters.includes(brand)}
                                             value={brand}
-                                            onClick={(e) => {
+                                            onChange={(e) => {
                                                 setFiltersUsed({
                                                     type: "BRAND",
                                                     inputValue: e.target.value,

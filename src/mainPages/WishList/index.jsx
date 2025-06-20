@@ -19,9 +19,9 @@ export default function WishList() {
         </p>
       ) : (
         <div className="productsContainer">
-          {wishList?.backendWishList.map((item) => (
-            <ProductCard item={item} inWishlist={true} />
-          ))}
+            {wishList?.backendWishList.map((item) => (
+                <ProductCard key={item.id} item={item.product} inWishlist={true} />
+            ))}
         </div>
       )}
     </div>

@@ -61,7 +61,12 @@ export default function ShoppingCart() {
                   <td className="product-thumbnail">
                     <NavLink to={`/products/${productId}`}>
                       <div onClick={() => getSingleProduct(productId)}>
-                        <img src={images} width="70px" alt={name} />
+                        <img
+                            src={`http://localhost:8080/api/product/${images[0].url}`}
+                            width="70px"
+                            alt={name}
+                        />
+
                       </div>
                     </NavLink>
                   </td>
@@ -97,7 +102,7 @@ export default function ShoppingCart() {
 
                   <td className="product-wishlist">
                     <div onClick={() => getSingleProduct(productId)}>
-                      {isAvailableInWishList(productId) > -1 ? (
+                      {isAvailableInWishList(productId) ? (
                           <span
                               className="addedtofav"
                               onClick={() => deleteWishListData(productId)}
