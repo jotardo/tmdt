@@ -5,6 +5,9 @@ import { useData } from '../../context/DataContext';
 import TuneIcon from "@mui/icons-material/Tune";
 import Loader from "../../components/Loader";
 import { Pagination } from "@mui/material";
+import { useMemo } from 'react';
+
+
 const Shop = () => {
     const {
         backendData,    // full product list
@@ -22,15 +25,46 @@ const Shop = () => {
     const [data, setData] = useState([]);
     const [showFilters, setShowFilters] = useState(true);
     const productDiv = useRef(null);
-    // pagination change control
+    const maxPrice = Math.max(...finalPriceSortedData.map(p => Number(p.price) || 0));
     function onPageChange(event, p) {
         setPage(p - 1);
     }
 
-    // yipee
+    const filtered = useMemo(() => {
+        let temp = finalPriceSortedData;
+
+        if (filtersUsed.categoryFilters.length > 0) {
+            temp = temp.filter(product =>
+                filtersUsed.categoryFilters.includes(product.categoryName)
+            );
+        }
+
+        if (filtersUsed.ocassionFilters.length > 0) {
+            temp = temp.filter(product =>
+                filtersUsed.ocassionFilters.includes(product.occasion)
+            );
+        }
+
+        if (filtersUsed.brandFilters.length > 0) {
+            temp = temp.filter(product =>
+                filtersUsed.brandFilters.includes(product.brand)
+            );
+        }
+
+        if (filtersUsed.priceRange) {
+            temp = temp.filter(product =>
+                Number(product.price) <= Number(filtersUsed.priceRange)
+            );
+        }
+
+
+
+        return temp;
+    }, [finalPriceSortedData, filtersUsed]);
+
     useEffect(() => {
         if (!backendData.loading) {
-            const totalPages = Math.ceil(finalPriceSortedData.length / resultsPerPage);
+            const totalPages = Math.ceil(filtered.length / resultsPerPage);
             if (page < 0 || page >= totalPages) {
                 setPage(Math.max(0, Math.min(page, totalPages - 1)));
                 return;
@@ -38,13 +72,14 @@ const Shop = () => {
 
             const startIndex = page * resultsPerPage;
             const endIndex = startIndex + resultsPerPage;
-            setData(finalPriceSortedData.slice(startIndex, endIndex));
+            setData(filtered.slice(startIndex, endIndex));
 
             if (productDiv.current) {
                 productDiv.current.scrollIntoView();
             }
         }
-    }, [finalPriceSortedData, page, resultsPerPage]);
+    }, [filtered, backendData.loading, page, resultsPerPage]);
+
 
 
     return (
@@ -72,7 +107,8 @@ const Shop = () => {
                         </div>
                         <div className="priceFilter">
                             <h3>Giá cả</h3>
-                            <input type="range"
+                            <input
+                                type="range"
                                 min="5000000"
                                 max="500000000"
                                 step="5000000"
@@ -80,9 +116,10 @@ const Shop = () => {
                                 onChange={(e) => {
                                     setFiltersUsed({
                                         type: "PRICE",
-                                        inputValue: e.target.value,
+                                        inputValue: Number(e.target.value),
                                     });
-                                }} />
+                                }}
+                            />
                             <p>
                                 <span>Min: 5,000,000</span>
                                 <span>Max: 500,000,000</span>
@@ -153,10 +190,11 @@ const Shop = () => {
                         </div>
                         <div className="clearAll">
                             <button
-                                onClick={(e) => {
+                                onClick={() => {
                                     setFiltersUsed({
                                         type: "CLEARFILTER",
-                                        inputValue: e.target.value,
+                                        inputValue: null,
+                                        maxPrice,
                                     });
                                 }}
                             >
@@ -179,8 +217,8 @@ const Shop = () => {
                                     }
                                 </div>
                                     <Pagination
-                                        style={{marginTop: 6}}
-                                        count={Math.ceil(finalPriceSortedData.length / resultsPerPage)}
+                                        style={{ marginTop: 6 }}
+                                        count={Math.ceil(filtered.length / resultsPerPage)}
                                         page={page + 1}
                                         onChange={onPageChange}
                                         color="primary"
