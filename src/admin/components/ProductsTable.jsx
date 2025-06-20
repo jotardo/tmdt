@@ -130,8 +130,8 @@ const ProductsTable = ({ apiData, resultsPerPage, filter, loading, onDelete, onH
                     <TableCell>{p.occasion}</TableCell>
                     <TableCell>
                       <Chip
-                        label={p.status?.toLowerCase() === "active" ? "Hoạt động" : "Không hoạt động"}
-                        color={p.status?.toLowerCase() === "active" ? "success" : "default"}
+                        label={p.status === "Active" ? "Hoạt động" : "Không hoạt động"}
+                        color={p.status === "Active" ? "success" : "default"}
                         size="small"
                         sx={{ fontWeight: 600, textTransform: "capitalize" }}
                       />

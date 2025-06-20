@@ -22,6 +22,7 @@ import User from "./mainPages/Profile/components/User";
 import CheckoutDetails from "./mainPages/Cart/cartComponents/CheckoutDetails";
 import ShoppingCart from "./mainPages/Cart/cartComponents/ShoppingCart";
 import OrderComplete from "./mainPages/Cart/cartComponents/OrdersComplete";
+import StripeSuccess from "./mainPages/Cart/cartComponents/StripeSuccess";
 import Contact from "./mainPages/Contact/index";
 import ScrollToTop from "./components/ScrollUp";
 import VerifyEmail from "./mainPages/Login/VerifyEmail";
@@ -31,30 +32,32 @@ import Dashboard from "./admin/pages/Dashboard";
 import Customers from "./admin/pages/Customer";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CategoryManagement from "./admin/pages/CategoryManagement";
-import { useContext, useEffect } from "react";
+import {useContext, useEffect} from "react";
 import { AuthContext } from "./context/AuthContext";
 import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
 import ProductWarehouse from "./admin/pages/ProductWarehouse";
 import ForgotPassword from "./mainPages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
-
+import ReverseAuctionHome from "./mainPages/ReverseAuction/index";
+import MyAuction from "./mainPages/ReverseAuction/UserComponents/myAuction";
+// import CreateAuction from "./mainPages/ReverseAuction/UserComponents/CreateAuction";
 import ApproveCTV from "./admin/pages/ApproveCTV";
 import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
 import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
 import OrdersAdmin from "./admin/pages/OrdersManagement";
-import ReverseAuctionHome from "./mainPages/ReverseAuction";
-import MyAuction from "./mainPages/ReverseAuction/UserComponents/myAuction";
-import CreateAuction from "./mainPages/ReverseAuction/UserComponents/CreateAuction";
 import AuctionChatWindow from "./mainPages/ReverseAuction/Components/AuctionChatWindow";
 
 
 function App() {
   const token = localStorage.getItem("jwtToken");
   const { logout } = useContext(AuthContext);
-  // useEffect(() => {
-  //  logout();
-  // }, [])
+    useEffect(() => {
+        if (!token) {
+            logout();
+        }
+    }, [token]);
+
   return (
     <div className="App">
       <Header />
@@ -93,6 +96,28 @@ function App() {
           <Route path="checkout" element={<CheckoutDetails />} />
           
         </Route>
+
+          <Route
+              path="/payment"
+              element={
+                  <RequiresAuth token={token}>
+                      <StripeSuccess />
+                  </RequiresAuth>
+              }
+          />
+
+          <Route
+              path="/reverse-auction"
+              element={
+                  <RequiresAuth token={token}>
+                      <ReverseAuctionHome />
+                  </RequiresAuth>
+              }
+          >
+              <Route path="my" element={<MyAuction />} />
+              {/* <Route path="create" element={<CreateAuction />} /> */}
+          </Route>
+
 
         <Route
           path="/wishlist"

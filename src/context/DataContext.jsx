@@ -35,6 +35,7 @@ export function DataProvider({ children }) {
   const getBackendData = async () => {
     try {
       const response = await productApi.fetchExistingProducts();
+      console.log(response);
       const productList = response?.data;
       setBackendData({
         ...backendData,
@@ -64,6 +65,7 @@ export function DataProvider({ children }) {
       loading: true,
     });
     try {
+        console.log(id)
       const response = await productApi.fetchProductDetail(id);
         console.log("Product API response:", response);
       const {

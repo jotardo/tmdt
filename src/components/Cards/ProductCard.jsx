@@ -11,7 +11,18 @@ export default function ProductCard({ item, inWishlist }) {
     const { deleteWishListData, addWishListData, isAvailableInWishList } = useWish();
     const { getSingleProduct } = useData();
     const { addToCartFunction, isItemInCart, changeQuantity } = useCart();
-    const { id, name, price, prevPrice, imageURLs, productIsBadge, averageRating = 0, brand, occasion } = item;
+    const { product } = item;
+    const {
+        id,
+        name,
+        price,
+        prevPrice,
+        imageURLs,
+        averageRating = 2,
+        productIsBadge,
+        brand,
+        occasion
+    } = product || {};
 
     const isInWishList = useMemo(() => {
         return isAvailableInWishList(id);
@@ -44,7 +55,7 @@ export default function ProductCard({ item, inWishlist }) {
     return (
         <div className="ProductCard" onClick={() => getSingleProduct(id)}>
             <NavLink to={`/products/${id}`}>
-                <img src={`http://localhost:8080/api/product/${mainImage}`} alt="Sản phẩm trang sức"/>
+                <img src={`${process.env.REACT_APP_BASE_URL}/product/${mainImage}`} alt="Sản phẩm trang sức"/>
                 <div className="cardTextContent">
                     <h3>{name?.slice(0, 15) || "Sản phẩm"}</h3>
                     {brand && <p className="brand">Thương hiệu: {brand}</p>}

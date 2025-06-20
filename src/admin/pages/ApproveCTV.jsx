@@ -27,7 +27,7 @@ const ApproveCTV = () => {
         const fetchPendingUsers = async () => {
             setLoading(true);
             try {
-                const res = await axios.get('http://localhost:8080/api/user/ctv-pending');
+                const res = await axios.get(`${process.env.REACT_APP_BASE_URL}/user/ctv-pending`);
                 setPendingUsers(res.data);
             } catch (err) {
                 setMessage('Lỗi khi tải danh sách CTV chờ duyệt.');
@@ -38,6 +38,8 @@ const ApproveCTV = () => {
         fetchPendingUsers();
     }, []);
 
+    console.log('Pending Users:', pendingUsers);
+
     const toggleExpand = (id) => {
         setExpandedId(expandedId === id ? null : id);
     };
@@ -45,7 +47,7 @@ const ApproveCTV = () => {
     const handleConfirm = async (id, isConfirmed) => {
         setLoading(true);
         try {
-            const res = await axios.post(`http://localhost:8080/api/user/${id}/confirm-CTV?isConfirmed=${isConfirmed}`);
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/user/${id}/confirm-CTV?isConfirmed=${isConfirmed}`);
             setMessage(res.data.responseMessage);
             setPendingUsers(prev => prev.filter(user => user.id !== id));
             setExpandedId(null);

@@ -65,7 +65,7 @@ export default function ProductDetails() {
             <ProductImageContainer
               image_urls={product.imageURLs.map((img) => ({
                 ...img,
-                url: `http://localhost:8080/api/product/${img.url}`,
+                url: `${process.env.REACT_APP_BASE_URL}/product/${img.url}`,
               }))}
               mainImageSize={{ width: 400, height: 400 }} // Fixed size for main image
             />
