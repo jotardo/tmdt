@@ -15,10 +15,10 @@ import {
 } from "@mui/material";
 import { AddCircle, List } from "@mui/icons-material";
 import axios from "axios";
-// import CreateAuction from "./UserComponents/CreateAuction";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 import AuctionProductCard from "./Components/AuctionProductCard";
+import CreateAuction from "./Components/CreateAuction";
 
 export default function ReverseAuctionHome() {
   const [tabValue] = useState(0);
@@ -27,25 +27,37 @@ export default function ReverseAuctionHome() {
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const userDetails = user || JSON.parse(localStorage.getItem("user"));
-  const role = userDetails?.role; //
-  
+  const role = userDetails?.role;
+
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get("http://localhost:8080/api/reverse-auction/fetch-all")
-      .then((response) => {
-        console.log("Fetched products:", response.data);
-        const productDTOs = Array.isArray(response.data.productDTOs) ? response.data.productDTOs : [];
-        setProducts(productDTOs.filter(product => product && typeof product === 'object'));
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching products:", error);
-        // toast.error("Không thể tải danh sách sản phẩm!");
-        setLoading(false);
-      });
-  }, []);
-  
+    // Set tab value based on current path
+    if (location.pathname === "/reverse-auction/my") {
+      setTabValue(1);
+    } else {
+      setTabValue(0);
+    }
+  }, [location.pathname]);
+
+  useEffect(() => {
+    // Only fetch data for the main auction list, MyAuctionProduct handles its own data
+    if (location.pathname !== "/reverse-auction/my") {
+      setLoading(true);
+      axios
+        .get("http://localhost:8080/api/reverse-auction/fetch-all")
+        .then((response) => {
+          console.log("Fetched products:", response.data);
+          const productDTOs = Array.isArray(response.data.productDTOs) ? response.data.productDTOs : [];
+          setProducts(productDTOs.filter(product => product && typeof product === 'object'));
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching products:", error);
+          toast.error("Không thể tải danh sách sản phẩm!");
+          setLoading(false);
+        });
+    }
+  }, [location.pathname, userDetails?.token]);
+
   const handleAddProduct = (product) => {
     setProducts((prev) => [...prev, product]);
     setOpenCreateDialog(false);
@@ -76,7 +88,7 @@ export default function ReverseAuctionHome() {
           >
             Đấu Giá Ngược
           </Typography>
-          {(role === 'User') && (
+          {role === 'User' && (
             <Button
               variant="contained"
               startIcon={<AddCircle />}
@@ -119,49 +131,57 @@ export default function ReverseAuctionHome() {
             icon={<List />}
             iconPosition="start"
             component={NavLink}
+            to="/reverse-auction"
+          />
+          <Tab
+            label="Danh Sách Đấu Giá Của Tôi"
+            icon={<List />}
+            iconPosition="start"
+            component={NavLink}
             to="/reverse-auction/my"
           />
         </Tabs>
       </Paper>
 
       <Box sx={{ minHeight: '400px' }}>
-        <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, color: '#333' }}>
-          Danh Sách Sản Phẩm Đấu Giá
-        </Typography>
-        {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
-            <CircularProgress />
-          </Box>
-        ) : products.length === 0 ? (
-          <Typography color="text.secondary" sx={{ my: 4, textAlign: 'center' }}>
-            Chưa có sản phẩm đấu giá nào.
-          </Typography>
+        {location.pathname === "/reverse-auction/my" ? (
+          <Outlet />
         ) : (
-          <Grid container spacing={3}>
-            {products.map((product) => (
-              <Grid item xs={12} sm={6} md={4} key={product.id}>
-                <AuctionProductCard 
-                  item={product} 
-                  inWishlist={false} // Adjust if wishlist integration is needed
-                />
+          <>
+            <Typography variant="h5" gutterBottom sx={{ fontWeight: 600, color: '#333' }}>
+              Danh Sách Sản Phẩm Đấu Giá
+            </Typography>
+            {loading ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+                <CircularProgress />
+              </Box>
+            ) : products.length === 0 ? (
+              <Typography color="text.secondary" sx={{ my: 4, textAlign: 'center' }}>
+                Chưa có sản phẩm đấu giá nào.
+              </Typography>
+            ) : (
+              <Grid container spacing={3}>
+                {products.map((product) => (
+                  <Grid item xs={12} sm={6} md={4} key={product.id}>
+                    <AuctionProductCard 
+                      item={product} 
+                      inWishlist={false}
+                    />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
+            )}
+          </>
         )}
       </Box>
 
-      {/* <CreateAuction
+      <CreateAuction
         open={openCreateDialog}
         onClose={() => {
           setOpenCreateDialog(false);
         }}
         onAddProduct={handleAddProduct}
-      /> */}
-
-      <Box sx={{ mt: 4 }}>
-        <Outlet />
-      </Box>
+      />
     </Container>
   );
 }
-
