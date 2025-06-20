@@ -21,8 +21,7 @@ import { useAuth } from "../../context/AuthContext";
 import AuctionProductCard from "./Components/AuctionProductCard";
 
 export default function ReverseAuctionHome() {
-  const location = useLocation();
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue] = useState(0);
   const [products, setProducts] = useState([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -95,12 +94,12 @@ export default function ReverseAuctionHome() {
           >
             Đấu Giá Ngược
           </Typography>
-          {(role === 'User' || role === 'CTV') && (
+          {(role.toUpperCase() === 'USER') && (
             <Button
               variant="contained"
               startIcon={<AddCircle />}
               onClick={() => setOpenCreateDialog(true)}
-              sx={{ 
+              sx={{
                 borderRadius: 20, 
                 textTransform: "none",
                 bgcolor: 'white',

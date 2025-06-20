@@ -54,6 +54,8 @@ export default function ProductDetails() {
 
   const discount = Math.floor(100 - (price / prevPrice) * 100);
 
+  console.log(isAvailableInWishList(id));
+
   return (
     <Box sx={{ maxWidth: 1200, mx: "auto", p: 4 }}>
       <Grid container spacing={4}>
@@ -84,15 +86,15 @@ export default function ProductDetails() {
                 <Button
                   variant="outlined"
                   color="secondary"
-                  startIcon={token && isAvailableInWishList(id) >= 0 ? <FavoriteRoundedIcon /> : <FavoriteTwoToneIcon />}
+                  startIcon={token && isAvailableInWishList(id) ? <FavoriteRoundedIcon /> : <FavoriteTwoToneIcon />}
                   fullWidth
                   sx={{ py: 1.5, borderRadius: 2 }}
                   onClick={() => {
-                    if (token && isAvailableInWishList(id) >= 0) deleteWishListData(id);
+                    if (token && isAvailableInWishList(id)) deleteWishListData(id);
                     else addWishListData(product);
                   }}
                 >
-                  {token && isAvailableInWishList(id) >= 0 ? "Xóa Wishlist" : "Thêm Wishlist"}
+                  {token && isAvailableInWishList(id)   ? "Xóa Wishlist" : "Thêm Wishlist"}
                 </Button>
               </Box>
             </CardContent>

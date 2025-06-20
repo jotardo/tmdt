@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-// import MockApi from "./components/MockMan";
 import RequiresAuth from "./components/RequiresAuth";
 
 import Header from "./components/Header";
@@ -63,7 +62,6 @@ function App() {
       <div className="mainApp">
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* <Route path="/mockman" element={<MockApi />} /> */}
         <Route path="/about" element={<About />} />
         <Route
           path="/admin"

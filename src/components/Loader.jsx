@@ -1,14 +1,14 @@
 export default function Loader(){
   return <>
-<div class="cssload-loader">
-	<div class="cssload-side"></div>
-	<div class="cssload-side"></div>
-	<div class="cssload-side"></div>
-	<div class="cssload-side"></div>
-	<div class="cssload-side"></div>
-	<div class="cssload-side"></div>
-	<div class="cssload-side"></div>
-	<div class="cssload-side"></div>
+<div className="cssload-loader">
+	<div className="cssload-side"></div>
+	<div className="cssload-side"></div>
+	<div className="cssload-side"></div>
+	<div className="cssload-side"></div>
+	<div className="cssload-side"></div>
+	<div className="cssload-side"></div>
+	<div className="cssload-side"></div>
+	<div className="cssload-side"></div>
 </div>
   </>
 }
