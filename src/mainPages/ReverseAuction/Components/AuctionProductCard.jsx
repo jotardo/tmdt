@@ -56,7 +56,7 @@ export default function AuctionProductCard({ item, inWishlist }) {
           <p
             className="status"
             style={{
-              color: item.status === "OPEN" ? "#4caf50" : item.status === "CLOSED" ? "#f44336" : "#ff9800",
+              color: item.status === "Open-Auction" ? "#4caf50" : item.status === "CLOSED" ? "#f44336" : "#ff9800",
             }}
           >
             Trạng thái: {item.status === 'Open-Auction' ? 'Đang đấu giá' : "Không xác định"}
@@ -68,6 +68,9 @@ export default function AuctionProductCard({ item, inWishlist }) {
       <Box sx={{ display: "flex", gap: 1, mt: 2, justifyContent: "center" }}>
         {user?.role === "CTV" && (
           <Button
+            style={{
+              color: "#4caf50",
+            }}
             variant="contained"
             color="primary"
             onClick={() => setOpenRegistration(true)}
@@ -78,6 +81,9 @@ export default function AuctionProductCard({ item, inWishlist }) {
         )}
         {isAuthorOfAuction() && (
           <Button
+            style={{
+              color: "#4caf50",
+            }}
             variant="outlined"
             onClick={() => setOpenChat(true)}
             disabled={item.status === "CLOSED"}
