@@ -3,10 +3,10 @@ import { toast } from "react-toastify";
 import Address from "../mainPages/Profile/components/Address";
 import Loader from "./Loader";
 import { useData } from "../context/DataContext";
-import {createOrder, verifyOtp, resendOTP} from "../services/shopingService/orderService";
+import {createOrder, verifyOtp, resendOTP, createStripeSession } from "../services/shopingService/orderService";
 import OTPModal from "./Cards/OTPModal";
-import {useState} from "react";
-
+import {useEffect, useState} from "react";
+import {PaymentQR} from "../mainPages/Cart/cartComponents/PaymentQRPopup";
 
 export default function FilledCart({
                                      token,
@@ -22,25 +22,55 @@ export default function FilledCart({
                                    }) {
   const navigate = useNavigate();
   const { getSingleProduct } = useData();
-
+  const [showQRPopup, setShowQRPopup] = useState(false);
+  const [checkoutUrl, setCheckoutUrl] = useState(null);
   const grandTotal = totalPrice - totalDiscount + 25000;
-
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState(null);
+
+  useEffect(() => {
+    const handleStripeMessage = (event) => {
+      console.log("Received postMessage:", event.data);
+
+      if (event.data === "stripe_payment_success") {
+        window.location.href = "/cart/completedorders";
+      }
+    };
+
+    window.addEventListener("message", handleStripeMessage);
+    return () => window.removeEventListener("message", handleStripeMessage);
+  }, []);
+
+
 
   const handleVerifyOtp = async (otp) => {
     try {
       const result = await verifyOtp(createdOrderId, otp, token);
-      if (result.success) {
+      if (result?.success) {
         toast.success("Xác thực OTP thành công!");
         setIsOtpModalOpen(false);
-        navigate("/cart/completedorders");
-      } else {
-        toast.warn("Mã OTP không đúng hoặc đã hết hạn!");
+
+        if (paymentSelected === "online") {
+          const url = await createStripeSession(createdOrderId, token);
+          console.log(url);
+          if (url) {
+            setCheckoutUrl(url);
+            setShowQRPopup(true);
+          } else {
+            toast.error("Không thể tạo session thanh toán!");
+          }
+        } else {
+          handlePaymentSuccess();
+        }
       }
     } catch (error) {
       toast.error("Lỗi khi xác thực OTP!");
     }
+  };
+
+  const handlePaymentSuccess = () => {
+    setShowQRPopup(false);
+    navigate("/cart/completedorders");
   };
 
   const handleResendOtp = async () => {
@@ -49,7 +79,6 @@ export default function FilledCart({
       console.log(createdOrderId);
       if (result.data?.success) {
         toast.success("Đã gửi lại mã OTP!");
-        setIsOtpModalOpen(false);
       } else {
         toast.warn("Gửi lại không thành công");
       }
@@ -65,7 +94,7 @@ export default function FilledCart({
         userId: localStorage.getItem("user"),
         deliveryAddressId: selectedAddress.id,
         cartItems: cartData.map(item => ({
-          productId: item.id,
+          productId: item.product.id,
           quantity: item.quantity
         })),
         totalAmount: totalPrice,
@@ -74,9 +103,11 @@ export default function FilledCart({
       };
 
       try {
+        console.log(orderData.cartItems);
         const res = await createOrder(orderData, token);
         console.log(res.data?.success);
         if (res.data?.success) {
+          console.log(res.data?.orderID)
           setCreatedOrderId(res.data?.orderID);
           setIsOtpModalOpen(true);
 
@@ -123,7 +154,15 @@ export default function FilledCart({
 
   return (
       <>
-      <div className="filledCart">
+        {showQRPopup && (
+            <PaymentQR
+                url={checkoutUrl}
+                onClose={() => setShowQRPopup(false)}
+                onPaymentSuccess={handlePaymentSuccess}
+            />
+        )}
+
+        <div className="filledCart">
         <div className="cutomerDetails">
           <div>
             <h5>Giao đến</h5>

@@ -41,7 +41,7 @@ export default function ProductReviews({ productId, currentUserId, navigate, ave
         try {
             if (productId && productId !== 'undefined') {
                 const response = await getReviewsByProductId(productId);
-                setReviews(Array.isArray(response.data) ? response.data : []);
+                setReviews(Array.isArray(response) ? response : []);
             } else {
                 setReviews([]);
             }

@@ -89,7 +89,7 @@ export function WishProvider({ children }) {
       const { status, data } = response;
       console.log(data)
       if (status === 200) {
-        await getWishlistData(); // cập nhật lại toàn bộ danh sách sau khi xoá
+        await getWishlistData();
         toast.warn("Đã xoá sản phẩm khỏi Wishlist", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
