@@ -38,6 +38,8 @@ const ApproveCTV = () => {
         fetchPendingUsers();
     }, []);
 
+    console.log('Pending Users:', pendingUsers);
+
     const toggleExpand = (id) => {
         setExpandedId(expandedId === id ? null : id);
     };
