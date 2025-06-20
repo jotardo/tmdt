@@ -19,6 +19,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 import AuctionProductCard from "./Components/AuctionProductCard";
+import CreateAuction from "./Components/CreateAuction";
 
 export default function ReverseAuctionHome() {
   const location = useLocation();
@@ -151,13 +152,13 @@ export default function ReverseAuctionHome() {
         )}
       </Box>
 
-      {/* <CreateAuction
+      <CreateAuction
         open={openCreateDialog}
         onClose={() => {
           setOpenCreateDialog(false);
         }}
         onAddProduct={handleAddProduct}
-      /> */}
+      />
 
       <Box sx={{ mt: 4 }}>
         <Outlet />
