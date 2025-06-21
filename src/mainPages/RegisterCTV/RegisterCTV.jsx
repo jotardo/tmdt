@@ -32,7 +32,7 @@ const RegisterCTV = () => {
         }
 
         try {
-            const res = await axios.post("http://localhost:8080/api/user/register-ctv", formData);
+            const res = await axios.post(`${process.env.REACT_APP_BASE_URL}/user/register-ctv`, formData);
             setMessage(res.data.responseMessage || "Gửi yêu cầu thành công.");
         } catch (error) {
             setMessage("Gửi yêu cầu thất bại. Vui lòng kiểm tra lại địa chỉ email");

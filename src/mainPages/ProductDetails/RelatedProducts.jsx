@@ -30,7 +30,7 @@ export default function RelatedProducts({ categoryName }) {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:8080/api/product/fetch-by-category/${categoryName}`);
+        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/product/fetch-by-category/${categoryName}`);
         if (!response.ok) throw new Error("Không thể lấy dữ liệu sản phẩm");
         const data = await response.json();
         setProducts(data.products || []);
@@ -91,7 +91,7 @@ export default function RelatedProducts({ categoryName }) {
                   height="200"
                   image={
                     product.images && product.images.length > 0
-                      ? `http://localhost:8080/api/product/${product.images[0].url}`
+                      ? `${process.env.REACT_APP_BASE_URL}/product/${product.images[0].url}`
                       : "/no-image.jpg"
                   }
                   alt={product.name}

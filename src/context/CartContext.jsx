@@ -40,7 +40,11 @@ export function CartProvider({ children }) {
 
             const response = await getCartList(encodedToken, userId);
             if (response.status === 200) {
-                const normalizedCart = response.data.map(normalizeCartItem);
+                console.log("Cart API response:", response.data);
+
+                const cartArray = Array.isArray(response.data) ? response.data : response.data.cart || [];
+                const normalizedCart = cartArray.map(normalizeCartItem);
+
                 dispatch({ type: "DISPLAYCART", payload: normalizedCart });
             }
         } catch (error) {

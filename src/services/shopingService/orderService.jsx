@@ -71,5 +71,23 @@ export async function fetchAllOrderData() {
     }
 }
 
+export async function createStripeSession(orderId, token) {
+    try {
+        const response = await axiosClient.post(
+            "/payment/create-stripe-session",
+            { id: orderId },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        console.log("Stripe checkout URL:", response.data.checkoutUrl);
+        return response.data.checkoutUrl;
+    } catch (error) {
+        console.error("Lỗi khi tạo Stripe session:", error.response?.data || error.message);
+        throw error;
+    }
+}
 
 

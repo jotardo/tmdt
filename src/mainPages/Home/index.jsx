@@ -65,23 +65,28 @@ export default function Home() {
         <p>Browse through your favorite categories. we have got them all!</p>
         <div className="categoryBox">
           {
-            categoriesData.map(({ id:_id, name:categoryName, thumbnail }) => <div key={_id} className={categoryName}
-              onClick={() => {
-                setFiltersUsed({
-                  type: "CLEARFILTER",
-                  inputValue: "",
-                });
-
-                setFiltersUsed({ type: "CATEGORY", inputValue: categoryName });
-                navigate('/shop')
-              }}>
-              <img src={`http://localhost:8080/api/category/${thumbnail}`} alt={`${categoryName}`} width={200} height={200} />
-              <p>{categoryName}</p>
-            </div>
-            )
+            Array.isArray(categoriesData)
+                ? categoriesData.map(({ id: _id, name: categoryName, thumbnail }) => (
+                    <div key={_id} className={categoryName}
+                         onClick={() => {
+                           setFiltersUsed({ type: "CLEARFILTER", inputValue: "" });
+                           setFiltersUsed({ type: "CATEGORY", inputValue: categoryName });
+                           navigate('/shop');
+                         }}
+                    >
+                      <img
+                          src={`${process.env.REACT_APP_BASE_URL}/category/${thumbnail}`}
+                          alt={categoryName}
+                          width={200}
+                          height={200}
+                      />
+                      <p>{categoryName}</p>
+                    </div>
+                ))
+                : <p>Đang tải danh mục...</p>
           }
-
         </div>
+
 
 
       </section>
