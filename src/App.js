@@ -47,6 +47,7 @@ import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
 import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
 import OrdersAdmin from "./admin/pages/OrdersManagement";
 import AuctionChatWindow from "./mainPages/ReverseAuction/Components/AuctionChatWindow";
+import MyAuctionProduct from "./mainPages/ReverseAuction/MyAuctionProduct";
 
 
 function App() {
@@ -94,7 +95,6 @@ function App() {
           <Route path="checkout" element={<CheckoutDetails />} />
           
         </Route>
-
           <Route
               path="/payment"
               element={
@@ -103,41 +103,28 @@ function App() {
                   </RequiresAuth>
               }
           />
+          <Route
+            path="/wishlist"
+            element={
+              <RequiresAuth token={token}>
+                <WishList />
+              </RequiresAuth>
+            }
+          />
 
           <Route
-              path="/reverse-auction"
-              element={
-                  <RequiresAuth token={token}>
-                      <ReverseAuctionHome />
-                  </RequiresAuth>
-              }
+            path="/profile"
+            element={
+              <RequiresAuth token={token}>
+                <Profile />
+              </RequiresAuth>
+            }
           >
-              <Route path="my" element={<MyAuction />} />
-              {/* <Route path="create" element={<CreateAuction />} /> */}
-          </Route>
-
-
-        <Route
-          path="/wishlist"
-          element={
-            <RequiresAuth token={token}>
-              <WishList />
-            </RequiresAuth>
-          }
-        />
-
-        <Route
-          path="/profile"
-          element={
-            <RequiresAuth token={token}>
-              <Profile />
-            </RequiresAuth>
-          }
-        >
           <Route path="" element={<User />} />
           <Route path="orders" element={<Orders />} />
           <Route path="address" element={<Address />} />
         </Route>
+
         <Route path="/login" element={<Login />} />
         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
         <Route path="/login/oauth2/code/facebook" element={<FacebookOAuthCallback />} />
@@ -149,10 +136,10 @@ function App() {
         <Route path="/shop" element={<Shop />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/register-ctv" element={<RegisterCTV />} />
-        <Route path="/reverse-auction" element={<ReverseAuctionHome />} />
-          {/* <Route path="my" element={<MyAuction />} />
-          <Route path="create" element={<CreateAuction />} />
-        </Route> */}
+        <Route path="/reverse-auction" element={<ReverseAuctionHome />}>
+          <Route path="my" element={<MyAuctionProduct />} />
+          {/* <Route path="room/:roomId" element={<AuctionChatWindow />} /> */}
+        </Route>
 
         {/* <Route path="/reverse-auction" element={<ReverseAuctionHome />}>
           <Route path="my" element={<MyAuction />} />
