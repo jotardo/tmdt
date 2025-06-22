@@ -153,7 +153,8 @@ export default function AuctionProductCard({ item, inWishlist }) {
         )}
 
         {/* Phải là chủ nhân của sản phẩm đấu giá thì mới xem được. */}
-        {isAuthorOfAuction() && (
+        {/* hoặc người ta đã đăng kí rồi */}
+        {(
           <Button
             style={{
               color: "#4caf50",

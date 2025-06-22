@@ -14,6 +14,7 @@ import {
   IconButton,
   Paper,
   useTheme,
+  ListItemButton,
 } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CloseIcon from "@mui/icons-material/Close";
@@ -21,6 +22,7 @@ import SendIcon from "@mui/icons-material/Send";
 import reverseAuctionApi from "../../../backend/db/reverseAuctionApi";
 import { useAuth } from "../../../context/AuthContext";
 import { useWebSocket } from "../../../context/WebSocketContext";
+import { toast } from "react-toastify";
 
 // Mock chat messages for realism
 const mockMessages = [
@@ -48,45 +50,88 @@ function AuctionChatWindow({ open, onClose, item }) {
 
 
   useEffect(() => {
-    const ehrm = async () => {
-      if (user) {
-        const uhm = await reverseAuctionApi.getRoomChat({ userID: user.id, productID: item.id })
-        return uhm.roomList;
-      }
-      return []
+    // Nếu không có user hoặc item thì không làm gì cả
+    if (!user || !item?.id) {
+      return;
     }
 
-    ehrm().then(data => {
-      console.log("Room chat fetched", user?.id, item.id, data)
-      setChatRoom(data)
+    // 1. Tạo một mảng để lưu lại tất cả các subscription sẽ được tạo ra
+    let activeSubscriptions = [];
 
-      data.forEach((room) => {
-        console.log("Đăng kí cho phòng chat ID", room.roomID)
+    const fetchAndSubscribe = async () => {
+      try {
+        const uhm = await reverseAuctionApi.getRoomChat({ userID: user.id, productID: item.id });
+        const rooms = uhm.roomList || []; // Đảm bảo rooms luôn là một mảng
+        console.log("Room chat fetched for user:", user.id, rooms);
+        setChatRoom(rooms);
 
-        subscribe(`/topic/reverse-auction/${room.roomID}`, (received) => {
-          console.log(room.roomID, " uhh received >>", received);
-          if (received.roomId === selectedRoom) {
-              setMessages([...messages,
+        rooms.forEach((room) => {
+          console.log("Đăng kí cho phòng chat ID:", room.roomID);
+
+          // 2. Gọi subscribe và lưu lại đối tượng subscription
+          const subscription = subscribe(
+            `/topic/reverse-auction/${room.roomID}`,
+            (received) => {
+              // Logic xử lý tin nhắn nhận được (đã khá ổn)
+              // Nên kiểm tra xem selectedRoom có được cập nhật đúng không
+              console.log("PING, new message found for room:", received.roomId, selectedRoom, received.roomId == selectedRoom);
+              if (received.roomId == selectedRoom) {
+                setMessages(prev => [...prev,
                 {
                   id: received.id,
-                  user:  received.senderId === item.collaboratorID ? item.collaboratorName : "Unknown",
+                  user: received.senderId === item.collaboratorID ? item.collaboratorName : "Unknown",
                   text: received.content,
                   timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
                   isOwnMessage: received.senderId === user?.id,
                 },
-              ])
+                ]);
+              }
             }
-          })
-      })
-    })
-  }, [user])
+          );
+
+          // Thêm subscription vào mảng để quản lý
+          if (subscription) {
+            activeSubscriptions.push(subscription);
+          }
+        });
+      } catch (err) {
+        toast.error(JSON.stringify(err));
+      }
+    };
+
+    fetchAndSubscribe();
+
+    // 3. TRẢ VỀ HÀM DỌN DẸP (CLEANUP FUNCTION)
+    // Hàm này sẽ được gọi khi component unmount, hoặc khi user/item thay đổi
+    return () => {
+      console.log("Cleaning up subscriptions for user:", user.id);
+      activeSubscriptions.forEach(sub => {
+        // Kiểm tra chắc chắn trước khi hủy
+        if (sub && typeof sub.unsubscribe === 'function') {
+          sub.unsubscribe();
+        }
+      });
+    };
+
+    // 4. CẬP NHẬT DEPENDENCY ARRAY
+    // Thêm item.id và subscribe để đảm bảo effect chạy lại khi cần
+  }, [user, item?.id, subscribe, selectedRoom]);
+
 
   // on select chat room, append with history
   useEffect(() => {
     if (selectedRoom != null) {
-      reverseAuctionApi.getRoomChatHistory(selectedRoom).then(data => {
-        console.log("Room chat fetched", selectedRoom, data.data)
-        setMessages(data.data)
+      reverseAuctionApi.getRoomChatHistory(selectedRoom).then(response => {
+        console.log("Room chat fetched", selectedRoom, response.data)
+        setMessages(response.data.map(chatMsg => {
+          return {
+            id: chatMsg.id,
+            user: chatMsg.senderId === item.collaboratorID ? item.collaboratorName : "Unknown",
+            text: chatMsg.content,
+            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            isOwnMessage: chatMsg.senderId === user?.id,
+          }
+        }))
       })
     }
 
@@ -99,11 +144,11 @@ function AuctionChatWindow({ open, onClose, item }) {
 
   const handleSendMessage = () => {
     if (message.trim()) {
-        sendMessage(`/api/reverse-auction/sendMessage`, { 
-          content: message,
-          senderId: user.id,
-          roomId: selectedRoom
-       })
+      sendMessage(`/api/reverse-auction/sendMessage`, {
+        content: message,
+        senderId: user.id,
+        roomId: selectedRoom
+      })
       setMessage("");
     }
   };
@@ -157,7 +202,7 @@ function AuctionChatWindow({ open, onClose, item }) {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <ListItem
+                  <ListItemButton
                     button
                     selected={selectedRoom === room.roomID}
                     onClick={() => setSelectedRoom(room.roomID)}
@@ -174,11 +219,11 @@ function AuctionChatWindow({ open, onClose, item }) {
                   >
                     <ListItemText
                       primary={room.collaboratorName}
-                      secondary={`${room.status} - ${room.proposingPrice}`}
+                      secondary={`${room.roomID} - ${room.proposingPrice}`}
                       primaryTypographyProps={{ fontWeight: "medium" }}
                       secondaryTypographyProps={{ color: "text.secondary" }}
                     />
-                  </ListItem>
+                  </ListItemButton>
                 </motion.div>
               ))}
             </AnimatePresence>
