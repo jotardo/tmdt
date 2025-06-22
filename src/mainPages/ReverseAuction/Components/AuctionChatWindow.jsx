@@ -18,6 +18,9 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
+import reverseAuctionApi from "../../../backend/db/reverseAuctionApi";
+import { useAuth } from "../../../context/AuthContext";
+import { useWebSocket } from "../../../context/WebSocketContext";
 
 // Mock chat messages for realism
 const mockMessages = [
@@ -28,17 +31,66 @@ const mockMessages = [
 
 function AuctionChatWindow({ open, onClose, item }) {
   const theme = useTheme();
+  const { user } = useAuth();
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState(mockMessages);
   const chatEndRef = useRef(null);
+  const { connected, sendMessage, subscribe } = useWebSocket();
 
   // Mock room data - replace with actual API data
-  const chatRooms = [
-    { id: 1, name: "Phòng đấu giá Kim cương", product: "Nhẫn kim cương 2 carat" },
-    { id: 2, name: "Phòng đấu giá Vàng", product: "Vòng cổ vàng 18K" },
-    { id: 3, name: "Phòng đấu giá Ngọc trai", product: "Bông tai ngọc trai" },
-  ];
+  const [chatRooms, setChatRoom] = useState([])
+  // [
+  //   { id: 1, name: "Phòng đấu giá Kim cương", product: "Nhẫn kim cương 2 carat" },
+  //   { id: 2, name: "Phòng đấu giá Vàng", product: "Vòng cổ vàng 18K" },
+  //   { id: 3, name: "Phòng đấu giá Ngọc trai", product: "Bông tai ngọc trai" },
+  // ];
+
+
+  useEffect(() => {
+    const ehrm = async () => {
+      if (user) {
+        const uhm = await reverseAuctionApi.getRoomChat({ userID: user.id, productID: item.id })
+        return uhm.roomList;
+      }
+      return []
+    }
+
+    ehrm().then(data => {
+      console.log("Room chat fetched", user?.id, item.id, data)
+      setChatRoom(data)
+
+      data.forEach((room) => {
+        console.log("Đăng kí cho phòng chat ID", room.roomID)
+
+        subscribe(`/topic/reverse-auction/${room.roomID}`, (received) => {
+          console.log(room.roomID, " uhh received >>", received);
+          if (received.roomId === selectedRoom) {
+              setMessages([...messages,
+                {
+                  id: received.id,
+                  user:  received.senderId === item.collaboratorID ? item.collaboratorName : "Unknown",
+                  text: received.content,
+                  timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+                  isOwnMessage: received.senderId === user?.id,
+                },
+              ])
+            }
+          })
+      })
+    })
+  }, [user])
+
+  // on select chat room, append with history
+  useEffect(() => {
+    if (selectedRoom != null) {
+      reverseAuctionApi.getRoomChatHistory(selectedRoom).then(data => {
+        console.log("Room chat fetched", selectedRoom, data.data)
+        setMessages(data.data)
+      })
+    }
+
+  }, [selectedRoom])
 
   // Scroll to bottom of chat when messages change
   useEffect(() => {
@@ -47,16 +99,11 @@ function AuctionChatWindow({ open, onClose, item }) {
 
   const handleSendMessage = () => {
     if (message.trim()) {
-      setMessages([
-        ...messages,
-        {
-          id: messages.length + 1,
-          user: "You",
-          text: message,
-          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          isOwnMessage: true,
-        },
-      ]);
+        sendMessage(`/api/reverse-auction/sendMessage`, { 
+          content: message,
+          senderId: user.id,
+          roomId: selectedRoom
+       })
       setMessage("");
     }
   };
@@ -102,9 +149,9 @@ function AuctionChatWindow({ open, onClose, item }) {
           </Typography>
           <List>
             <AnimatePresence>
-              {chatRooms.map((room) => (
+              {chatRooms && chatRooms.map((room) => (
                 <motion.div
-                  key={room.id}
+                  key={room.roomID}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
@@ -112,12 +159,12 @@ function AuctionChatWindow({ open, onClose, item }) {
                 >
                   <ListItem
                     button
-                    selected={selectedRoom === room.id}
-                    onClick={() => setSelectedRoom(room.id)}
+                    selected={selectedRoom === room.roomID}
+                    onClick={() => setSelectedRoom(room.roomID)}
                     sx={{
                       borderRadius: 2,
                       mb: 1,
-                      bgcolor: selectedRoom === room.id ? theme.palette.primary.light : "transparent",
+                      bgcolor: selectedRoom === room.roomID ? theme.palette.primary.light : "transparent",
                       "&:hover": {
                         bgcolor: theme.palette.action.hover,
                         transform: "translateX(5px)",
@@ -126,8 +173,8 @@ function AuctionChatWindow({ open, onClose, item }) {
                     }}
                   >
                     <ListItemText
-                      primary={room.name}
-                      secondary={room.product}
+                      primary={room.collaboratorName}
+                      secondary={`${room.status} - ${room.proposingPrice}`}
                       primaryTypographyProps={{ fontWeight: "medium" }}
                       secondaryTypographyProps={{ color: "text.secondary" }}
                     />
@@ -181,7 +228,7 @@ function AuctionChatWindow({ open, onClose, item }) {
             <Box sx={{ flex: 1, overflowY: "auto", mb: 2, pr: 1 }}>
               {selectedRoom ? (
                 <AnimatePresence>
-                  {messages.map((msg) => (
+                  {messages && messages.map((msg) => (
                     <motion.div
                       key={msg.id}
                       initial={{ opacity: 0, y: 20 }}
@@ -209,7 +256,7 @@ function AuctionChatWindow({ open, onClose, item }) {
                               : theme.palette.secondary.main,
                           }}
                         >
-                          {msg.user[0]}
+                          {msg.user}
                         </Avatar>
                         <Paper
                           elevation={1}

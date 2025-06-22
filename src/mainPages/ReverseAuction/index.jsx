@@ -21,16 +21,17 @@ import AuctionProductCard from "./Components/AuctionProductCard";
 import CreateAuction from "./Components/CreateAuction";
 
 export default function ReverseAuctionHome() {
-  const [tabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(0);
   const [products, setProducts] = useState([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const userDetails = user || JSON.parse(localStorage.getItem("user"));
   const role = userDetails?.role;
+  const location = useLocation();
 
   useEffect(() => {
-    // Set tab value based on current path
+    // Set tab value based on current path (1==?, 0==?)
     if (location.pathname === "/reverse-auction/my") {
       setTabValue(1);
     } else {

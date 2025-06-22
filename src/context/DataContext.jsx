@@ -100,12 +100,12 @@ export function DataProvider({ children }) {
     /** refresh data every 1 min? */
       getBackendData();
       getCategories();
-    const interval = setInterval(() => {
-      console.log("Refreshing data every 1min")
-      getBackendData();
-      getCategories();
-    }, 1000 * 60);
-    return () => clearInterval(interval)
+    // const interval = setInterval(() => {
+    //   console.log("Refreshing data every 1min")
+    //   getBackendData();
+    //   getCategories();
+    // }, 1000 * 60);
+    // return () => clearInterval(interval)
   }, []);
 
   const [filtersUsed, setFiltersUsed] = useReducer(reducerFilterFunction, {

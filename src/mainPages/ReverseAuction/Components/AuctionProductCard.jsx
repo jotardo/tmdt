@@ -109,6 +109,7 @@ export default function AuctionProductCard({ item, inWishlist }) {
           {item.material && <p className="material">Vật liệu: {item.material}</p>}
           {item.size && <p className="size">Kích thước: {item.size}</p>}
           {item.occasion && <p className="occasion">Dịp: {item.occasion}</p>}
+          {item.auctionProductDTO && <p className="auctionProductDTO">Người tạo: {item.auctionProductDTO.authorName}</p>}
           {item.status === "Open-Auction" ? (
             <div>
               <p className="price">
@@ -178,6 +179,7 @@ export default function AuctionProductCard({ item, inWishlist }) {
         open={openChat}
         onClose={() => setOpenChat(false)}
         item={item}
+        
       />
 
       {/* Badge */}

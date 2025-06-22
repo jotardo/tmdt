@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter,  Pagination, Box,
-  Button
+  Button, Chip
 } from "@mui/material";
-import UserDetailModal from "../model/AdminUserDetailsModal";
 import orderApi from "../../backend/db/orderApi";
+import OrderDetailModal from "../model/AdminOrderDetailsModal";
 
 const AdminOrdersTable = ({ resultsPerPage, filter }) => {
   const [page, setPage] = useState(1);

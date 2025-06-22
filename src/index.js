@@ -10,19 +10,21 @@ import { useData, DataProvider } from "./context/DataContext";
 import { useWish, WishProvider } from "./context/WishListContext";
 import { useCart, CartProvider } from "./context/CartContext";
 import { useAddress, AddressProvider } from "./context/AddressContext";
+import { WebSocketProvider } from "./context/WebSocketContext";
 
 export { useData, useWish, useCart, useAddress };
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-    <React.StrictMode>
-      <BrowserRouter
-          unstable_future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-          }}
-      >
+  <React.StrictMode>
+    <BrowserRouter
+      unstable_future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
+      <WebSocketProvider>
         <AuthProvider>
           <DataProvider>
             <CartProvider>
@@ -34,6 +36,8 @@ root.render(
             </CartProvider>
           </DataProvider>
         </AuthProvider>
-      </BrowserRouter>
-    </React.StrictMode>
+      </WebSocketProvider>
+
+    </BrowserRouter>
+  </React.StrictMode>
 );
