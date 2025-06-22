@@ -40,7 +40,6 @@ const CategoryManagement = () => {
       const response = await categoryApi.fetchAllCategories();
       setCategories(Array.isArray(response.data.categories) ? response.data.categories : []);
     } catch (error) {
-      console.error("Failed to fetch categories", error);
       toast.error("Lấy danh mục thất bại");
     } finally {
       setLoading(false);
@@ -53,7 +52,6 @@ const CategoryManagement = () => {
       toast.success("Xóa danh mục thành công");
       fetchCategories();
     } catch (error) {
-      console.error("Lỗi khi xóa danh mục:", error);
       toast.error("Xóa danh mục thất bại");
     }
   };

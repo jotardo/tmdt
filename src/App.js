@@ -48,6 +48,7 @@ import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
 import OrdersAdmin from "./admin/pages/OrdersManagement";
 import AuctionChatWindow from "./mainPages/ReverseAuction/Components/AuctionChatWindow";
 import MyAuctionProduct from "./mainPages/ReverseAuction/MyAuctionProduct";
+import ForumHome from "./mainPages/Forum";
 
 
 function App() {
@@ -135,6 +136,7 @@ function App() {
 
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/forum" element={<ForumHome/>} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/register-ctv" element={<RegisterCTV />} />
         <Route path="/reverse-auction" element={<ReverseAuctionHome />}>

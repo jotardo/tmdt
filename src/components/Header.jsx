@@ -11,6 +11,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useData, useCart, useWish } from "../";
 import { AdminPanelSettings } from "@mui/icons-material";
 import { useAuth } from "../context/AuthContext";
+import ForumHome from "../mainPages/Forum";
 
 export default function Header() {
   const [isMenuClicked, setIsMenuClicked] = useState(false);
@@ -86,6 +87,9 @@ export default function Header() {
           </NavLink>
           <NavLink to={"reverse-auction"}>
             <li className={"NavItem"}>Đấu Giá Ngược</li>
+          </NavLink>
+          <NavLink to="/forum">
+            <li className={"NavItem"}>Diễn đàn</li>
           </NavLink>
 
           <span className="search">

@@ -35,7 +35,7 @@ export function DataProvider({ children }) {
   const getBackendData = async () => {
     try {
       const response = await productApi.fetchExistingProducts();
-      console.log(response);
+      console.log("Product list Existing: ", response);
       const productList = response?.data;
       setBackendData({
         ...backendData,
@@ -50,7 +50,7 @@ export function DataProvider({ children }) {
       setOccasionData(occasionList);
     } catch (error) {
       setBackendData({ ...backendData, loading: false, error: error });
-      console.log("Lỗi kết nối tới backend:", error);
+      console.log("Lỗi kết nối tới backend 1:", error);
     }
   };
 
