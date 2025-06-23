@@ -25,10 +25,6 @@ function CommentItem({ comment, onReply }) {
   const userDetails = user || JSON.parse(localStorage.getItem('user'));
   const isAuthor = comment.userID === userDetails.id ? true : false;
 
-  console.log('CommentItem props:', comment);
-  console.log('User details:', userDetails);
-  console.log('Is author:', isAuthor);
-
   const handleToggleReplies = async () => {
     if (!showReplies && childComments.length === 0) {
       try {
