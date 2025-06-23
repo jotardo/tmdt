@@ -33,7 +33,7 @@ export default function MyAuctionProduct() {
         toast.error("Không thể tải danh sách đấu giá của bạn!");
         setLoading(false);
       });
-  }, [userDetails?.token]);
+  }, [user, userDetails?.token]);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4, bgcolor: '#f5f7fa' }}>

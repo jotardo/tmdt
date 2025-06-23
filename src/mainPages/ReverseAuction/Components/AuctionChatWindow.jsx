@@ -17,6 +17,7 @@ import {
   ListItemButton,
   Chip,
   Stack,
+  Input,
 } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CloseIcon from "@mui/icons-material/Close";
@@ -39,16 +40,22 @@ function AuctionChatWindow({ open, onClose, item }) {
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState(mockMessages);
+  // Mock room data
+  const [chatRooms, setChatRoom] = useState([])
+  const [chatRoomsNotification, setChatRoomsNotification] = useState({})
   const chatEndRef = useRef(null);
   const { connected, sendMessage, subscribe } = useWebSocket();
 
-  // Giả sử bạn có state này trong component
+  // xác thực trạng thái 2 bên
   const [agreementStatus, setAgreementStatus] = useState({
     myStatus: 'pending', // Trạng thái có thể là: 'pending', 'accepted', 'denied'
     otherPartyStatus: 'pending',
   });
 
-  // Giả sử bạn có hàm xử lý này
+  const handleUpdate = () => {
+
+  }
+
   const handleAccept = () => {
     sendMessage(`/api/reverse-auction/sendMessage`, {
       senderId: user.id,
@@ -93,9 +100,6 @@ function AuctionChatWindow({ open, onClose, item }) {
 
 
 
-  // Mock room data
-  const [chatRooms, setChatRoom] = useState([])
-  const [chatRoomsNotification, setChatRoomsNotification] = useState([])
 
   // Fetch and Update Chat Windows
   useEffect(() => {
@@ -113,12 +117,16 @@ function AuctionChatWindow({ open, onClose, item }) {
 
         rooms.forEach((room) => {
           console.log("Đăng kí cho phòng chat ID:", room.roomID);
+          setChatRoomsNotification((prev) => {
+            return { ...prev, [room.roomID]: prev[room.roomID] || 0 }
+          })
 
           const subscription = subscribe(
             `/topic/reverse-auction/${room.roomID}`,
             (received) => {
               console.log("PING, new message found for room:", received.roomId, selectedRoom, received.roomId == selectedRoom);
               if (received.roomId == selectedRoom) {
+                // append message
                 setMessages(prev => [...prev,
                 {
                   id: received.id,
@@ -128,6 +136,7 @@ function AuctionChatWindow({ open, onClose, item }) {
                   isOwnMessage: received.senderId === user?.id,
                 },
                 ]);
+                // accept/deny/pending 
                 if (received.type === 'ACCEPT') {
                   console.log("User clicked ACCEPT");
                   // Gọi API và cập nhật state
@@ -152,6 +161,21 @@ function AuctionChatWindow({ open, onClose, item }) {
                   else
                     setAgreementStatus(prev => ({ ...prev, otherPartyStatus: 'pending' }));
                 }
+                // reset counter to 0
+                setChatRoomsNotification(prev => {
+                  return {
+                    ...prev,
+                    [room.roomID]: received.senderId === user?.id ? 0 : prev[room.roomID] + 1
+                  }
+                })
+              } else if (received.roomId == room.roomID) {
+                // reset counter to 0
+                setChatRoomsNotification(prev => {
+                  return {
+                    ...prev,
+                    [received.roomId]: prev[received.roomId] + 1
+                  }
+                })
               }
             }
           );
@@ -211,7 +235,7 @@ function AuctionChatWindow({ open, onClose, item }) {
             id: chatMsg.id,
             user: chatMsg.senderId === user.id ? "You" : chatMsg.senderId === item.collaboratorUserID ? item.collaboratorName : "Unknown",
             text: chatMsg.content,
-            timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+            timestamp: new Date(chatMsg.sentAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             isOwnMessage: chatMsg.senderId === user?.id,
           }
         }))
@@ -236,6 +260,8 @@ function AuctionChatWindow({ open, onClose, item }) {
       setMessage("");
     }
   };
+
+  let currentRoom = chatRooms.find(room => room.roomID === selectedRoom)
 
   return (
     <Dialog
@@ -303,7 +329,7 @@ function AuctionChatWindow({ open, onClose, item }) {
                   >
                     <ListItemText
                       primary={room.collaboratorName}
-                      secondary={`${room.roomID} - ${room.proposingPrice}`}
+                      secondary={`Giá đề xuất: ${room.proposingPrice.toLocaleString()} VNĐ (${chatRoomsNotification[room.roomID] || 0})`}
                       primaryTypographyProps={{ fontWeight: "medium" }}
                       secondaryTypographyProps={{ color: "text.secondary" }}
                     />
@@ -330,24 +356,27 @@ function AuctionChatWindow({ open, onClose, item }) {
               <Typography variant="h6" fontWeight="600" mb={1}>
                 Thông tin sản phẩm
               </Typography>
-              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}>
+              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 1 }}>
                 <Typography>
-                  <strong>Tên:</strong> {item.name}
+                  <strong>Tên:</strong> <Input name="productName" placeholder="N/A" value={item.name} />
                 </Typography>
                 <Typography>
-                  <strong>Giá khởi điểm:</strong> {item.price?.toLocaleString() || 0} VNĐ
+                  <strong>Giá khởi điểm:</strong> <Input name="productName" placeholder="0" value={item.price?.toLocaleString()} /> VNĐ
                 </Typography>
                 <Typography>
-                  <strong>Vật liệu:</strong> {item.material || "N/A"}
+                  <strong>Giá thỏa thuận:</strong> <Input name="productName" placeholder="0" value={currentRoom?.proposingPrice?.toLocaleString()} /> VNĐ
                 </Typography>
                 <Typography>
-                  <strong>Kích thước:</strong> {item.size || "N/A"}
+                  <strong>Vật liệu:</strong> <Input name="productName" placeholder="N/A" value={item.productMaterial} />
                 </Typography>
                 <Typography>
-                  <strong>Dịp:</strong> {item.occasion || "N/A"}
+                  <strong>Kích thước:</strong> <Input name="productName" placeholder="N/A" value={item.size} />
                 </Typography>
                 <Typography>
-                  <strong>Mô tả:</strong> {item.description || "Không có mô tả"}
+                  <strong>Dịp:</strong> <Input name="productName" placeholder="N/A" value={item.occasion} />
+                </Typography>
+                <Typography>
+                  <strong>Mô tả:</strong> <Input name="productName" placeholder="Không có mô tả" value={item.description} />
                 </Typography>
               </Box>
 
@@ -360,40 +389,54 @@ function AuctionChatWindow({ open, onClose, item }) {
               <Typography variant="h6" fontWeight="600" mb={2}>
                 Trạng thái thoả thuận
               </Typography>
+              {
+                selectedRoom ? (
 
-              <Stack spacing={1.5}>
-                {/* Hiển thị trạng thái */}
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="body1">Trạng thái của bạn:</Typography>
-                  {renderStatusChip(agreementStatus.myStatus)}
-                </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="body1">Trạng thái đối phương:</Typography>
-                  {renderStatusChip(agreementStatus.otherPartyStatus)}
-                </Box>
+                  <Stack spacing={1.5}>
+                    {/* Hiển thị trạng thái */}
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body1">Trạng thái của bạn:</Typography>
+                      {renderStatusChip(agreementStatus.myStatus)}
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <Typography variant="body1">Trạng thái đối phương:</Typography>
+                      {renderStatusChip(agreementStatus.otherPartyStatus)}
+                    </Box>
 
-                {/* Các nút hành động */}
-                <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={handleAccept}
-                    disabled={actionDisabled}
-                    fullWidth
-                  >
-                    Chấp nhận
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    color="error"
-                    onClick={handleDeny}
-                    disabled={actionDisabled}
-                    fullWidth
-                  >
-                    Từ chối
-                  </Button>
-                </Stack>
-              </Stack>
+                    {/* Các nút hành động */}
+                    <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+                      
+                      <Button
+                        variant="outlined"
+                        color="info"
+                        onClick={handleUpdate}
+                        disabled={actionDisabled}
+                        fullWidth
+                      >
+                        Cập nhật
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="success"
+                        onClick={handleAccept}
+                        disabled={actionDisabled}
+                        fullWidth
+                      >
+                        Chấp nhận
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={handleDeny}
+                        disabled={actionDisabled}
+                        fullWidth
+                      >
+                        Từ chối
+                      </Button>
+                    </Stack>
+                  </Stack>
+                ) : (<>"Vui lòng chọn phòng chat để xem"</>)
+              }
             </Box>
           </Box>
 
