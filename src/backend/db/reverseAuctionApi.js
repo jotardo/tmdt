@@ -27,6 +27,7 @@ const reverseAuctionApi = {
     }
   },
   getRoomChatHistory: async (roomID) => await axiosClient.get(`/chat/history?roomID=${roomID}`),
+  updateAuctionProduct: async (data) => await axiosClient.post(`/reverse-auction/update-product`, data),
 };
 
 export default reverseAuctionApi;

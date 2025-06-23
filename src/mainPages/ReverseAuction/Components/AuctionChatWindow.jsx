@@ -51,9 +51,29 @@ function AuctionChatWindow({ open, onClose, item }) {
     myStatus: 'pending', // Trạng thái có thể là: 'pending', 'accepted', 'denied'
     otherPartyStatus: 'pending',
   });
+  const [form, setForm] = useState({
+    roomID: "",
+    name: "",
+    description: "",
+    budgetAuction: "",
+    size: "",
+    material: "",
+    occasion: "",
+  });
 
   const handleUpdate = () => {
-
+    reverseAuctionApi.updateAuctionProduct({ ...form, roomID: selectedRoom })
+      .then((data) => {
+        console.log("EHRM", data.data)
+        setChatRoom((prev) => prev.map(room => room.roomID !== data.data.room.roomID ? room : {...data.data.room}))
+        const currentRoom = data.data.room;
+            item.productName = currentRoom.productName;
+            item.productDetail = currentRoom.productDetail;
+            item.size = currentRoom.productSize;
+            item.productMaterial = currentRoom.productMaterial;
+            item.occasion = currentRoom.occasion;
+      })
+      .catch(error => { console.error(error) })
   }
 
   const handleAccept = () => {
@@ -97,9 +117,6 @@ function AuctionChatWindow({ open, onClose, item }) {
         return 'pending';
     }
   };
-
-
-
 
   // Fetch and Update Chat Windows
   useEffect(() => {
@@ -204,7 +221,13 @@ function AuctionChatWindow({ open, onClose, item }) {
 
   }, [user, item?.id, subscribe, selectedRoom]);
 
-
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   // On select chat room, append with history
   useEffect(() => {
@@ -216,6 +239,18 @@ function AuctionChatWindow({ open, onClose, item }) {
     if (selectedRoom != null) {
       let currentRoom = chatRooms.find(room => room.roomID === selectedRoom)
       if (currentRoom) {
+        setForm(prev => {
+          return {
+            ...prev,
+            name: currentRoom.productName,
+            description: currentRoom.productDetail,
+            budgetAuction: currentRoom.proposingPrice,
+            size: currentRoom.productSize,
+            material: currentRoom.productMaterial,
+            occasion: currentRoom.occasion,
+          }
+        })
+
         if (isAuthorOfAuction())
           setAgreementStatus({
             myStatus: convertState(currentRoom.status),
@@ -226,6 +261,7 @@ function AuctionChatWindow({ open, onClose, item }) {
             myStatus: convertState(currentRoom.statusCTV),
             otherPartyStatus: convertState(currentRoom.status),
           })
+
       }
 
       reverseAuctionApi.getRoomChatHistory(selectedRoom).then(response => {
@@ -247,7 +283,7 @@ function AuctionChatWindow({ open, onClose, item }) {
   // Scroll to bottom of chat when messages change
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, selectedRoom]);
 
   const handleSendMessage = () => {
     if (message.trim()) {
@@ -358,25 +394,26 @@ function AuctionChatWindow({ open, onClose, item }) {
               </Typography>
               <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 1 }}>
                 <Typography>
-                  <strong>Tên:</strong> <Input name="productName" placeholder="N/A" value={item.name} />
+                  <strong>Tên:</strong> <Input name="name" onChange={handleChange} placeholder="N/A" defaultValue={item.name} />
                 </Typography>
                 <Typography>
-                  <strong>Giá khởi điểm:</strong> <Input name="productName" placeholder="0" value={item.price?.toLocaleString()} /> VNĐ
+                  <strong>Giá khởi điểm:</strong> <Input
+                    type="number" readOnly name="startPrice" placeholder="0" defaultValue={item.price} /> VNĐ
                 </Typography>
                 <Typography>
-                  <strong>Giá thỏa thuận:</strong> <Input name="productName" placeholder="0" value={currentRoom?.proposingPrice?.toLocaleString()} /> VNĐ
+                  <strong>Giá thỏa thuận:</strong> <Input type="number" onChange={handleChange} name="budgetAuction" placeholder="0" defaultValue={currentRoom?.proposingPrice} /> VNĐ
                 </Typography>
                 <Typography>
-                  <strong>Vật liệu:</strong> <Input name="productName" placeholder="N/A" value={item.productMaterial} />
+                  <strong>Vật liệu:</strong> <Input name="material" onChange={handleChange} placeholder="N/A" defaultValue={item.productMaterial} />
                 </Typography>
                 <Typography>
-                  <strong>Kích thước:</strong> <Input name="productName" placeholder="N/A" value={item.size} />
+                  <strong>Kích thước:</strong> <Input name="size" onChange={handleChange} placeholder="N/A" defaultValue={item.size} />
                 </Typography>
                 <Typography>
-                  <strong>Dịp:</strong> <Input name="productName" placeholder="N/A" value={item.occasion} />
+                  <strong>Dịp:</strong> <Input name="occasion" onChange={handleChange} placeholder="N/A" defaultValue={item.occasion} />
                 </Typography>
                 <Typography>
-                  <strong>Mô tả:</strong> <Input name="productName" placeholder="Không có mô tả" value={item.description} />
+                  <strong>Mô tả:</strong> <Input name="description" onChange={handleChange} placeholder="Không có mô tả" defaultValue={item.description} />
                 </Typography>
               </Box>
 
@@ -405,7 +442,7 @@ function AuctionChatWindow({ open, onClose, item }) {
 
                     {/* Các nút hành động */}
                     <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
-                      
+
                       <Button
                         variant="outlined"
                         color="info"
