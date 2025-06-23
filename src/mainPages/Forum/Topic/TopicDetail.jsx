@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   Card,
   CardContent,
@@ -9,51 +9,63 @@ import {
   Avatar,
   IconButton,
   Fade,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import { ThumbUp, Share } from '@mui/icons-material';
-import CommentForm from '../Comment/CommentForm';
-import CommentList from '../Comment/CommentList';
 import { formatDistanceToNow } from 'date-fns';
-import { se, vi } from 'date-fns/locale';
+import { vi } from 'date-fns/locale';
 import { useAuth } from '../../../context/AuthContext';
 import commentApi from '../../../backend/db/commentApi';
-
+import CommentForm from '../Comment/CommentForm';
+import CommentList from '../Comment/CommentList';
+import PropTypes from 'prop-types';
+import TopicHeader from './TopicHeader';
+import TopicActions from './TopicActions';
 function TopicDetail({ topic, onBack }) {
-  const { user } = useAuth();
+  const { user: authUser } = useAuth();
   const [comments, setComments] = useState(topic?.comments || []);
   const [likes, setLikes] = useState(topic?.likes || 0);
   const [liked, setLiked] = useState(false);
-  const { user: authUser } = useAuth();
-  const userDetails = user || authUser || JSON.parse(localStorage.getItem('user')) || { id: null, username: 'Khách', avatar: '' };
-  const authorID = userDetails?.id ?? null;
+  const [loadingComments, setLoadingComments] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  // User details with fallback
+  const userDetails = authUser || JSON.parse(localStorage.getItem('user')) || {
+    id: null,
+    username: 'Khách',
+    avatar: '',
+  };
+
+  // Fetch comments
   useEffect(() => {
     const fetchCommentsNoParent = async () => {
-      const response = await commentApi.fetchAllCommentNoParent(topic.id);
-      setComments(response);
+      try {
+        setLoadingComments(true);
+        const response = await commentApi.fetchAllCommentNoParent(topic.id);
+        setComments(response);
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+      } finally {
+        setLoadingComments(false);
+      }
+    };
+    if (topic?.id) {
+      fetchCommentsNoParent();
     }
-    fetchCommentsNoParent();
-  }, [topic.id]);
+  }, [topic?.id]);
 
-
-  const handleCommentSubmit = (newComment, tempId) => {
-    if (!newComment && tempId) {
-      // Xóa bình luận tạm nếu lỗi
-      setComments((prev) =>
-        prev.filter((c) => c.id !== tempId)
-      );
-      return;
-    }
-
+  // Handle comment submission
+  const handleCommentSubmit = useCallback((newComment, tempId) => {
     setComments((prev) => {
+      if (!newComment && tempId) {
+        return prev.filter((c) => c.id !== tempId);
+      }
       if (tempId) {
-        // Thay bình luận tạm bằng bình luận từ server
-        return prev.map((c) =>
-          c.id === tempId ? newComment : c
-        );
+        return prev.map((c) => (c.id === tempId ? newComment : c));
       }
       if (newComment.parentCommentId) {
-        // Thêm bình luận con
         const addReply = (cmts) =>
           cmts.map((c) =>
             c.id === newComment.parentCommentId
@@ -62,22 +74,21 @@ function TopicDetail({ topic, onBack }) {
           );
         return addReply(prev);
       }
-      // Thêm bình luận cấp 1
       return [...prev, newComment];
     });
-  };
+  }, []);
 
-  const handleLike = () => {
-    setLikes(liked ? likes - 1 : likes + 1);
-    setLiked(!liked);
-  };
+  // Handle like action
+  const handleLike = useCallback(() => {
+    setLikes((prev) => (liked ? prev - 1 : prev + 1));
+    setLiked((prev) => !prev);
+  }, [liked]);
 
+  // Early return for invalid topic
   if (!topic || typeof topic !== 'object') {
     return (
-      <Box sx={{ p: 3, bgcolor: 'background.default' }}>
-        <Button onClick={onBack} variant="outlined" sx={{ mb: 2, borderRadius: 2 }}>
-          Quay lại
-        </Button>
+      <Box sx={{ p: { xs: 2, md: 3 }, bgcolor: 'background.default' }}>
+        <TopicHeader title="Không tìm thấy chủ đề" onBack={onBack} />
         <Typography variant="h6" color="error">
           Không tìm thấy chủ đề
         </Typography>
@@ -87,113 +98,119 @@ function TopicDetail({ topic, onBack }) {
 
   return (
     <Fade in timeout={800}>
-      <Box sx={{ p: { xs: 2, md: 4 }, bgcolor: 'background.default' }}>
-        <Box
+      <Box
+        sx={{
+          p: { xs: 2, md: 4 },
+          bgcolor: 'background.default',
+          minHeight: '100vh',
+        }}
+      >
+        <TopicHeader title={topic.title} onBack={onBack} />
+        <Card
           sx={{
-            position: 'sticky',
-            top: 0,
-            zIndex: 10,
-            bgcolor: 'white',
-            p: 2,
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            mb: 2,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+            mb: 4,
+            borderRadius: 3,
+            boxShadow: theme.shadows[3],
+            overflow: 'hidden',
           }}
         >
-          <Typography variant="h6" noWrap sx={{ flexGrow: 1, fontWeight: 'bold' }}>
-            {topic.title || 'Chưa có tiêu đề'}
-          </Typography>
-          <Button
-            onClick={onBack}
-            variant="outlined"
+          <Box
             sx={{
-              borderRadius: 2,
-              '&:hover': { bgcolor: 'grey.100', transform: 'scale(1.05)' },
-              transition: 'all 0.2s ease',
+              bgcolor: theme.palette.background.paper,
+              p: { xs: 2, md: 3 },
+              borderBottom: `1px solid ${theme.palette.divider}`,
             }}
           >
-            Quay lại
-          </Button>
-        </Box>
-        <Card sx={{ mb: 4, borderRadius: 3, boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)' }}>
-          <Box sx={{ bgcolor: 'primary.main', p: 3, color: 'white' }}>
-            <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+            <Typography
+              variant={isMobile ? 'h5' : 'h4'}
+              sx={{ fontWeight: 'bold', color: theme.palette.text.primary }}
+            >
               {topic.title || 'Chưa có tiêu đề'}
             </Typography>
             <Box sx={{ mt: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
               <Avatar
-                src={`http://localhost:8080/api/user/${topic.avatar}` || ''}
+                src={topic.avatar ? `http://localhost:8080/api/user/${topic.avatar}` : ''}
                 alt={topic.author || 'Ẩn danh'}
                 sx={{ width: 40, height: 40 }}
-              />
+              >
+                {topic.author?.[0]?.toUpperCase() || 'A'}
+              </Avatar>
               <Box>
-                <Typography variant="subtitle2">{userDetails.username || 'Ẩn danh'}</Typography>
-                <Typography variant="caption">
+                <Typography variant="subtitle2" color="text.primary">
+                  {userDetails.username || 'Ẩn danh'}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
                   {topic.createdAt
-                    ? formatDistanceToNow(new Date(topic.createdAt), { locale: vi, addSuffix: true })
+                    ? formatDistanceToNow(new Date(topic.createdAt), {
+                        locale: vi,
+                        addSuffix: true,
+                      })
                     : 'Không rõ thời gian'}
                 </Typography>
               </Box>
             </Box>
           </Box>
-          <CardContent sx={{ p: 4 }}>
-            <Typography variant="body1" sx={{ lineHeight: 1.8, color: 'text.secondary', mb: 2 }}>
+          <CardContent sx={{ p: { xs: 2, md: 4 } }}>
+            <Typography
+              variant="body1"
+              sx={{
+                lineHeight: 1.8,
+                color: 'text.secondary',
+                mb: 2,
+                whiteSpace: 'pre-wrap',
+              }}
+            >
               {topic.content || 'Chưa có nội dung'}
             </Typography>
-            <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
-              <Typography variant="caption" color="text.secondary">
-                💬 {comments.length} bình luận
-              </Typography>
-              <Typography variant="caption" color="text.secondary">
-                👀 {topic.views || 0} lượt xem
-              </Typography>
-            </Box>
-            <Box sx={{ mt: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Chip
-                  label={topic.categoryName || 'Chưa có danh mục'}
-                  size="small"
-                  sx={{ bgcolor: 'secondary.light', color: 'secondary.main' }}
-                />
-              </Box>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <IconButton
-                  onClick={handleLike}
-                  sx={{
-                    color: liked ? 'primary.main' : 'grey.500',
-                    '&:hover': { bgcolor: 'grey.100', transform: 'scale(1.1)' },
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  <ThumbUp fontSize="small" />
-                  <Typography variant="caption" sx={{ ml: 0.5 }}>
-                    {likes}
-                  </Typography>
-                </IconButton>
-                <IconButton
-                  sx={{
-                    color: 'grey.500',
-                    '&:hover': { bgcolor: 'grey.100', transform: 'scale(1.1)' },
-                    transition: 'all 0.2s ease',
-                  }}
-                >
-                  <Share fontSize="small" />
-                </IconButton>
-              </Box>
-            </Box>
+            <Chip
+              label={topic.categoryName || 'Chưa có danh mục'}
+              size="small"
+              sx={{
+                bgcolor: theme.palette.secondary.light,
+                color: theme.palette.secondary.main,
+                mb: 2,
+              }}
+            />
+            <TopicActions
+              likes={likes}
+              liked={liked}
+              onLike={handleLike}
+              commentsCount={comments.length}
+              views={topic.views}
+            />
           </CardContent>
         </Card>
         <CommentForm
           onSubmit={handleCommentSubmit}
-          user={user}
-          topicId={topic.id} // Truyền topicId
+          user={userDetails}
+          topicId={topic.id}
         />
-        <CommentList comments={comments} onReply={handleCommentSubmit} />
+        {loadingComments ? (
+          <Typography variant="body2" color="text.secondary" sx={{ p: 2 }}>
+            Đang tải bình luận...
+          </Typography>
+        ) : (
+          <CommentList comments={comments} onReply={handleCommentSubmit} />
+        )}
       </Box>
     </Fade>
   );
 }
 
-export default TopicDetail;
+TopicDetail.propTypes = {
+  topic: PropTypes.shape({
+    id: PropTypes.string,
+    title: PropTypes.string,
+    content: PropTypes.string,
+    author: PropTypes.string,
+    avatar: PropTypes.string,
+    createdAt: PropTypes.string,
+    likes: PropTypes.number,
+    views: PropTypes.number,
+    categoryName: PropTypes.string,
+    comments: PropTypes.array,
+  }),
+  onBack: PropTypes.func.isRequired,
+};
+
+export default React.memo(TopicDetail);

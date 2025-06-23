@@ -4,6 +4,7 @@ import { Box, Typography, TextField, Button, MenuItem, CircularProgress } from '
 import categoryApi from '../../../backend/db/categoryApi';
 import topicApi from '../../../backend/db/topicApi';
 import { useAuth } from '../../../context/AuthContext';
+import axios from 'axios';
 
 function TopicForm({ onSubmit, onCancel }) {
   const [title, setTitle] = useState('');
@@ -19,48 +20,49 @@ function TopicForm({ onSubmit, onCancel }) {
   const ctvID = role === 'CTV' ? userDetails?.id : null;
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoading(true);
-        const response = await categoryApi.fetchAllCategories();
-        if (Array.isArray(response.data.categories)) {
-          setCategories(response.data.categories);
-        } else {
-          setCategories([]);
-          setError('Dữ liệu danh mục không hợp lệ');
+  const fetchCategories = async () => {
+    try {
+      setLoading(true);
+      const response = await categoryApi.fetchAllCategories();
+      if (Array.isArray(response.data.categories)) {
+        setCategories(response.data.categories);
+        if (response.data.categories.length > 0) {
+          setCategoryID(response.data.categories[0].id); // Tự động chọn danh mục đầu tiên
         }
-      } catch (err) {
+      } else {
         setCategories([]);
-        setError('Không thể tải danh mục');
-      } finally {
-        setLoading(false);
+        setError('Dữ liệu danh mục không hợp lệ');
       }
-    };
-    fetchCategories();
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (title.trim() && content.trim() && categoryID && ctvID) {
-      try {
-        setLoading(true);
-        setError(null);
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000);
-        const topicData = { title, content, ctvID, categoryID };
-        const response = await topicApi.createTopic(topicData, { signal: controller.signal });
-        clearTimeout(timeoutId);
-        onSubmit(response.data);
-        setTitle('');
-        setContent('');
-        setCategoryID('');
-      } catch (err) {
-        setError(err.response?.data?.message || 'Không thể tạo chủ đề');
-      } finally {
-        setLoading(false);
-      }
+    } catch (err) {
+      setCategories([]);
+      setError('Không thể tải danh mục');
+    } finally {
+      setLoading(false);
     }
   };
+  fetchCategories();
+}, []);
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    setLoading(true);
+    setError(null);
+    const topicData = { title, content, ctvID, categoryID };
+    const response = await topicApi.createTopic(topicData);
+    console.log('Topic created:', response.data);
+    onSubmit(response.data);
+    setTitle('');
+    setContent('');
+    setCategoryID('');
+  } catch (err) {
+    console.error('API Error:', err); // Debug
+    setError(err.response?.data?.message || 'Không thể tạo chủ đề');
+  } finally {
+    setLoading(false);
+  }
+ 
+};
 
   return (
     <Box
@@ -133,27 +135,27 @@ function TopicForm({ onSubmit, onCancel }) {
             )}
           </TextField>
           <Box sx={{ display: 'flex', gap: 2 }}>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={loading || !ctvID}
-              sx={{
-                bgcolor: 'primary.main',
-                color: 'white',
-                fontWeight: 'medium',
-                px: 3,
-                py: 1,
-                borderRadius: 2,
-                '&:hover': {
-                  bgcolor: 'primary.dark',
-                  transform: 'translateY(-2px)',
-                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-                },
-                transition: 'all 0.3s ease',
-              }}
-            >
-              Tạo chủ đề
-            </Button>
+            {
+              ctvID && (
+                <Button
+                  variant="contained"
+                  type="submit"
+                  disabled={loading}
+                  sx={{
+                    px: 3,
+                    py: 1,
+                    borderRadius: 2,
+                    '&:hover': {
+                      bgcolor: 'primary.dark',
+                      transform: 'translateY(-2px)',
+                    },
+                    transition: 'all 0.3s ease',
+                  }}
+                >
+                  Tạo chủ đề
+                </Button>
+              )
+            }
             <Button
               variant="outlined"
               onClick={onCancel}
