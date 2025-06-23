@@ -26,6 +26,8 @@ export default function Header() {
   const { wishlistCount } = useWish();
   const { cartCount } = useCart();
   const navigate = useNavigate();
+  const userDetails = user || JSON.parse(localStorage.getItem('user'));
+  const role = userDetails?.role;
 
   const handleMenu = () => {
     setIsMenuClicked(!isMenuClicked);
@@ -149,11 +151,14 @@ export default function Header() {
               </NavLink>
             </Badge>
           </span>
-          <span className={user?.role !== "Admin" ? "admin" : "hiddenElement"}>
-                <NavLink to="/admin/dashboard">
-                  <AdminPanelSettings/>
-                </NavLink>
+          <span className="admin">
+            {(user?.role === "CTV" || user?.role === "Admin") && (
+              <NavLink to="/admin/dashboard">
+                <AdminPanelSettings />
+              </NavLink>
+            )}
           </span>
+          
           <span className="login">
             {token ? (
                 <NavLink to="/profile">
