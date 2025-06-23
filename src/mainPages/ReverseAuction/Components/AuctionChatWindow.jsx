@@ -15,6 +15,8 @@ import {
   Paper,
   useTheme,
   ListItemButton,
+  Chip,
+  Stack,
 } from "@mui/material";
 import { motion, AnimatePresence } from "framer-motion";
 import CloseIcon from "@mui/icons-material/Close";
@@ -26,9 +28,9 @@ import { toast } from "react-toastify";
 
 // Mock chat messages for realism
 const mockMessages = [
-  { id: 1, user: "User1", text: "Tôi muốn đặt giá 55 triệu!", timestamp: "10:50 PM", isOwnMessage: false },
-  { id: 2, user: "User2", text: "Hiện tại giá cao nhất là 60 triệu.", timestamp: "10:52 PM", isOwnMessage: false },
-  { id: 3, user: "You", text: "Tôi bid 65 triệu!", timestamp: "10:53 PM", isOwnMessage: true },
+  // { id: 1, user: "User1", text: "Tôi muốn đặt giá 55 triệu!", timestamp: "10:50 PM", isOwnMessage: false },
+  // { id: 2, user: "User2", text: "Hiện tại giá cao nhất là 60 triệu.", timestamp: "10:52 PM", isOwnMessage: false },
+  // { id: 3, user: "You", text: "Tôi bid 65 triệu!", timestamp: "10:53 PM", isOwnMessage: true },
 ];
 
 function AuctionChatWindow({ open, onClose, item }) {
@@ -40,24 +42,68 @@ function AuctionChatWindow({ open, onClose, item }) {
   const chatEndRef = useRef(null);
   const { connected, sendMessage, subscribe } = useWebSocket();
 
-  // Mock room data - replace with actual API data
+  // Giả sử bạn có state này trong component
+  const [agreementStatus, setAgreementStatus] = useState({
+    myStatus: 'pending', // Trạng thái có thể là: 'pending', 'accepted', 'denied'
+    otherPartyStatus: 'pending',
+  });
+
+  // Giả sử bạn có hàm xử lý này
+  const handleAccept = () => {
+    sendMessage(`/api/reverse-auction/sendMessage`, {
+      senderId: user.id,
+      roomId: selectedRoom,
+      type: agreementStatus.myStatus === 'accepted' ? 'PENDING' : 'ACCEPT',
+    })
+  };
+
+  const handleDeny = () => {
+    sendMessage(`/api/reverse-auction/sendMessage`, {
+      senderId: user.id,
+      roomId: selectedRoom,
+      type: agreementStatus.myStatus === 'denied' ? 'PENDING' : 'REJECT',
+    })
+  };
+
+  const actionDisabled = agreementStatus.myStatus !== 'pending' && agreementStatus.otherPartyStatus !== 'pending' && agreementStatus.myStatus === agreementStatus.otherPartyStatus;
+
+  // Hàm helper để hiển thị Chip trạng thái cho đẹp
+  const renderStatusChip = (status) => {
+    switch (status) {
+      case 'accepted':
+        return <Chip label="Chấp nhận" color="success" size="small" />;
+      case 'denied':
+        return <Chip label="Từ chối" color="error" size="small" />;
+      default:
+        return <Chip label="Đang chờ" color="default" size="small" />;
+    }
+  };
+
+  // Hàm helper để convert từ BE về FE
+  const convertState = (status) => {
+    switch (status) {
+      case 'Approved':
+        return 'accepted';
+      case 'Rejected':
+        return 'denied';
+      default:
+        return 'pending';
+    }
+  };
+
+
+
+  // Mock room data
   const [chatRooms, setChatRoom] = useState([])
-  // [
-  //   { id: 1, name: "Phòng đấu giá Kim cương", product: "Nhẫn kim cương 2 carat" },
-  //   { id: 2, name: "Phòng đấu giá Vàng", product: "Vòng cổ vàng 18K" },
-  //   { id: 3, name: "Phòng đấu giá Ngọc trai", product: "Bông tai ngọc trai" },
-  // ];
+  const [chatRoomsNotification, setChatRoomsNotification] = useState([])
 
-
+  // Fetch and Update Chat Windows
   useEffect(() => {
-    // Nếu không có user hoặc item thì không làm gì cả
     if (!user || !item?.id) {
       return;
     }
 
-    // 1. Tạo một mảng để lưu lại tất cả các subscription sẽ được tạo ra
     let activeSubscriptions = [];
-
     const fetchAndSubscribe = async () => {
       try {
         const uhm = await reverseAuctionApi.getRoomChat({ userID: user.id, productID: item.id });
@@ -68,23 +114,44 @@ function AuctionChatWindow({ open, onClose, item }) {
         rooms.forEach((room) => {
           console.log("Đăng kí cho phòng chat ID:", room.roomID);
 
-          // 2. Gọi subscribe và lưu lại đối tượng subscription
           const subscription = subscribe(
             `/topic/reverse-auction/${room.roomID}`,
             (received) => {
-              // Logic xử lý tin nhắn nhận được (đã khá ổn)
-              // Nên kiểm tra xem selectedRoom có được cập nhật đúng không
               console.log("PING, new message found for room:", received.roomId, selectedRoom, received.roomId == selectedRoom);
               if (received.roomId == selectedRoom) {
                 setMessages(prev => [...prev,
                 {
                   id: received.id,
-                  user: received.senderId === item.collaboratorID ? item.collaboratorName : "Unknown",
+                  user: received.senderId === user.id ? "You" : received.senderId === room.collaboratorUserID ? room.collaboratorName : "Unknown",
                   text: received.content,
                   timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
                   isOwnMessage: received.senderId === user?.id,
                 },
                 ]);
+                if (received.type === 'ACCEPT') {
+                  console.log("User clicked ACCEPT");
+                  // Gọi API và cập nhật state
+                  if (received.senderId === user?.id)
+                    setAgreementStatus(prev => ({ ...prev, myStatus: 'accepted' }));
+                  else
+                    setAgreementStatus(prev => ({ ...prev, otherPartyStatus: 'accepted' }));
+                }
+                else if (received.type === 'REJECT') {
+                  console.log("User clicked DENY");
+                  // Gọi API và cập nhật state
+                  if (received.senderId === user?.id)
+                    setAgreementStatus(prev => ({ ...prev, myStatus: 'denied' }));
+                  else
+                    setAgreementStatus(prev => ({ ...prev, otherPartyStatus: 'denied' }));
+                }
+                else if (received.type === 'PENDING') {
+                  console.log("User clicked PENDING");
+                  // Gọi API và cập nhật state
+                  if (received.senderId === user?.id)
+                    setAgreementStatus(prev => ({ ...prev, myStatus: 'pending' }));
+                  else
+                    setAgreementStatus(prev => ({ ...prev, otherPartyStatus: 'pending' }));
+                }
               }
             }
           );
@@ -101,8 +168,6 @@ function AuctionChatWindow({ open, onClose, item }) {
 
     fetchAndSubscribe();
 
-    // 3. TRẢ VỀ HÀM DỌN DẸP (CLEANUP FUNCTION)
-    // Hàm này sẽ được gọi khi component unmount, hoặc khi user/item thay đổi
     return () => {
       console.log("Cleaning up subscriptions for user:", user.id);
       activeSubscriptions.forEach(sub => {
@@ -113,20 +178,38 @@ function AuctionChatWindow({ open, onClose, item }) {
       });
     };
 
-    // 4. CẬP NHẬT DEPENDENCY ARRAY
-    // Thêm item.id và subscribe để đảm bảo effect chạy lại khi cần
   }, [user, item?.id, subscribe, selectedRoom]);
 
 
-  // on select chat room, append with history
+
+  // On select chat room, append with history
   useEffect(() => {
+    const isAuthorOfAuction = () => {
+      return user?.id && item?.auctionProductDTO?.author_id === user.id;
+    };
+    if (!chatRooms || chatRooms.length <= 0) return;
+
     if (selectedRoom != null) {
+      let currentRoom = chatRooms.find(room => room.roomID === selectedRoom)
+      if (currentRoom) {
+        if (isAuthorOfAuction())
+          setAgreementStatus({
+            myStatus: convertState(currentRoom.status),
+            otherPartyStatus: convertState(currentRoom.statusCTV),
+          })
+        else
+          setAgreementStatus({
+            myStatus: convertState(currentRoom.statusCTV),
+            otherPartyStatus: convertState(currentRoom.status),
+          })
+      }
+
       reverseAuctionApi.getRoomChatHistory(selectedRoom).then(response => {
-        console.log("Room chat fetched", selectedRoom, response.data)
+        console.log(item)
         setMessages(response.data.map(chatMsg => {
           return {
             id: chatMsg.id,
-            user: chatMsg.senderId === item.collaboratorID ? item.collaboratorName : "Unknown",
+            user: chatMsg.senderId === user.id ? "You" : chatMsg.senderId === item.collaboratorUserID ? item.collaboratorName : "Unknown",
             text: chatMsg.content,
             timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
             isOwnMessage: chatMsg.senderId === user?.id,
@@ -135,7 +218,7 @@ function AuctionChatWindow({ open, onClose, item }) {
       })
     }
 
-  }, [selectedRoom])
+  }, [selectedRoom, item, user?.id, chatRooms])
 
   // Scroll to bottom of chat when messages change
   useEffect(() => {
@@ -147,7 +230,8 @@ function AuctionChatWindow({ open, onClose, item }) {
       sendMessage(`/api/reverse-auction/sendMessage`, {
         content: message,
         senderId: user.id,
-        roomId: selectedRoom
+        roomId: selectedRoom,
+        type: 'MESSAGE',
       })
       setMessage("");
     }
@@ -181,7 +265,7 @@ function AuctionChatWindow({ open, onClose, item }) {
         <Paper
           elevation={0}
           sx={{
-            width: { xs: "100%", md: "30%" },
+            width: { xs: "100%", md: "25%" },
             p: 2,
             borderRight: { md: `1px solid ${theme.palette.divider}` },
             bgcolor: theme.palette.mode === "dark" ? "#2a2a2a" : "#f9fafb",
@@ -230,7 +314,7 @@ function AuctionChatWindow({ open, onClose, item }) {
           </List>
         </Paper>
 
-        {/* Right: Chat and Product Info */}
+        {/* Center: Chat and Product Info */}
         <Box sx={{ width: { xs: "100%", md: "70%" }, display: "flex", flexDirection: "column" }}>
           {/* Product Info */}
           <Box
@@ -238,30 +322,78 @@ function AuctionChatWindow({ open, onClose, item }) {
               p: 2,
               borderBottom: `1px solid ${theme.palette.divider}`,
               bgcolor: theme.palette.mode === "dark" ? "#2a2a2a" : "#fff",
+              display: 'flex',
+              flexDirection: `row`
             }}
           >
-            <Typography variant="h6" fontWeight="600" mb={1}>
-              Thông tin sản phẩm
-            </Typography>
-            <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}>
-              <Typography>
-                <strong>Tên:</strong> {item.name}
+            <Box>
+              <Typography variant="h6" fontWeight="600" mb={1}>
+                Thông tin sản phẩm
               </Typography>
-              <Typography>
-                <strong>Giá khởi điểm:</strong> {item.price?.toLocaleString() || 0} VNĐ
+              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1 }}>
+                <Typography>
+                  <strong>Tên:</strong> {item.name}
+                </Typography>
+                <Typography>
+                  <strong>Giá khởi điểm:</strong> {item.price?.toLocaleString() || 0} VNĐ
+                </Typography>
+                <Typography>
+                  <strong>Vật liệu:</strong> {item.material || "N/A"}
+                </Typography>
+                <Typography>
+                  <strong>Kích thước:</strong> {item.size || "N/A"}
+                </Typography>
+                <Typography>
+                  <strong>Dịp:</strong> {item.occasion || "N/A"}
+                </Typography>
+                <Typography>
+                  <strong>Mô tả:</strong> {item.description || "Không có mô tả"}
+                </Typography>
+              </Box>
+
+            </Box>
+
+            <Divider sx={{ my: 3 }} />
+
+            {/* STatus */}
+            <Box>
+              <Typography variant="h6" fontWeight="600" mb={2}>
+                Trạng thái thoả thuận
               </Typography>
-              <Typography>
-                <strong>Vật liệu:</strong> {item.material || "N/A"}
-              </Typography>
-              <Typography>
-                <strong>Kích thước:</strong> {item.size || "N/A"}
-              </Typography>
-              <Typography>
-                <strong>Dịp:</strong> {item.occasion || "N/A"}
-              </Typography>
-              <Typography>
-                <strong>Mô tả:</strong> {item.description || "Không có mô tả"}
-              </Typography>
+
+              <Stack spacing={1.5}>
+                {/* Hiển thị trạng thái */}
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="body1">Trạng thái của bạn:</Typography>
+                  {renderStatusChip(agreementStatus.myStatus)}
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="body1">Trạng thái đối phương:</Typography>
+                  {renderStatusChip(agreementStatus.otherPartyStatus)}
+                </Box>
+
+                {/* Các nút hành động */}
+                <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={handleAccept}
+                    disabled={actionDisabled}
+                    fullWidth
+                  >
+                    Chấp nhận
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    onClick={handleDeny}
+                    disabled={actionDisabled}
+                    fullWidth
+                  >
+                    Từ chối
+                  </Button>
+                </Stack>
+              </Stack>
             </Box>
           </Box>
 
@@ -270,7 +402,7 @@ function AuctionChatWindow({ open, onClose, item }) {
             <Typography variant="h6" fontWeight="600" mb={2}>
               Chat giao dịch
             </Typography>
-            <Box sx={{ flex: 1, overflowY: "auto", mb: 2, pr: 1 }}>
+            <Box sx={{ flex: 1, overflowY: "auto", mb: 2, pr: 0 }}>
               {selectedRoom ? (
                 <AnimatePresence>
                   {messages && messages.map((msg) => (
@@ -287,7 +419,8 @@ function AuctionChatWindow({ open, onClose, item }) {
                     >
                       <Box
                         sx={{
-                          maxWidth: "70%",
+                          maxWidth: "95%",
+                          marginBottom: "5px",
                           display: "flex",
                           flexDirection: msg.isOwnMessage ? "row-reverse" : "row",
                           alignItems: "flex-end",
@@ -357,6 +490,7 @@ function AuctionChatWindow({ open, onClose, item }) {
             </Box>
           </Box>
         </Box>
+
       </DialogContent>
     </Dialog>
   );

@@ -1,6 +1,7 @@
 import axiosClient from "../api/axiosClient";
 
 const reverseAuctionApi = {
+  getAllAuctionProduct: async () => await axiosClient.get('/reverse-auction/fetch-all'),
   registerAuction: async (data) => {
     try {
       console.log("📤 Tạo Request:", data); // Debug dữ liệu đầu vào
@@ -25,7 +26,6 @@ const reverseAuctionApi = {
       return error.data || error
     }
   },
-
   getRoomChatHistory: async (roomID) => await axiosClient.get(`/chat/history?roomID=${roomID}`),
 };
 

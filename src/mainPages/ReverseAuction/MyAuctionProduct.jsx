@@ -18,6 +18,7 @@ export default function MyAuctionProduct() {
   const userDetails = user || JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
+    if (!user || !userDetails || !userDetails.id) return;
     setLoading(true);
     axios
       .get(`http://localhost:8080/api/reverse-auction/fetch-all/my/${userDetails?.id}`)
