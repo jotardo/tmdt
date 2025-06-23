@@ -19,6 +19,9 @@ function CommentForm({ onSubmit, parentId = null, onCancel, user, topicId }) {
     // Mặc định là bình luận tích cực
     let isPositive = true;
 
+    // Mặc định là bình luận liên quan
+    let relevant = true; 
+
     if (!content.trim()) {
       setError('Bình luận không được để trống');
       return;
@@ -38,6 +41,8 @@ function CommentForm({ onSubmit, parentId = null, onCancel, user, topicId }) {
     // Kiểm tra bình luận bằng API Ollama
     const apiResponse = await callOllamaApi(content);
     const parsedContent = parseOllamaMessageContent(apiResponse);
+
+    console.log('Parsed content from Ollama API:', parsedContent);
 
     // Kiểm tra nếu không phân tích được nội dung bình luận
     if (!parsedContent) {
@@ -59,8 +64,6 @@ function CommentForm({ onSubmit, parentId = null, onCancel, user, topicId }) {
     // Lấy kiểu bình luận từ API và ánh xạ sang tiếng Việt
     const commentType = parsedContent.category || 'opinion';
 
-    console.log('Parsed comment type AI Check:', commentType);
-
     // Kiểm tra nếu bình luận là spam hoặc không liên quan
     if (commentType === 'spam' || commentType === 'irrelevant') {
       toast.error('Bình luận của bạn không phù hợp (spam hoặc không liên quan).');
@@ -73,7 +76,7 @@ function CommentForm({ onSubmit, parentId = null, onCancel, user, topicId }) {
     const tempComment = {
       id: `temp-${Date.now()}`,
       content,
-      commentType, // Nhãn tiếng Việt
+      type: commentType, // Nhãn tiếng Việt
       author: { id: userDetails.id, username: userDetails.username, avatar: userDetails.avatar },
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -82,6 +85,7 @@ function CommentForm({ onSubmit, parentId = null, onCancel, user, topicId }) {
       childComments: [],
       topicId,
       isPositive,
+      relevant: parsedContent.relevant,
     };
 
     onSubmit(tempComment);
@@ -95,6 +99,7 @@ function CommentForm({ onSubmit, parentId = null, onCancel, user, topicId }) {
         parentCommentID: parseInt(parentId, 10),
         type: commentType, // Gửi nhãn tiếng Việt
         isPositive,
+        relevant: parsedContent.relevant,
       };
       const response = await commentApi.createComment(commentData);
       console.log('BE API response:', response);

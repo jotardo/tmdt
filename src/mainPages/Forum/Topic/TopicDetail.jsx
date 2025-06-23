@@ -188,12 +188,21 @@ function TopicDetail({ topic, onBack }) {
             </Typography>
 
             <Chip
-              label={topic.categoryName || 'Chưa có danh mục'}
+              label={"Sản phầm được đề cập: "+topic.categoryName || 'Chưa có danh mục'}
               size="small"
               sx={{
-                bgcolor: theme.palette.secondary.light,
-                color: theme.palette.secondary.main,
-                mb: 2,
+                bgcolor: topic.categoryName ? theme.palette.grey[100] : theme.palette.grey[50],
+                color: topic.categoryName ? theme.palette.grey[800] : theme.palette.grey[600],
+                border: `1px solid ${topic.categoryName ? theme.palette.grey[300] : theme.palette.grey[200]}`,
+                mb: 1,
+                borderRadius: '12px',
+                fontSize: '0.75rem',
+                fontWeight: 'medium',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  bgcolor: topic.categoryName ? theme.palette.grey[200] : theme.palette.grey[100],
+                  color: topic.categoryName ? theme.palette.grey[900] : theme.palette.grey[700],
+                },
               }}
             />
 

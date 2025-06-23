@@ -15,15 +15,19 @@ import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 import commentApi from '../../../backend/db/commentApi';
 import { COMMENT_TYPE_MAP, TYPE_STYLE_MAP } from '../../../utils/ollamaApi/types';
+import { useAuth } from '../../../context/AuthContext';
 
 function CommentItem({ comment, onReply }) {
   const [showReplies, setShowReplies] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [childComments, setChildComments] = useState([]);
-  const isAuthor = comment.userID ?? null;
+  const { user } = useAuth();
+  const userDetails = user || JSON.parse(localStorage.getItem('user'));
+  const isAuthor = comment.userID === userDetails.id ? true : false;
 
   console.log('CommentItem props:', comment);
-  
+  console.log('User details:', userDetails);
+  console.log('Is author:', isAuthor);
 
   const handleToggleReplies = async () => {
     if (!showReplies && childComments.length === 0) {
@@ -67,6 +71,15 @@ function CommentItem({ comment, onReply }) {
                 )}
                 <Chip
                   label={commentTypeLabel}
+                  size="small"
+                  sx={{
+                    ...chipStyle,
+                    fontSize: '0.75rem',
+                    height: '20px',
+                  }}
+                />
+                <Chip
+                  label={comment.relevant ? 'Liên quan' : 'Không liên quan'}
                   size="small"
                   sx={{
                     ...chipStyle,
