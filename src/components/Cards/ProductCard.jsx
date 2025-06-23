@@ -11,7 +11,6 @@ export default function ProductCard({ item, inWishlist }) {
     const { deleteWishListData, addWishListData, isAvailableInWishList } = useWish();
     const { getSingleProduct } = useData();
     const { addToCartFunction, isItemInCart, changeQuantity } = useCart();
-    const { product } = item;
     const {
         id,
         name,
@@ -22,12 +21,12 @@ export default function ProductCard({ item, inWishlist }) {
         productIsBadge,
         brand,
         occasion
-    } = product || {};
+    } = item || {};
 
     const isInWishList = useMemo(() => {
         return isAvailableInWishList(id);
     }, [isAvailableInWishList, id]);
-
+    console.log(id)
     const discount = prevPrice ? Math.floor(100 - (price / prevPrice) * 100) : 0;
     const mainImage = imageURLs && imageURLs.length > 0 ? imageURLs[0].url : "no-image.jpg";
 

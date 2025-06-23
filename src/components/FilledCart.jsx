@@ -16,7 +16,6 @@ export default function FilledCart({
                                      paymentSelected,
                                      totalPrice,
                                      totalDiscount,
-                                     deleteFromCartFunction,
                                      setPaymentSelected,
                                      addItemstoOrdersPlaced,
                                    }) {
@@ -30,16 +29,14 @@ export default function FilledCart({
 
   useEffect(() => {
     const handleStripeMessage = (event) => {
-      console.log("Received postMessage:", event.data);
-
       if (event.data === "stripe_payment_success") {
         window.location.href = "/cart/completedorders";
       }
     };
-
     window.addEventListener("message", handleStripeMessage);
     return () => window.removeEventListener("message", handleStripeMessage);
   }, []);
+
 
 
 
@@ -52,7 +49,6 @@ export default function FilledCart({
 
         if (paymentSelected === "online") {
           const url = await createStripeSession(createdOrderId, token);
-          console.log(url);
           if (url) {
             setCheckoutUrl(url);
             setShowQRPopup(true);

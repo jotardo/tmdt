@@ -10,8 +10,10 @@ import { useData } from '../../'
 export default function Home() {
   const { backendData, categoriesData, setFiltersUsed } = useData()
   const navigate = useNavigate()
+  const trendingArray = Array.isArray(backendData?.productsData)
+      ? backendData.productsData.filter((item) => item.product_isBadge === "Trending")
+      : [];
 
-  const trendingArray = backendData?.productsData.filter((item) => item.product_isBadge === "Trending")
   return (
     <>
       <section className="home">
@@ -38,7 +40,10 @@ export default function Home() {
         <p>Trang sức nổi bật</p>
         <h3>ĐANG THỊNH HÀNH</h3>
         <div className="productsContainer">
-          {trendingArray.slice(0, 6).map((item) => <ProductCard item={item} />)}
+          {trendingArray.length > 0
+              ? trendingArray.slice(0, 6).map((item) => <ProductCard item={item} key={item.id} />)
+              : <p>Đang tải sản phẩm nổi bật...</p>}
+
         </div>
 
       </section>
@@ -54,8 +59,8 @@ export default function Home() {
           </div>
         </div>
         <div className="imageContent">
-          <img className="bigImage" src='\assets\model2.jpg' width="400px" alt={''}/>
-          <img className="smallImage" src='\assets\hands.jpg' alt="" />
+          <img className="bigImage" src='/assets/model2.jpg' width="400px" alt={''}/>
+          <img className="smallImage" src='/assets/hands.jpg' alt="" />
 
         </div>
       </section>
@@ -94,25 +99,25 @@ export default function Home() {
         <p>TỐT NHẤT TRÊN THỊ TRƯỜNG</p>
         <h3>Tại sao nên chọn chúng tôi</h3>
         <div className="whyusContent">
-          <img className="middleImage" src="\assets\model3.jpg" alt="" srcSet="" />
+          <img className="middleImage" src="/assets/model3.jpg" alt="" srcSet="" />
           <div className="whyUsDescription">
             <div>
-              <img src="\assets\whyUsIcons\percent-solid.svg" alt="big discount" />
+              <img src="/assets/whyUsIcons/percent-solid.svg" alt="big discount" />
               <h3>Khuyến mãi lớn</h3>
               <p>Chúng tôi cung cấp mức giảm giá cao hơn mà không ảnh hưởng đến chất lượng hay tay nghề chế tác. Cam kết mang đến giá cả phải chăng giúp bạn có thể tận hưởng niềm đam mê với trang sức tinh xảo và vẫn tiết kiệm đáng kể.</p>
             </div>
             <div>
-              <img src="\assets\whyUsIcons\truck-fast-solid.svg" alt="fast delivery" />
+              <img src="/assets/whyUsIcons/truck-fast-solid.svg" alt="fast delivery" />
               <h3>Giao hàng miễn phí</h3>
               <p>Với dịch vụ giao hàng miễn phí, bạn có thể mua sắm tự tin mà không lo về chi phí ẩn hay khoản phí phát sinh. Chỉ cần ngồi thư giãn, để chúng tôi lo việc giao món trang sức tuyệt đẹp đến tận tay bạn.</p>
             </div>
             <div>
-              <img src="\assets\whyUsIcons\wallet-solid.svg" alt="big savings " />
+              <img src="/assets/whyUsIcons/wallet-solid.svg" alt="big savings " />
               <h3>Thanh toán an toàn</h3>
               <p>Chúng tôi đảm bảo sự yên tâm của bạn trong suốt quá trình mua sắm. Bảo mật tài chính của bạn là điều vô cùng quan trọng đối với chúng tôi, vì vậy chúng tôi đã áp dụng hệ thống mã hóa tiên tiến và cổng thanh toán an toàn.</p>
             </div>
             <div>
-              <img src="\assets\whyUsIcons\boxes-packing-solid.svg" alt="big tracking order" />
+              <img src="/assets/whyUsIcons/boxes-packing-solid.svg" alt="big tracking order" />
               <h3>Theo dõi đơn hàng</h3>
               <p>Chúng tôi cung cấp dịch vụ theo dõi đơn hàng, giúp bạn luôn được cập nhật về tình trạng mua sắm của mình từng bước một, đảm bảo trải nghiệm mua sắm minh bạch và suôn sẻ.</p>
             </div>

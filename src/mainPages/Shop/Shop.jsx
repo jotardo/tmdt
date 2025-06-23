@@ -121,8 +121,8 @@ const Shop = () => {
                                 }}
                             />
                             <p>
-                                <span>Min: 5,000,000</span>
-                                <span>Max: 500,000,000</span>
+                                <span>Min: 10 Tr</span>
+                                <span>Max: 500 Tr</span>
                             </p>
                         </div>
                         <div>

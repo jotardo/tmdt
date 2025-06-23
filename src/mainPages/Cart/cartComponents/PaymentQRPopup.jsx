@@ -8,7 +8,7 @@ export function PaymentQR({ url, onClose }) {
             const checkClosed = setInterval(() => {
                 if (stripeWindow && stripeWindow.closed) {
                     clearInterval(checkClosed);
-                    onClose(); // hoặc bạn có thể reload trạng thái đơn hàng tại đây
+                    onClose();
                 }
             }, 500);
         }
