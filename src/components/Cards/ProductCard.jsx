@@ -25,17 +25,17 @@ export default function ProductCard({ item, inWishlist }) {
     } = product || {};
 
     const isInWishList = useMemo(() => {
-        return isAvailableInWishList(id);
-    }, [isAvailableInWishList, id]);
+        return isAvailableInWishList(item.id);
+    }, [isAvailableInWishList, item.id]);
 
     const discount = prevPrice ? Math.floor(100 - (price / prevPrice) * 100) : 0;
-    const mainImage = imageURLs && imageURLs.length > 0 ? imageURLs[0].url : "no-image.jpg";
-
+    const mainImage = item.imageURLs && item.imageURLs.length > 0 ? item.imageURLs[0].url : "no-image.jpg";
+    
     const handleWishlistToggle = (e) => {
         e.preventDefault();
         if (!token) return;
 
-        isInWishList ? deleteWishListData(id) : addWishListData(item);
+        isInWishList ? deleteWishListData(item.id) : addWishListData(item);
     };
 
     const handleAddToCart = (e) => {
@@ -49,25 +49,25 @@ export default function ProductCard({ item, inWishlist }) {
         e.preventDefault();
         if (!token) return;
 
-        changeQuantity(id, token, "increment");
+        changeQuantity(item.id, token, "increment");
     };
 
     return (
-        <div className="ProductCard" onClick={() => getSingleProduct(id)}>
-            <NavLink to={`/products/${id}`}>
+        <div className="ProductCard" onClick={() => getSingleProduct(item.id)}>
+            <NavLink to={`/products/${item.id}`}>
                 <img src={`${process.env.REACT_APP_BASE_URL}/product/${mainImage}`} alt="Sản phẩm trang sức"/>
                 <div className="cardTextContent">
-                    <h3>{name?.slice(0, 15) || "Sản phẩm"}</h3>
-                    {brand && <p className="brand">Thương hiệu: {brand}</p>}
-                    {occasion && <p className="occasion">Dịp: {occasion}</p>}
+                    <h3>{item.name?.slice(0, 15) || "Sản phẩm"}</h3>
+                    {item.brand && <p className="brand">Thương hiệu: {item.brand}</p>}
+                    {item.occasion && <p className="occasion">Dịp: {item.occasion}</p>}
                     <p className="price">
-                        {prevPrice && <span className="stikeThrough">{prevPrice.toLocaleString()} VNĐ</span>}
-                        <b>{price?.toLocaleString() || 0} VNĐ</b>
-                        {prevPrice && <span> (Giảm {discount}%)</span>}
+                        {item.prevPrice && <span className="stikeThrough">{item.prevPrice.toLocaleString()} VNĐ</span>}
+                        <b>{item.price?.toLocaleString() || 0} VNĐ</b>
+                        {item.prevPrice && <span> (Giảm {item.discount}%)</span>}
                     </p>
-                    <div className="rating" title={`${averageRating} sao`}>
-                        {"★".repeat(Math.round(averageRating))}
-                        {"☆".repeat(5 - Math.round(averageRating))}
+                    <div className="rating" title={`${item.averageRating} sao`}>
+                        {"★".repeat(Math.round(item.averageRating))}
+                        {"☆".repeat(5 - Math.round(item.averageRating))}
                     </div>
                 </div>
             </NavLink>
@@ -78,10 +78,10 @@ export default function ProductCard({ item, inWishlist }) {
             </span>
 
             {/* 🎖️ Badge */}
-            {productIsBadge && (
-                <span title={productIsBadge} className="trendingIcon">
+            {item.productIsBadge && (
+                <span title={item.productIsBadge} className="trendingIcon">
                     <div className="ribbon ribbon-top-left">
-                        <span>{productIsBadge}</span>
+                        <span>{item.productIsBadge}</span>
                     </div>
                 </span>
             )}
@@ -89,7 +89,7 @@ export default function ProductCard({ item, inWishlist }) {
             {/* 🛒 Add to cart */}
             <div className="buttons">
                 <div className="addToCartButton" title="Add to Cart">
-                    {token && isItemInCart(id) ? (
+                    {token && isItemInCart(item.id) ? (
                         <span className="moveToCart" style={{ background: "#cb9fe3", borderRadius: "12px" }}>
                             <NavLink to="/cart">
                                 <ShoppingCartCheckoutIcon />
@@ -102,7 +102,7 @@ export default function ProductCard({ item, inWishlist }) {
             </div>
 
             {/* ➕ Tăng số lượng nếu là wishlist */}
-            {isItemInCart(id) && inWishlist && (
+            {isItemInCart(item.id) && inWishlist && (
                 <button onClick={handleIncrementQuantity}>Thêm 1 đơn vị của sản phẩm này</button>
             )}
         </div>

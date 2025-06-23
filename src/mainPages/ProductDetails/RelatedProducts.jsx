@@ -4,6 +4,7 @@ import { Grid, Card, CardMedia, CardContent, Typography, Button, Box, Pagination
 import TuneIcon from "@mui/icons-material/Tune";
 import Loader from "../../components/Loader";
 import { useNavigate } from "react-router-dom";
+import axiosClient from "../../backend/api/axiosClient";
 
 export default function RelatedProducts({ categoryName }) {
   const { categoriesData, brandData, occasionData } = useData();
@@ -23,18 +24,15 @@ export default function RelatedProducts({ categoryName }) {
   const resultsPerPage = 24;
   const productDiv = useRef(null);
 
-  console.log("Category Name ", categoryName);
-
   // Fetch products by categoryId
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.REACT_APP_BASE_URL}/product/fetch-by-category/${categoryName}`);
-        if (!response.ok) throw new Error("Không thể lấy dữ liệu sản phẩm");
-        const data = await response.json();
-        setProducts(data.products || []);
-        setFilteredProducts(data.products || []);
+        const response = await axiosClient.get(`/product/fetch-by-category/${categoryName}`);
+        // if (!response.ok) throw new Error("Không thể lấy dữ liệu sản phẩm");
+        setProducts(response.data.productDTOs || []);
+        setFilteredProducts(response.data.productDTOs || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -63,8 +61,6 @@ export default function RelatedProducts({ categoryName }) {
     setPage(0); // Reset to first page when filters change
   }, [products, filters]);
 
-  console.log("Product relative ", products);
-  
 
   return (
     <Box sx={{ maxWidth: 1200, mx: "auto", p: 4 }}>
@@ -90,8 +86,8 @@ export default function RelatedProducts({ categoryName }) {
                   component="img"
                   height="200"
                   image={
-                    product.images && product.images.length > 0
-                      ? `${process.env.REACT_APP_BASE_URL}/product/${product.images[0].url}`
+                    product.imageURLs && product.imageURLs.length > 0
+                      ? `${process.env.REACT_APP_BASE_URL}/product/${product.imageURLs[0].url}`
                       : "/no-image.jpg"
                   }
                   alt={product.name}
