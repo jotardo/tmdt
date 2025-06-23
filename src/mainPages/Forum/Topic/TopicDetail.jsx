@@ -137,7 +137,7 @@ function TopicDetail({ topic, onBack }) {
               </Avatar>
               <Box>
                 <Typography variant="subtitle2" color="text.primary">
-                  {userDetails.username || 'Ẩn danh'}
+                  {topic.author || 'Ẩn danh'}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   {topic.createdAt
@@ -151,6 +151,30 @@ function TopicDetail({ topic, onBack }) {
             </Box>
           </Box>
           <CardContent sx={{ p: { xs: 2, md: 4 } }}>
+            {/* Ảnh thumbnail */}
+            {topic.thumbnail && (
+              <Box
+                sx={{
+                  mb: 2,
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <Box
+                  component="img"
+                  src={`http://localhost:8080/api/category/${topic.thumbnail}`}
+                  alt="Thumbnail"
+                  sx={{
+                    width: '100%',
+                    maxWidth: 600,
+                    borderRadius: 2,
+                    boxShadow: theme.shadows[2],
+                  }}
+                />
+              </Box>
+            )}
+
+            {/* Nội dung */}
             <Typography
               variant="body1"
               sx={{
@@ -162,6 +186,7 @@ function TopicDetail({ topic, onBack }) {
             >
               {topic.content || 'Chưa có nội dung'}
             </Typography>
+
             <Chip
               label={topic.categoryName || 'Chưa có danh mục'}
               size="small"
@@ -171,6 +196,7 @@ function TopicDetail({ topic, onBack }) {
                 mb: 2,
               }}
             />
+
             <TopicActions
               likes={likes}
               liked={liked}

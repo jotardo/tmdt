@@ -7,18 +7,23 @@ import {
   Collapse,
   Divider,
   Fade,
+  Chip,
 } from '@mui/material';
 import { formatDistanceToNow } from 'date-fns';
 import { vi } from 'date-fns/locale';
 import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 import commentApi from '../../../backend/db/commentApi';
+import { COMMENT_TYPE_MAP, TYPE_STYLE_MAP } from '../../../utils/ollamaApi/types';
 
 function CommentItem({ comment, onReply }) {
   const [showReplies, setShowReplies] = useState(false);
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [childComments, setChildComments] = useState([]);
   const isAuthor = comment.userID ?? null;
+
+  console.log('CommentItem props:', comment);
+  
 
   const handleToggleReplies = async () => {
     if (!showReplies && childComments.length === 0) {
@@ -31,6 +36,10 @@ function CommentItem({ comment, onReply }) {
     }
     setShowReplies(!showReplies);
   };
+  // Xác định nhãn kiểu bình luận
+  const commentTypeLabel = COMMENT_TYPE_MAP[comment.type] || comment.type || 'Khác';
+  // Lấy style cho chip dựa trên commentTypeLabel
+  const chipStyle = TYPE_STYLE_MAP[commentTypeLabel] || TYPE_STYLE_MAP['Khác'];
 
   return (
     <Fade in timeout={500}>
@@ -56,6 +65,15 @@ function CommentItem({ comment, onReply }) {
                     (Tác giả)
                   </Typography>
                 )}
+                <Chip
+                  label={commentTypeLabel}
+                  size="small"
+                  sx={{
+                    ...chipStyle,
+                    fontSize: '0.75rem',
+                    height: '20px',
+                  }}
+                />
               </Typography>
               <Typography variant="caption" color="text.secondary">
                 {comment.createdAt
@@ -65,7 +83,7 @@ function CommentItem({ comment, onReply }) {
             </Box>
             <Typography
               variant="body2"
-              sx={{ mt: 0.5, lineHeight: 1.6, color: 'text.secondary' }}
+              sx={{ mt: 0.5, lineHeight: 1.6, color: 'text.secondary', textAlign: 'left' }}
             >
               {comment.content || 'Chưa có nội dung'}
             </Typography>

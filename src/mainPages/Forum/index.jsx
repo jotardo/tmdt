@@ -90,7 +90,7 @@ export default function ForumHome() {
     };
     fetchTopicDetail();
   }, [selectedTopicId]);
-
+  
   const drawerContent = (
     <Box sx={{ p: 2 }}>
       <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>

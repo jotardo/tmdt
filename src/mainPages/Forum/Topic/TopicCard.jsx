@@ -25,6 +25,7 @@ function TopicCard({ topic, onSelect }) {
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
+              textAlign: 'left'
             }}
           >
             {topic.content}
@@ -32,7 +33,7 @@ function TopicCard({ topic, onSelect }) {
           <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Typography variant="caption">👤 {topic.author}</Typography>
-              <Typography variant="caption">💬 {topic.commentCount || 0}</Typography>
+              {/* <Typography variant="caption">💬 {topic.commentCount || 0}</Typography> */}
               <Typography variant="caption">👀 {topic.views || 0}</Typography>
             </Box>
             <Typography variant="caption">{topic.createdAt}</Typography>
