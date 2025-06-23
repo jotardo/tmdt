@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosClient from "../../backend/api/axiosClient";
 
-export const getAllCategories = async ()=> await axios.get('/api/category/fetch/all');
+export const getAllCategories = async ()=> await axiosClient.get('/category/fetch/all');
 

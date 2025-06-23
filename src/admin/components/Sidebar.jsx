@@ -3,6 +3,7 @@ import { Drawer, List, ListItem, ListItemIcon, ListItemText } from "@mui/materia
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PeopleIcon from "@mui/icons-material/People";
+import GavelIcon from '@mui/icons-material/Gavel';
 import { useNavigate } from "react-router-dom";
 import { Category, Inbox, Inventory } from "@mui/icons-material";
 
@@ -16,6 +17,7 @@ const Sidebar = () => {
     { text: "Products", icon: <Inventory />, path: "/admin/products" },
     { text: "Categories", icon: <Category />, path: "/admin/categories" },
     { text: "Pending Collaborators", icon: <Inbox />, path: "/admin/approve-ctv" },
+    { text: "Auctions", icon: <GavelIcon />, path: "/admin/auctions" },
   ];
 
   return (

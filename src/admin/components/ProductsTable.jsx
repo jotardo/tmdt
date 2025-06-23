@@ -136,7 +136,7 @@ const ProductsTable = ({ apiData, resultsPerPage, filter, loading, onDelete, onH
                         sx={{ fontWeight: 600, textTransform: "capitalize" }}
                       />
                     </TableCell>
-                    <TableCell>{p.ctvOrAdminId}</TableCell>
+                    <TableCell>{p.userAddID}</TableCell>
                     <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
                       <Tooltip title="Chỉnh sửa">
                         <IconButton

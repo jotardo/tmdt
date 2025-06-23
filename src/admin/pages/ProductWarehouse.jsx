@@ -152,7 +152,7 @@ const ProductWarehouse = () => {
                         sx={{ fontWeight: 600, textTransform: "capitalize" }}
                       />
                     </TableCell>
-                    <TableCell>{p.ctvOrAdminId}</TableCell>
+                    <TableCell>{p.userAddID}</TableCell>
                     <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>
                       <IconButton
                         color="primary"

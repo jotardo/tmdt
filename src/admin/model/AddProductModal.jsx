@@ -26,7 +26,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
     // productIsFavorite: false,
     // productIsCart: false,
     categoryId: "",
-    ctvOrAdminId: user?.id,
+    userAddID: user?.id,
   });
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
         productIsBadge: editProduct.productIsBadge || "",
         status: editProduct.status || "ACTIVE",
         categoryId: editProduct.categoryId || "",
-        ctvOrAdminId: user?.id,
+        userAddID: user?.id,
       });
     } else {
       setForm({
@@ -58,7 +58,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
         productIsBadge: "",
         status: "ACTIVE",
         categoryId: "",
-        ctvOrAdminId: user?.id,
+        userAddID: user?.id,
       });
       setImages([]);
     }
@@ -107,7 +107,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
   const handleSubmit = async () => {
     const formData = new FormData();
 
-    console.log("Category ID and CTV ID:", form.categoryId, form.ctvOrAdminId);
+    console.log("Category ID and CTV ID:", form.categoryId, form.userAddID);
   
     // Validate trước
     if (!form.categoryId || !user?.id) {
@@ -127,7 +127,7 @@ const AddProductModal = ({ open, onClose, onAddProduct, editProduct }) => {
     formData.append("prevPrice", form.prevPrice ? parseFloat(form.prevPrice) : 0);
     formData.append("status", form.status);
     formData.append("categoryId", parseInt(form.categoryId));
-    formData.append("ctvOrAdminId", parseInt(user.id));
+    formData.append("userAddID", parseInt(user.id));
   
     // Append images
     images.forEach((img) => {

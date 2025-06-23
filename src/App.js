@@ -30,6 +30,7 @@ import VerifyEmail from "./mainPages/Login/VerifyEmail";
 import AdminLayout from "./admin";
 import Dashboard from "./admin/pages/Dashboard";
 import Customers from "./admin/pages/Customer";
+import AuctionManagement from "./admin/pages/AuctionManagement";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CategoryManagement from "./admin/pages/CategoryManagement";
 import {useContext, useEffect} from "react";
@@ -79,7 +80,7 @@ function App() {
           <Route path="categories" element={<CategoryManagement />} />
           <Route path="category-warehouse" element={<CategoryWarehouse />} />
           <Route path="product-warehouse" element={<ProductWarehouse />} />
-
+          <Route path="auctions" element={<AuctionManagement />} />
           <Route path="approve-ctv" element={<ApproveCTV />} />
         </Route>
         <Route
