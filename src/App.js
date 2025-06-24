@@ -32,21 +32,18 @@ import Dashboard from "./admin/pages/Dashboard";
 import Customers from "./admin/pages/Customer";
 import ProductManagement from "./admin/pages/ProductManagement";
 import CategoryManagement from "./admin/pages/CategoryManagement";
-import {useContext, useEffect} from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "./context/AuthContext";
 import CategoryWarehouse from "./admin/pages/CategoryWarehouse";
 import ProductWarehouse from "./admin/pages/ProductWarehouse";
 import ForgotPassword from "./mainPages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
 import ReverseAuctionHome from "./mainPages/ReverseAuction/index";
-import MyAuction from "./mainPages/ReverseAuction/UserComponents/myAuction";
-// import CreateAuction from "./mainPages/ReverseAuction/UserComponents/CreateAuction";
 import ApproveCTV from "./admin/pages/ApproveCTV";
 import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
 import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
 import OrdersAdmin from "./admin/pages/OrdersManagement";
-import AuctionChatWindow from "./mainPages/ReverseAuction/Components/AuctionChatWindow";
 import MyAuctionProduct from "./mainPages/ReverseAuction/MyAuctionProduct";
 import ForumHome from "./mainPages/Forum";
 
@@ -54,56 +51,58 @@ import ForumHome from "./mainPages/Forum";
 function App() {
   const token = localStorage.getItem("jwtToken");
   const { logout } = useContext(AuthContext);
-    useEffect(() => {
-        if (!token) {
-            logout();
-        }
-    }, [token]);
+  useEffect(() => {
+    if (!token) {
+      logout();
+    }
+  }, [token]);
 
   return (
     <div className="App">
       <Header />
       <ScrollToTop />
       <div className="mainApp">
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* <Route path="/mockman" element={<MockApi />} /> */}
-        <Route path="/about" element={<About />} />
-        <Route
-          path="/admin"
-          element={<AdminLayout />}
-        >
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="orders" element={<OrdersAdmin />} />
-          <Route path="users" element={<Customers/>} />
-          <Route path="products" element={<ProductManagement />} />
-          <Route path="categories" element={<CategoryManagement />} />
-          <Route path="category-warehouse" element={<CategoryWarehouse />} />
-          <Route path="product-warehouse" element={<ProductWarehouse />} />
 
-          <Route path="approve-ctv" element={<ApproveCTV />} />
-        </Route>
-        <Route
-          path="/cart"
-          element={
-            <RequiresAuth token={token}>
-              {" "}
-              <Cart />
-            </RequiresAuth>
-          }
-        >
-          <Route path="" element={<ShoppingCart />} />
-          <Route path="completedorders" element={<OrderComplete />} />
-          <Route path="checkout" element={<CheckoutDetails />} />
-          
-        </Route>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
           <Route
-              path="/payment"
-              element={
-                  <RequiresAuth token={token}>
-                      <StripeSuccess />
-                  </RequiresAuth>
-              }
+            path="/admin"
+            element={
+              <RequiresAuth token={token}>
+                <AdminLayout />
+              </RequiresAuth>}
+          >
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="orders" element={<OrdersAdmin />} />
+            <Route path="users" element={<Customers />} />
+            <Route path="products" element={<ProductManagement />} />
+            <Route path="categories" element={<CategoryManagement />} />
+            <Route path="category-warehouse" element={<CategoryWarehouse />} />
+            <Route path="product-warehouse" element={<ProductWarehouse />} />
+            <Route path="approve-ctv" element={<ApproveCTV />} />
+          </Route>
+          <Route
+            path="/cart"
+            element={
+              <RequiresAuth token={token}>
+                {" "}
+                <Cart />
+              </RequiresAuth>
+            }
+          >
+            <Route path="" element={<ShoppingCart />} />
+            <Route path="completedorders" element={<OrderComplete />} />
+            <Route path="checkout" element={<CheckoutDetails />} />
+
+          </Route>
+          <Route
+            path="/payment"
+            element={
+              <RequiresAuth token={token}>
+                <StripeSuccess />
+              </RequiresAuth>
+            }
           />
           <Route
             path="/wishlist"
@@ -122,17 +121,18 @@ function App() {
               </RequiresAuth>
             }
           >
-          <Route path="" element={<User />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="address" element={<Address />} />
-        </Route>
+            <Route path="" element={<User />} />
+            <Route path="orders" element={<Orders />} />
+            <Route path="address" element={<Address />} />
+          </Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
-        <Route path="/login/oauth2/code/facebook" element={<FacebookOAuthCallback />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
+          <Route path="/login/oauth2/code/facebook" element={<FacebookOAuthCallback />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+
 
         <Route path="/products/:prodID" element={<ProductDetails />} />
         <Route path="/shop" element={<Shop />} />
@@ -144,27 +144,21 @@ function App() {
           {/* <Route path="room/:roomId" element={<AuctionChatWindow />} /> */}
         </Route>
 
-        {/* <Route path="/reverse-auction" element={<ReverseAuctionHome />}>
-          <Route path="my" element={<MyAuction />} />
-          <Route path="create" element={<CreateAuction />} />
-          <Route path="waiting-rooms" element={<AuctionChatWindow />} />
-          <Route path="room/:roomId" element={<AuctionChatWindow />} />
-        </Route> */}
-        <Route path="*" element={<Error />} />
+          <Route path="*" element={<Error />} />
 
-      </Routes>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={1200}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+        </Routes>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={1200}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
       </div>
       <Footer />
     </div>

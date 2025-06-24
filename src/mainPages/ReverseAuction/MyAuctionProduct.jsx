@@ -18,6 +18,7 @@ export default function MyAuctionProduct() {
   const userDetails = user || JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
+    if (!user || !userDetails || !userDetails.id) return;
     setLoading(true);
     axios
       .get(`http://localhost:8080/api/reverse-auction/fetch-all/my/${userDetails?.id}`)
@@ -32,7 +33,7 @@ export default function MyAuctionProduct() {
         toast.error("Không thể tải danh sách đấu giá của bạn!");
         setLoading(false);
       });
-  }, [userDetails?.token]);
+  }, [user, userDetails?.token]);
 
   return (
     <Container maxWidth="lg" sx={{ py: 4, bgcolor: '#f5f7fa' }}>

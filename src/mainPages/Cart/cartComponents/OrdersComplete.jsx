@@ -7,9 +7,9 @@ export default function OrderComplete() {
       Xác nhận đơn hàng
       <div className="orderPlaced">
         <img
-          src="\assets\order-placed-purchased-icon.svg"
+          src="/assets/order-placed-purchased-icon.svg"
           alt="empty cart"
-          srcset=""
+          srcSet=""
           width="200px"
         />
       </div>

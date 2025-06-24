@@ -140,16 +140,19 @@ export function CartProvider({ children }) {
         return cartManager.cartData.some(item => item._id === prodId);
     };
 
-    const totalPrevPrice = token && cartManager.cartData.length > 0
-        ? Math.floor(cartManager.cartData.reduce((acc, curr) => acc + curr.product_prevPrice * curr.qty, 0))
-        : 0;
+    const hasCart = token && cartManager.cartData && cartManager.cartData.length > 0;
 
-    const totalPrice = token && cartManager.cartData.length > 0
-        ? Math.floor(cartManager.cartData.reduce((acc, curr) => acc + curr.product_price * curr.qty, 0))
-        : 0;
+    const totalPrevPrice = cartManager.cartData.reduce(
+        (acc, curr) => acc + (curr.product_prevPrice || 0) * (curr.qty || 1),
+        0
+    );
+    const totalPrice = cartManager.cartData.reduce(
+        (acc, curr) => acc + (curr.product_price || 0) * (curr.qty || 1),
+        0
+    );
 
-    const totalDiscount = token && totalPrevPrice > 0
-        ? Math.floor(100 - (totalPrice / totalPrevPrice) * 100)
+    const totalDiscount = totalPrevPrice > 0
+        ? Math.round(((totalPrevPrice - totalPrice) / totalPrevPrice) * 100)
         : 0;
 
     useEffect(() => {
