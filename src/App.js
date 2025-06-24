@@ -39,14 +39,11 @@ import ProductWarehouse from "./admin/pages/ProductWarehouse";
 import ForgotPassword from "./mainPages/ForgotPassword/ForgotPassword";
 import ResetPassword from "./mainPages/ForgotPassword/ResetPassword";
 import ReverseAuctionHome from "./mainPages/ReverseAuction/index";
-import MyAuction from "./mainPages/ReverseAuction/UserComponents/myAuction";
-// import CreateAuction from "./mainPages/ReverseAuction/UserComponents/CreateAuction";
 import ApproveCTV from "./admin/pages/ApproveCTV";
 import RegisterCTV from "./mainPages/RegisterCTV/RegisterCTV";
 import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
 import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
 import OrdersAdmin from "./admin/pages/OrdersManagement";
-import AuctionChatWindow from "./mainPages/ReverseAuction/Components/AuctionChatWindow";
 import MyAuctionProduct from "./mainPages/ReverseAuction/MyAuctionProduct";
 
 
@@ -64,6 +61,7 @@ function App() {
       <Header />
       <ScrollToTop />
       <div className="mainApp">
+
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />

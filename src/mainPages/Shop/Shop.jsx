@@ -73,6 +73,7 @@ const Shop = () => {
 
             // Paging later
             const totalPages = Math.ceil(finalPriceSortedData.length / resultsPerPage);
+          
             if (page < 0 || page >= totalPages) {
                 setPage(Math.max(0, Math.min(page, totalPages - 1)));
                 return;
@@ -126,8 +127,8 @@ const Shop = () => {
                                 }}
                             />
                             <p>
-                                <span>Min: 5,000,000</span>
-                                <span>Max: 500,000,000</span>
+                                <span>Min: 10 Tr</span>
+                                <span>Max: 500 Tr</span>
                             </p>
                         </div>
                         <div>

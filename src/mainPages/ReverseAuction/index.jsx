@@ -164,8 +164,8 @@ export default function ReverseAuctionHome() {
               <Grid container spacing={3}>
                 {auctionProducts.map((product) => (
                   <Grid item xs={12} sm={6} md={4} key={product.id}>
-                    <AuctionProductCard 
-                      item={product} 
+                    <AuctionProductCard
+                      item={product}
                       inWishlist={false}
                     />
                   </Grid>
