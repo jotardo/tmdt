@@ -1,17 +1,27 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { Button, Dialog, DialogTitle, DialogContent, TextField, Box } from "@mui/material";
+import reverseAuctionApi from "../../../backend/db/reverseAuctionApi";
+import { useAuth } from "../../../context/AuthContext";
 
 function AuctionRegistrationForm({ open, onClose, productId }) {
+  const {user} = useAuth();
   const [formData, setFormData] = useState({
     bidderName: "",
     contactNumber: "",
     bidAmount: "",
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Implement auction registration logic here
+    const data = {
+      auctionID: productId,
+      ctvID: user?.id,
+      proposedPrice: Math.round(formData.bidAmount)
+    }
+    const response = await reverseAuctionApi.registerAuction(data)
+    console.log(response)
     toast.success("Đăng ký đấu giá thành công!");
     onClose();
   };

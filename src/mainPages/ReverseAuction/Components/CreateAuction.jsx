@@ -22,6 +22,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../context/AuthContext";
 import categoryApi from "../../../backend/db/categoryApi";
+import AIGenerateImageForm from "./AIGenerateImageForm";
 
 const CreateAuction = ({ open, onClose, onAddProduct }) => {
   const { user } = useAuth();
@@ -169,6 +170,40 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
     }
   }, [user]);
 
+  const handleAIImageGenerated = (base64Img) => {
+    if (images.length >= 5) {
+      toast.warning("Bạn đã đạt tối đa 5 ảnh!");
+      return;
+    }
+    try {
+      // Nếu base64Img có prefix, loại bỏ prefix
+      let pureBase64 = base64Img;
+      if (base64Img.startsWith("data:image")) {
+        pureBase64 = base64Img.split(",")[1];
+      }
+      // Chuyển base64 thành Uint8Array
+      const byteString = atob(pureBase64);
+      const arrayBuffer = new ArrayBuffer(byteString.length);
+      const intArray = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        intArray[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([intArray], { type: "image/png" });
+      const file = new File([blob], `ai-image-${Date.now()}.png`, { type: "image/png" });
+
+      // Debug: kiểm tra file size
+      console.log("AI file size:", file.size);
+
+      setImages((prev) => [...prev, file]);
+      setImagePreviews((prev) => [...prev, URL.createObjectURL(file)]);
+      toast.success("Đã thêm ảnh AI vào sản phẩm!");
+    } catch (err) {
+      console.error("Lỗi xử lý ảnh AI:", err);
+      toast.error("Không thể xử lý ảnh AI!");
+    }
+  };
+
+
   return (
     <Dialog 
       open={open} 
@@ -310,58 +345,75 @@ const CreateAuction = ({ open, onClose, onAddProduct }) => {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <Button 
-                variant="contained" 
-                component="label"
-                sx={{
-                  bgcolor: '#1976d2',
-                  '&:hover': { bgcolor: '#1565c0' },
-                  textTransform: 'none'
-                }}
-                disabled={submitting}
-              >
-                Chọn ảnh
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  hidden
-                  onChange={handleImageChange}
-                />
-              </Button>
-              {errors.images && <Typography color="error" variant="caption" sx={{ mt: 1 }}>{errors.images}</Typography>}
+              <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                Hình ảnh sản phẩm (tối đa 5 ảnh)
+              </Typography>
+
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 2 }}>
+                <Button
+                    variant="contained"
+                    component="label"
+                    disabled={submitting || images.length >= 5}
+                    sx={{ bgcolor: '#1976d2', '&:hover': { bgcolor: '#1565c0' } }}
+                >
+                  Chọn ảnh
+                  <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      hidden
+                      onChange={handleImageChange}
+                  />
+                </Button>
+
+                <AIGenerateImageForm onImageGenerated={handleAIImageGenerated} />
+              </Box>
+
+              {errors.images && (
+                  <Typography color="error" variant="caption" sx={{ display: 'block', mb: 2 }}>
+                    {errors.images}
+                  </Typography>
+              )}
+
+            {errors.images && <Typography color="error" variant="caption" sx={{ mt: 1 }}>{errors.images}</Typography>}
               {imagePreviews.length > 0 && (
-                <Grid container spacing={2} sx={{ mt: 2 }}>
-                  {imagePreviews.map((preview, index) => (
-                    <Grid item key={index}>
-                      <Box sx={{ position: "relative" }}>
-                        <img
-                          src={preview}
-                          alt={`preview-${index}`}
-                          style={{ 
-                            width: "120px", 
-                            height: "120px", 
-                            objectFit: "cover", 
-                            borderRadius: 8,
-                            border: '1px solid #e0e0e0'
-                          }}
-                        />
-                        <IconButton
-                          onClick={() => handleRemoveImage(index)}
-                          sx={{
-                            position: "absolute",
-                            top: -8,
-                            right: -8,
-                            bgcolor: 'white',
-                            '&:hover': { bgcolor: '#ffebee' }
-                          }}
-                        >
-                          <Cancel color="error" />
-                        </IconButton>
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
+                  <Grid container spacing={2} sx={{ mt: 2 }}>
+                    {imagePreviews.map((preview, index) => (
+                        typeof preview === "string" && (
+                            <Grid item key={index}>
+                              <Box sx={{ position: "relative" }}>
+                                <img
+                                    src={preview}
+                                    alt={`preview-${index}`}
+                                    style={{
+                                      width: "120px",
+                                      height: "120px",
+                                      objectFit: "cover",
+                                      borderRadius: 8,
+                                      border: '1px solid #e0e0e0'
+                                    }}
+                                    onError={e => {
+                                      e.target.onerror = null;
+                                      e.target.src = "https://via.placeholder.com/120?text=No+Image";
+                                    }}
+                                />
+                                <IconButton
+                                    onClick={() => handleRemoveImage(index)}
+                                    sx={{
+                                      position: "absolute",
+                                      top: -8,
+                                      right: -8,
+                                      bgcolor: 'white',
+                                      '&:hover': { bgcolor: '#ffebee' }
+                                    }}
+                                >
+                                  <Cancel color="error" />
+                                </IconButton>
+                              </Box>
+                            </Grid>
+                        )
+                    ))}
+                  </Grid>
               )}
             </Grid>
           </Grid>

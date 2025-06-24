@@ -22,12 +22,22 @@ export const getReviewsByProductId = async (productId) => {
 
 export const addReview = async (reviewData, userId) => {
     try {
-        const response = await axiosClient.post(`/reviews`, reviewData, { headers: { userId: userId } });
+        const response = await axiosClient.post(
+            "/reviews",
+            reviewData,
+            {
+                headers: {
+                    userId: userId,
+                },
+            }
+        );
         return response.data;
     } catch (error) {
+        console.error("Lỗi gửi review:", error);
         throw error;
     }
 };
+
 
 export const updateReview = async (reviewId, reviewData, userId) => {
     try {

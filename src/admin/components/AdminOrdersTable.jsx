@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TableFooter,  Pagination, Box,
-  Button
+  Button, Chip
 } from "@mui/material";
-import UserDetailModal from "../model/AdminUserDetailsModal";
 import orderApi from "../../backend/db/orderApi";
+import OrderDetailModal from "../model/AdminOrderDetailsModal";
 
 const AdminOrdersTable = ({ resultsPerPage, filter }) => {
   const [page, setPage] = useState(1);
@@ -13,10 +13,18 @@ const AdminOrdersTable = ({ resultsPerPage, filter }) => {
 
   const [detailVisible, setDetailVisible] = useState(false);
   const [detailID, setDetailID] = useState(-1);
+  const [editMode, setEditMode] = useState("detail");
 
   // pagination change control
   function onPageChange(event, p) {
     setPage(p);
+  }
+
+  function requestOrderList() {
+    orderApi.fetchAllOrder().then(result => {
+      console.log("yipee", result.data)
+      setAPIData(result.data.orderDTOList);
+    })
   }
 
   // on page change, load new sliced data
@@ -27,11 +35,15 @@ const AdminOrdersTable = ({ resultsPerPage, filter }) => {
 
 
   useEffect(() => {
-    orderApi.fetchAllOrder().then(result => {
-      console.log("yipee", result.data)
-      setAPIData(result.data.orderDTOList);
-    })
+    requestOrderList()
   }, [])
+
+  const orderStatus = {
+    "PENDING": {name: "Chờ xác nhận", color: "info"},
+    "CONFIRM": {name: "Đã xác nhận", color: "success"},
+    "CANCELLLED": {name: "Đã hủy", color: "error"},
+    "PAID": {name: "Đã thanh toán", color: "warning"}
+  }
 
   return (
     <Box>
@@ -79,7 +91,13 @@ const AdminOrdersTable = ({ resultsPerPage, filter }) => {
                   <span>{order.totalPrice}</span>
                 </TableCell>
                 <TableCell>
-                  <span>{order.status}</span>
+                      <Chip
+                        label={orderStatus[order.status].name}
+                        color={order.status ? orderStatus[order.status].color : "default"}
+                        size="small"
+                        sx={{ fontWeight: 600, textTransform: "capitalize" }}
+                      />
+                  <span></span>
                 </TableCell>
                 <TableCell>
                   <Button 
@@ -88,16 +106,27 @@ const AdminOrdersTable = ({ resultsPerPage, filter }) => {
                   color="info" 
                   onClick={() => {
                     setDetailID(order.id)
+                    setEditMode("detail")
                     setDetailVisible(true)
                   }}
                   >
                     <p>Chi tiết</p>
                   </Button>
-                  <Button variant="outlined" size="small" color="secondary">
+                  <Button variant="outlined" size="small" color="secondary"
+                  onClick={() => {
+                    setDetailID(order.id)
+                    setEditMode("update")
+                    setDetailVisible(true)
+                  }}>
                     <p>Sửa</p>
                   </Button>
-                  <Button variant="outlined" size="small" color="error">
-                    <p>Cấm</p>
+                  <Button variant="outlined" size="small" color="error"
+                  onClick={() => {
+                    setDetailID(order.id)
+                    setEditMode("delete")
+                    setDetailVisible(true)
+                  }}>
+                    <p>Delete</p>
                   </Button>
                 </TableCell>
               </TableRow>
@@ -113,11 +142,14 @@ const AdminOrdersTable = ({ resultsPerPage, filter }) => {
           />
         </TableFooter>
       </TableContainer>
-      <UserDetailModal
+      {detailID > -1 &&
+      <OrderDetailModal
       open={detailVisible}
       onClose={() => setDetailVisible(false)}
-      userID={detailID}
-       />
+      orderID={detailID}
+      onType={editMode}
+      onRefetch={requestOrderList}
+       />}
     </Box>
   );
 };
