@@ -99,7 +99,9 @@ export default function Home() {
         <p>TỐT NHẤT TRÊN THỊ TRƯỜNG</p>
         <h3>Tại sao nên chọn chúng tôi</h3>
         <div className="whyusContent">
-          <img className="middleImage" src="/assets/model3.jpg" alt="" srcSet="" />
+
+          <img className="middleImage" src="\assets\model3.jpg" alt="" srcSet="" />
+
           <div className="whyUsDescription">
             <div>
               <img src="/assets/whyUsIcons/percent-solid.svg" alt="big discount" />

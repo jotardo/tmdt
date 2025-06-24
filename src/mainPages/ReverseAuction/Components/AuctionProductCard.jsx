@@ -41,107 +41,108 @@ export default function AuctionProductCard({ item, inWishlist }) {
   return (
     <div className="ProductCard">
       {/* <NavLink to={`/reverse-auction/${id}`}> */}
-        <img
-          src={`http://localhost:8080/api/product/${mainImage}`}
-          alt={item.name || "Sản phẩm đấu giá"}
-          onError={(e) => {
-            e.target.src = "/no-image.jpg";
-          }}
-        />
+      <img
+        src={`http://localhost:8080/api/product/${mainImage}`}
+        alt={item.name || "Sản phẩm đấu giá"}
+        onError={(e) => {
+          e.target.src = "/no-image.jpg";
+        }}
+      />
 
-        {/* Thumbnail List */}
-        {thumbnailImages.length > 0 && (
-          <Box sx={{ mt: 1, overflowX: "auto", whiteSpace: "nowrap", pb: 1, position: "relative" }}>
-            <Grid container spacing={1} sx={{ flexWrap: "nowrap" }}>
-              {thumbnailImages.map((image, index) => (
-                <Grid item key={index}>
-                  <img
-                    src={`http://localhost:8080/api/product/${image.url}`}
-                    alt={`Thumbnail ${index + 1}`}
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      objectFit: "cover",
-                      borderRadius: "4px",
-                      cursor: "pointer",
-                    }}
-                    onMouseEnter={(e) => handleMouseEnter(image.url, e)}
-                    onMouseLeave={handleMouseLeave}
-                    onError={(e) => {
-                      e.target.src = "/no-image.jpg";
-                    }}
-                  />
-                </Grid>
-              ))}
-            </Grid>
-            {/* Enlarged Image Preview */}
-            {hoveredImage && (
-              <Box
-                sx={{
-                  position: "fixed",
-                  top: hoveredImage.y + 10,
-                  left: hoveredImage.x + 10,
-                  zIndex: 1000,
-                  boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
-                  borderRadius: "8px",
-                  overflow: "hidden",
-                }}
-              >
+      {/* Thumbnail List */}
+      {thumbnailImages.length > 0 && (
+        <Box sx={{ mt: 1, overflowX: "auto", whiteSpace: "nowrap", pb: 1, position: "relative" }}>
+          <Grid container spacing={1} sx={{ flexWrap: "nowrap" }}>
+            {thumbnailImages.map((image, index) => (
+              <Grid item key={index}>
                 <img
-                  src={`http://localhost:8080/api/product/${hoveredImage.url}`}
-                  alt="Enlarged preview"
+                  src={`http://localhost:8080/api/product/${image.url}`}
+                  alt={`Thumbnail ${index + 1}`}
                   style={{
-                    width: "200px",
-                    height: "200px",
+                    width: "60px",
+                    height: "60px",
                     objectFit: "cover",
+                    borderRadius: "4px",
+                    cursor: "pointer",
                   }}
+                  onMouseEnter={(e) => handleMouseEnter(image.url, e)}
+                  onMouseLeave={handleMouseLeave}
                   onError={(e) => {
                     e.target.src = "/no-image.jpg";
                   }}
                 />
-              </Box>
-            )}
-          </Box>
-        )}
-
-        <div className="cardTextContent">
-          <h3>{item.name?.slice(0, 15) || "Sản phẩm"}</h3>
-          {item.material && <p className="material">Vật liệu: {item.material}</p>}
-          {item.size && <p className="size">Kích thước: {item.size}</p>}
-          {item.occasion && <p className="occasion">Dịp: {item.occasion}</p>}
-          {item.status === "Open-Auction" ? (
-            <div>
-              <p className="price">
-                <b>Ngân sách: {item.auctionProductDTO?.budgetAuction?.toLocaleString() || 0} VNĐ</b>
-              </p>
-              <p className="quantity">
-                <b>Số lượng: </b>
-                {item?.auctionProductDTO?.quantity || "Không xác định"}
-              </p>
-              <p
-                className="status"
+              </Grid>
+            ))}
+          </Grid>
+          {/* Enlarged Image Preview */}
+          {hoveredImage && (
+            <Box
+              sx={{
+                position: "fixed",
+                top: hoveredImage.y + 10,
+                left: hoveredImage.x + 10,
+                zIndex: 1000,
+                boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+                borderRadius: "8px",
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src={`http://localhost:8080/api/product/${hoveredImage.url}`}
+                alt="Enlarged preview"
                 style={{
-                  color: item.status === "Open-Auction" ? "#4caf50" : item.status === "CLOSED" ? "#f44336" : "#ff9800",
+                  width: "200px",
+                  height: "200px",
+                  objectFit: "cover",
                 }}
-              >
-                Trạng thái: {item.status === 'Open-Auction' ? 'Đang đấu giá' : "Không xác định"}
-              </p>
-            </div>
-          ) : (
-            <p className="price">
-              <b>Giá: {item.price?.toLocaleString() || 0} VNĐ</b>
-            </p>
+                onError={(e) => {
+                  e.target.src = "/no-image.jpg";
+                }}
+              />
+            </Box>
           )}
-        </div>
+        </Box>
+      )}
+
+      <div className="cardTextContent">
+        <h3>
+          {item.name?.slice(0, 15) || "Sản phẩm"}
+        </h3>
+        {item.material && <p className="material">Vật liệu: {item.material}</p>}
+        {item.size && <p className="size">Kích thước: {item.size}</p>}
+        {item.occasion && <p className="occasion">Dịp: {item.occasion}</p>}
+        {item.auctionProductDTO && <p className="auctionProductDTO">Người tạo: {item.auctionProductDTO.authorName}</p>}
+        {item.status === "Open-Auction" ? (
+          <div>
+            <p className="price">
+              <b>Ngân sách: {item.auctionProductDTO?.budgetAuction?.toLocaleString() || 0} VNĐ</b>
+            </p>
+            <p className="quantity">
+              <b>Số lượng: </b>
+              {item?.auctionProductDTO?.quantity || "Không xác định"}
+            </p>
+            <p
+              className="status"
+              style={{
+                color: item.status === "Open-Auction" ? "#4caf50" : item.status === "CLOSED" ? "#f44336" : "#ff9800",
+              }}
+            >
+              Trạng thái: {item.status === 'Open-Auction' ? 'Đang đấu giá' : "Không xác định"}
+            </p>
+          </div>
+        ) : (
+          <p className="price">
+            <b>Giá: {item.price?.toLocaleString() || 0} VNĐ</b>
+          </p>
+        )}
+      </div>
       {/* </NavLink> */}
 
       {/* Action Buttons */}
       <Box sx={{ display: "flex", gap: 1, mt: 2, justifyContent: "center" }}>
         {user?.role === "CTV" && (
           <Button
-            style={{
-              color: "#4caf50",
-            }}
+            style={{color: "#4caf50",}}
             variant="contained"
             color="primary"
             onClick={() => setOpenRegistration(true)}
@@ -152,7 +153,8 @@ export default function AuctionProductCard({ item, inWishlist }) {
         )}
 
         {/* Phải là chủ nhân của sản phẩm đấu giá thì mới xem được. */}
-        {isAuthorOfAuction() && (
+        {/* hoặc người ta đã đăng kí rồi */}
+        {(
           <Button
             style={{
               color: "#4caf50",
@@ -178,6 +180,7 @@ export default function AuctionProductCard({ item, inWishlist }) {
         open={openChat}
         onClose={() => setOpenChat(false)}
         item={item}
+
       />
 
       {/* Badge */}

@@ -19,19 +19,20 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../context/AuthContext";
 import AuctionProductCard from "./Components/AuctionProductCard";
 import CreateAuction from "./Components/CreateAuction";
+import reverseAuctionApi from "../../backend/db/reverseAuctionApi";
 
 export default function ReverseAuctionHome() {
-  const location = useLocation();
   const [tabValue, setTabValue] = useState(0);
-  const [products, setProducts] = useState([]);
+  const [auctionProducts, setAuctionProducts] = useState([]);
   const [openCreateDialog, setOpenCreateDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
   const userDetails = user || JSON.parse(localStorage.getItem("user"));
   const role = userDetails?.role;
+  const location = useLocation();
 
   useEffect(() => {
-    // Set tab value based on current path
+    // Set tab value based on current path (1==?, 0==?)
     if (location.pathname === "/reverse-auction/my") {
       setTabValue(1);
     } else {
@@ -39,28 +40,27 @@ export default function ReverseAuctionHome() {
     }
   }, [location.pathname]);
 
+  // Lấy tất cả các Auction Product
   useEffect(() => {
     // Only fetch data for the main auction list, MyAuctionProduct handles its own data
     if (location.pathname !== "/reverse-auction/my") {
       setLoading(true);
-      axios
-        .get("http://localhost:8080/api/reverse-auction/fetch-all")
-        .then((response) => {
-          console.log("Fetched products:", response.data);
+      reverseAuctionApi.getAllAuctionProduct().then((response) => {
+          console.log("Fetched Auction Products:", response.data);
           const productDTOs = Array.isArray(response.data.productDTOs) ? response.data.productDTOs : [];
-          setProducts(productDTOs.filter(product => product && typeof product === 'object'));
-          setLoading(false);
+          setAuctionProducts(productDTOs.filter(product => product && typeof product === 'object'));
         })
         .catch((error) => {
           console.error("Error fetching products:", error);
           toast.error("Không thể tải danh sách sản phẩm!");
-          setLoading(false);
-        });
+          
+        })
+        .finally(() => setLoading(false));
     }
   }, [location.pathname, userDetails?.token]);
 
   const handleAddProduct = (product) => {
-    setProducts((prev) => [...prev, product]);
+    setAuctionProducts((prev) => [...prev, product]);
     setOpenCreateDialog(false);
   };
 
@@ -94,7 +94,7 @@ export default function ReverseAuctionHome() {
               variant="contained"
               startIcon={<AddCircle />}
               onClick={() => setOpenCreateDialog(true)}
-              sx={{ 
+              sx={{
                 borderRadius: 20, 
                 textTransform: "none",
                 bgcolor: 'white',
@@ -156,13 +156,13 @@ export default function ReverseAuctionHome() {
               <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
                 <CircularProgress />
               </Box>
-            ) : products.length === 0 ? (
+            ) : auctionProducts.length === 0 ? (
               <Typography color="text.secondary" sx={{ my: 4, textAlign: 'center' }}>
                 Chưa có sản phẩm đấu giá nào.
               </Typography>
             ) : (
               <Grid container spacing={3}>
-                {products.map((product) => (
+                {auctionProducts.map((product) => (
                   <Grid item xs={12} sm={6} md={4} key={product.id}>
                     <AuctionProductCard
                       item={product}
