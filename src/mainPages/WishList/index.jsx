@@ -12,7 +12,7 @@ export default function WishList() {
 
       {wishList?.backendWishList.length === 0 ? (
         <p className="empty_Wishlist ">
-          <img src="" alt="" width={300} />
+          <img src="/assets/empty-wishlist.png" alt="" width={300} />
           <p>Wishlist đang trống...{" "}</p>
           <NavLink to="/shop">
             <button>Đi đến Cửa hàng</button>
@@ -20,9 +20,9 @@ export default function WishList() {
         </p>
       ) : (
         <div className="productsContainer">
-          {wishList?.backendWishList.map((item) => (
-            <ProductCard item={item} inWishlist={true} />
-          ))}
+            {wishList?.backendWishList.map((item) => (
+                <ProductCard key={item.id} item={item.product} inWishlist={true} />
+            ))}
         </div>
       )}
     </div>

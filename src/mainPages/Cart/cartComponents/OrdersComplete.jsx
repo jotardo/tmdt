@@ -9,7 +9,7 @@ export default function OrderComplete() {
         <img
           src="\assets\order-placed-purchased-icon.svg"
           alt="empty cart"
-          srcset=""
+          srcSet=""
           width="200px"
         />
       </div>

@@ -1,6 +1,5 @@
 export const reducerFilterFunction = (state, action) => {
-
-  const value=action.inputValue;
+  const value = action.inputValue;
 
   switch (action.type) {
     case "PRICE":
@@ -14,34 +13,26 @@ export const reducerFilterFunction = (state, action) => {
     case "OCCASION":
       return {
         ...state,
-        ocassionFilters: state.ocassionFilters.includes(value)
-          ? [...state.ocassionFilters.filter((item) => item !== value)]
-          : [...state.ocassionFilters, value],
+        ocassionFilters: toggle(state.ocassionFilters, value),
       };
     case "MATERIAL":
       return {
         ...state,
-        materialFilter: state.materialFilter.includes(value)
-          ? [...state.materialFilter.filter((item) => item !== value)]
-          : [...state.materialFilter, value],
+        materialFilter: toggle(state.materialFilter, value),
       };
     case "CATEGORY":
       return {
         ...state,
-        categoryFilters: state.categoryFilters.includes(value)
-          ? [...state.categoryFilters.filter((item) => item !== value)]
-          : [...state.categoryFilters, value],
+        categoryFilters: toggle(state.categoryFilters, value),
       };
     case "BRAND":
       return {
         ...state,
-        brandFilters: state.brandFilters.includes(value)
-          ? [...state.brandFilters.filter((item) => item !== value)]
-          : [...state.brandFilters, value],
+        brandFilters: toggle(state.brandFilters, value),
       };
     case "CLEARFILTER":
       return {
-        priceRange: 1500,
+        priceRange: action.maxPrice,
         search: "",
         sort: "",
         rating: "",
@@ -50,9 +41,11 @@ export const reducerFilterFunction = (state, action) => {
         materialFilter: [],
         brandFilters: [],
       };
-
     default:
-      console.log("something is wrong in filters");
-      break;
+      return state;
   }
 };
+
+function toggle(arr, value) {
+  return arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
+}

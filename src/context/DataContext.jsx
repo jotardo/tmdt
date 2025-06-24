@@ -54,6 +54,11 @@ export function DataProvider({ children }) {
     }
   };
 
+  // const dealInChatRoom = async (userId, productId, ctvId) => {
+    
+  // }
+
+
   const getSingleProduct = async (id) => {
     setSingleProduct({
       ...singleProduct,
@@ -130,10 +135,10 @@ export function DataProvider({ children }) {
         )
       : backendData?.productsData;
 
-      /** Filter order: search result -> category -> (*)brand -> occasion ->
-       *  material -> price range -> rating.
-       * AFTER ALL THAT, SORT THEM BY PRICE IF THERE ARE SORT IN PLACE
-      */
+  /** Filter order: search result -> category -> (*)brand -> occasion ->
+   *  material -> price range -> rating.
+   * AFTER ALL THAT, SORT THEM BY PRICE IF THERE ARE SORT IN PLACE
+  */
   const categoryFilterData =
     filtersUsed.categoryFilters.length > 0
       ? searchedDataValue.filter((item) =>
@@ -143,7 +148,7 @@ export function DataProvider({ children }) {
         )
       : searchedDataValue;
 
-      /** yipee brand */
+  /** yipee brand */
   const brandFilterData = 
     filtersUsed.brandFilters.length > 0
       ? categoryFilterData.filter((item) =>
