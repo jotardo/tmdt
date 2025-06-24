@@ -29,7 +29,7 @@ export default function User() {
   const wishlistCount = useWish()?.length || 0;
 
   const avatarUrl = newUserData.avatar
-    ? `http://localhost/api/user/${newUserData.avatar}`
+    ? `http://localhost:8080/api/user/${newUserData.avatar}`
     : "/assets/model5.jpg";
 
   if (!user) return <p>Đang tải thông tin người dùng...</p>;

@@ -11,6 +11,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { useData, useCart, useWish } from "../";
 import { AdminPanelSettings } from "@mui/icons-material";
 import { useAuth } from "../context/AuthContext";
+import ForumHome from "../mainPages/Forum";
 
 export default function Header() {
   const [isMenuClicked, setIsMenuClicked] = useState(false);
@@ -25,6 +26,8 @@ export default function Header() {
   const { wishlistCount } = useWish();
   const { cartCount } = useCart();
   const navigate = useNavigate();
+  const userDetails = user || JSON.parse(localStorage.getItem('user'));
+  const role = userDetails?.role;
 
   const handleMenu = () => {
     setIsMenuClicked(!isMenuClicked);
@@ -87,6 +90,9 @@ export default function Header() {
           <NavLink to={"reverse-auction"}>
             <li className={"NavItem"}>Đấu Giá Ngược</li>
           </NavLink>
+          <NavLink to="/forum">
+            <li className={"NavItem"}>Diễn đàn</li>
+          </NavLink>
 
           <span className="search">
             {isSearchclicked ? (
@@ -145,11 +151,14 @@ export default function Header() {
               </NavLink>
             </Badge>
           </span>
-          <span className={user?.role !== "Admin" ? "admin" : "hiddenElement"}>
-                <NavLink to="/admin/dashboard">
-                  <AdminPanelSettings/>
-                </NavLink>
+          <span className="admin">
+            {(user?.role === "CTV" || user?.role === "Admin") && (
+              <NavLink to="/admin/dashboard">
+                <AdminPanelSettings />
+              </NavLink>
+            )}
           </span>
+          
           <span className="login">
             {token ? (
                 <NavLink to="/profile">

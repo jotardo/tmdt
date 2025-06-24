@@ -45,6 +45,7 @@ import OAuth2RedirectHandler from "./mainPages/Login/OAuth2RedirectHandler";
 import FacebookOAuthCallback from "./mainPages/Login/FacebookOAuthCallback";
 import OrdersAdmin from "./admin/pages/OrdersManagement";
 import MyAuctionProduct from "./mainPages/ReverseAuction/MyAuctionProduct";
+import ForumHome from "./mainPages/Forum";
 
 
 function App() {
@@ -132,13 +133,16 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
 
-          <Route path="/products/:prodID" element={<ProductDetails />} />
-          <Route path="/shop" element={<Shop />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/register-ctv" element={<RegisterCTV />} />
-          <Route path="/reverse-auction" element={<ReverseAuctionHome />}>
-            <Route path="my" element={<MyAuctionProduct />} />
-          </Route>
+
+        <Route path="/products/:prodID" element={<ProductDetails />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/forum" element={<ForumHome/>} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/register-ctv" element={<RegisterCTV />} />
+        <Route path="/reverse-auction" element={<ReverseAuctionHome />}>
+          <Route path="my" element={<MyAuctionProduct />} />
+          {/* <Route path="room/:roomId" element={<AuctionChatWindow />} /> */}
+        </Route>
 
           <Route path="*" element={<Error />} />
 

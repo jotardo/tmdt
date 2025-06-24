@@ -13,41 +13,51 @@ import categoryApi from "../backend/db/categoryApi";
 export const DataContext = createContext();
 
 export function DataProvider({ children }) {
-    // Hàm lọc phần tử duy nhất
-    const uniqueArrayFunc = (val, index, originalArr) => originalArr.indexOf(val) === index;
+  /**
+   * Product properties currently in focus and probably filter: {
+   * name, description, price, prevPrice,
+   * brand, size, productMaterial, occasion
+   * }
+   */
+  const uniqueArrayFunc = (val, index, originalArr) => originalArr.indexOf(val) === index;
+  const [backendData, setBackendData] = useState({
+    loading: true,
+    error: null,
+    productsData: [],
+  });
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [brandData, setBrandData] = useState([]);
+  const [occasionData, setOccasionData] = useState([]);
+  const [singleProduct, setSingleProduct] = useState({
+    product: {},
+    loading: true,
+  });
 
-    // State
-    const [backendData, setBackendData] = useState({
-        loading: true,
-        error: null,
-        productsData: [],
-    });
-    const [categoriesData, setCategoriesData] = useState([]);
-    const [brandData, setBrandData] = useState([]);
-    const [occasionData, setOccasionData] = useState([]);
-    const [singleProduct, setSingleProduct] = useState({
-        product: {},
-        loading: true,
-    });
+  const getBackendData = async () => {
+    try {
+      const response = await productApi.fetchExistingProducts();
+      console.log("Product list Existing: ", response);
+      const productList = response?.data;
+      setBackendData({
+        ...backendData,
+        loading: false,
+        productsData: [...productList],
+      });
+      // brands
+      const brandList = productList.map(product => product.brand).filter(uniqueArrayFunc);
+      setBrandData(brandList);
+      // occasions
+      const occasionList = productList.map(product => product.occasion).filter(uniqueArrayFunc);
+      setOccasionData(occasionList);
+    } catch (error) {
+      setBackendData({ ...backendData, loading: false, error: error });
+      console.log("Lỗi kết nối tới backend 1:", error);
+    }
+  };
 
-    // Lấy dữ liệu sản phẩm
-    const getBackendData = async () => {
-        try {
-            const response = await productApi.fetchExistingProducts();
-            const productList = response?.data || [];
-            setBackendData({
-                ...backendData,
-                loading: false,
-                productsData: [...productList],
-            });
-            // Lọc brand và occasion duy nhất
-            setBrandData(productList.map(p => p.brand).filter(uniqueArrayFunc));
-            setOccasionData(productList.map(p => p.occasion).filter(uniqueArrayFunc));
-        } catch (error) {
-            setBackendData({ ...backendData, loading: false, error });
-            console.log("Lỗi kết nối tới backend:", error);
-        }
-    };
+  // const dealInChatRoom = async (userId, productId, ctvId) => {
+    
+  // }
 
     // Lấy dữ liệu 1 sản phẩm
     const getSingleProduct = async (id) => {
