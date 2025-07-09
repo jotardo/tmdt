@@ -1,6 +1,6 @@
 async function callOllamaApi(
   messageContent,
-  model = 'llama3.2:1b',
+  model = 'qwen2.5-coder:latest',
   ollamaUrl = 'http://localhost:11434/api/chat'
 ) {
   const payload = {

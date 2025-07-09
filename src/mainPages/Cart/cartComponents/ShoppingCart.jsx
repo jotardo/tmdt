@@ -30,6 +30,45 @@ export default function ShoppingCart() {
     return <EmptyCart />;
   }
 
+  console.log("Cart data:", cartManager.cartData);
+
+  const calculateSubTotal = () => {
+    if (!cartManager.cartData || !Array.isArray(cartManager.cartData)) return 0;
+    return cartManager.cartData.reduce((total, item) => {
+      return total + item.price * item.quantity;
+    }, 0);
+  };
+
+  // Tính toán tổng giá trị giảm giá
+  const calculateDiscount = () => {
+    if (!cartManager.cartData || !Array.isArray(cartManager.cartData)) return 0;
+    return cartManager.cartData.reduce((total, item) => {
+      const discountValue = (item.discount / 100) * (item.price * item.quantity);
+      return total + discountValue;
+    }, 0);
+  };
+
+  // Tính tổng tiền sau giảm giá
+  const calculateTotal = () => {
+    return calculateSubTotal() - calculateDiscount();
+  };
+
+  // Format tiền tệ VNĐ
+  const formatPrice = (price) => {
+    return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+  };
+
+  // Lấy tổng phần trăm giảm giá trung bình (nếu cần hiển thị %)
+  const totalDiscountPercent = () => {
+    if (!cartManager.cartData || !Array.isArray(cartManager.cartData)) return 0;
+    const totalItems = cartManager.cartData.reduce((sum, item) => sum + item.quantity, 0);
+    if (totalItems === 0) return 0;
+    const totalDiscount = cartManager.cartData.reduce((sum, item) => {
+      return sum + item.discount * item.quantity;
+    }, 0);
+    return (totalDiscount / totalItems).toFixed(2);
+  };
+
   return (
       <div className="shoppingCart">
         <table className="cartData">
@@ -46,15 +85,16 @@ export default function ShoppingCart() {
           </thead>
           <tbody>
           {cartManager.cartData.map((item) => {
-            const { id, quantity } = item;
             const {
-              id: productId,
-              images,
-              name,
+              id,
+              productId,
+              imageDTOS,
+              nameProduct,
+              quantity,
               price,
-            } = item.product;
+            } = item;
 
-            const shortName = name.slice(0, 14);
+            // const shortName = nameProduct.slice(0, 14);
 
             return (
                 <tr className="cartItem" key={id}>
@@ -62,16 +102,16 @@ export default function ShoppingCart() {
                     <NavLink to={`/products/${productId}`}>
                       <div onClick={() => getSingleProduct(productId)}>
                         <img
-                            src={`http://localhost:8080/api/product/${images[0].url}`}
+                            src={`http://localhost:8080/api/product/${imageDTOS[0].url}`}
                             width="70px"
-                            alt={name}
+                            alt={nameProduct}
                         />
 
                       </div>
                     </NavLink>
                   </td>
 
-                  <td className="product-name">{shortName}...</td>
+                  <td className="product-name">{nameProduct}...</td>
 
                   <td className="product-price">{price} VNĐ</td>
 
@@ -112,7 +152,7 @@ export default function ShoppingCart() {
                       ) : (
                           <span
                               className="addtofav"
-                              onClick={() => addWishListData(item.product)}
+                              onClick={() => addWishListData(item)}
                           >
                         <FavoriteBorderIcon />
                       </span>
@@ -122,7 +162,7 @@ export default function ShoppingCart() {
 
                   <td
                       className="product-remove"
-                      onClick={() => deleteFromCartFunction(id, name, token, true)}
+                      onClick={() => deleteFromCartFunction(id, nameProduct, token, true)}
                   >
                     <HighlightOffIcon />
                   </td>
@@ -134,30 +174,30 @@ export default function ShoppingCart() {
 
         <table className="cartTotal">
           <thead>
-          <tr>
-            <th colSpan="2">Tổng tiền trong giỏ</th>
-          </tr>
+            <tr>
+              <th colSpan="2">Tổng tiền trong giỏ</th>
+            </tr>
           </thead>
           <tbody>
-          <tr className="subTotal">
-            <td className="dataTitle">Thành tiền</td>
-            <td className="Sprice">{totalPrevPrice} VNĐ</td>
-          </tr>
-          <tr className="discount">
-            <td className="disc">Khuyến mãi</td>
-            <td>{totalDiscount}%</td>
-          </tr>
-          <tr className="Tprice">
-            <td>Tổng tiền</td>
-            <td className="TotalPrice">{totalPrice} VNĐ</td>
-          </tr>
-          <tr>
-            <td colSpan="2" style={{ textAlign: "center" }}>
-              <button onClick={() => navigate("/cart/checkout")}>
-                Đi đến Thanh toán
-              </button>
-            </td>
-          </tr>
+            <tr className="subTotal">
+              <td className="dataTitle">Thành tiền</td>
+              <td className="Sprice">{formatPrice(calculateSubTotal())}</td>
+            </tr>
+            <tr className="discount">
+              <td className="disc">Khuyến mãi</td>
+              <td>{totalDiscountPercent()}%</td>
+            </tr>
+            <tr className="Tprice">
+              <td>Tổng tiền</td>
+              <td className="TotalPrice">{formatPrice(calculateTotal())}</td>
+            </tr>
+            <tr>
+              <td colSpan="2" style={{ textAlign: 'center' }}>
+                <button onClick={() => navigate('/cart/checkout')}>
+                  Đi đến Thanh toán
+                </button>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

@@ -32,8 +32,19 @@ const Format = {
   properties: {
     sentiment: { type: 'string', enum: ['positive', 'neutral', 'negative'] },
     category: {
-      type: 'string',
-      enum: ['opinion', 'suggestion', 'complaint', 'question', 'spam', 'irrelevant'],
+        type: 'string',
+        enum: [
+            'opinion',         // Ý kiến, cảm nghĩ
+            'suggestion',      // Gợi ý cải thiện
+            'complaint',       // Phàn nàn, không hài lòng
+            'question',        // Câu hỏi
+            'review',          // Đánh giá sản phẩm
+            'experience',      // Chia sẻ trải nghiệm
+            'fashion_trend',   // Thảo luận xu hướng
+            'material_quality',// Về chất lượng chất liệu (vàng, bạc, đá...)
+            'irrelevant',       // Không liên quan
+            'spam'             // Rác, quảng cáo
+        ],
     },
     toxic: { type: 'boolean' },
     relevant: { type: 'boolean' },
