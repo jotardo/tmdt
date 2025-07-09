@@ -15,9 +15,7 @@ const deliveryAddressApi = {
   },
   addNewAddress: async (data) => {
     try {
-      console.log("📤 Thêm địa chỉ:", data); // Debug dữ liệu đầu vào
       const response = await axiosClient.post(`/delivery/add`, data);
-      console.log("📤 Thêm địa chỉ:", response.data);
       return response.data;
     } catch (error) {
       console.error("❌ Lỗi khi thêm địa chỉ:", error);

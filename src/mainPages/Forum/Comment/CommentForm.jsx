@@ -55,7 +55,7 @@ function CommentForm({ onSubmit, parentId = null, onCancel, user, topicId }) {
     // Kiểm tra nếu bình luận tiêu cực hoặc độc hại
     if (parsedContent.sentiment === 'negative' || parsedContent.toxic) {
       isPositive = false; // Đánh dấu là bình luận tiêu cực
-      toast.error('Bình luận của bạn chứa nội dung tiêu cực hoặc không phù hợp.');
+      toast.error('Bình luận của bạn chứa nội dung độc hại hoặc không phù hợp.');
       setError('Bình luận của bạn chứa nội dung tiêu cực hoặc không phù hợp.');
       setLoading(false);
       return;
